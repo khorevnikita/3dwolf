@@ -1,29 +1,105 @@
 import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import VueRouter, {RouteConfig} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import store from "@/store";
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    {
+        path: '/',
+        name: 'home',
+        component: HomeView
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: () => import('../views/LoginView.vue'),
+        meta: {
+            guest: true
+        }
+    },
+    {
+        path: '/users',
+        name: 'users',
+        component: () => import('../views/UsersView.vue'),
+    },
+    {
+        path: '/customers',
+        name: 'customers',
+        component: () => import('../views/CustomersView.vue'),
+    },
+    {
+        path: '/materials',
+        name: 'materials',
+        component: () => import('../views/MaterialsView.vue'),
+    },
+    {
+        path: '/manufacturers',
+        name: 'manufacturers',
+        component: () => import('../views/ManufacturersView.vue'),
+    },
+    {
+        path: '/stock',
+        name: 'stock',
+        component: () => import('../views/StockView.vue'),
+    },
+    {
+        path: '/accounts',
+        name: 'accounts',
+        component: () => import('../views/AccountsView.vue'),
+    },
+    {
+        path: '/orders',
+        name: 'orders',
+        component: () => import('../views/OrdersView.vue'),
+    },
+    {
+        path: '/contracts',
+        name: 'contracts',
+        component: () => import('../views/ContractsView.vue'),
+    },
+    {
+        path: '/estimates',
+        name: 'estimates',
+        component: () => import('../views/EstimatesView.vue'),
+    },
+    {
+        path: '/404',
+        name: '404',
+        component: () => import('../views/404.vue'),
+    },
+
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
+
+router.beforeEach(async (to, from, next) => {
+    if (to === from) {
+        return;
+    }
+
+    if (to.matched.length === 0) {
+        next({path: '/404'})
+    }
+
+    const apiToken = !!store.getters.jwt;
+    const guestRoute = to.matched.some(record => record.meta.guest);
+    console.log(apiToken, guestRoute)
+    if (guestRoute && apiToken) {
+        console.log('instant', 'to', '/')
+        next({path: "/"})
+    } else if (!guestRoute && !apiToken) {
+        console.log('instant', 'to', 'sign-up')
+        next({path: "/login"})
+    } else {
+        console.log('instant', 'next()')
+        next()
+    }
+});
 
 export default router
