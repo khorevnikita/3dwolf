@@ -71,6 +71,11 @@ const routes: Array<RouteConfig> = [
         component: () => import('../views/EstimatesView.vue'),
     },
     {
+        path: '/estimates/:id',
+        name: 'estimate',
+        component: () => import('../views/EstimateItem.vue'),
+    },
+    {
         path: '/404',
         name: '404',
         component: () => import('../views/404.vue'),

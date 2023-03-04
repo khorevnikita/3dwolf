@@ -55,11 +55,13 @@ class EstimateController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @param Estimate $estimate
+     * @return JsonResponse
      */
-    public function show(Estimate $estimate)
+    public function show(Estimate $estimate):JsonResponse
     {
-        //
+        $estimate->load('lines');
+        return $this->resourceItemResponse('estimate', $estimate);
     }
 
     /**

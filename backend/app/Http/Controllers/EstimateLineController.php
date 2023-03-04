@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Estimate\EstimateLineRequest;
+use App\Models\Estimate;
 use App\Models\EstimateLine;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class EstimateLineController extends Controller
@@ -10,9 +13,10 @@ class EstimateLineController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Estimate $estimate): JsonResponse
     {
-        //
+        $lines = EstimateLine::query()->where("estimate_id", $estimate->id)->get();
+        return $this->resourceListResponse('estimateLines', $lines, $lines->count(), 1);
     }
 
     /**
@@ -24,11 +28,15 @@ class EstimateLineController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param EstimateLineRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Estimate $estimate, EstimateLineRequest $request): JsonResponse
     {
-        //
+        $line = new EstimateLine($request->all());
+        $line->estimate_id = $estimate->id;
+        $line->save();
+        return $this->resourceItemResponse('estimateLine', $line);
     }
 
     /**
@@ -48,18 +56,24 @@ class EstimateLineController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param EstimateLineRequest $request
+     * @param EstimateLine $estimateLine
+     * @return JsonResponse
      */
-    public function update(Request $request, EstimateLine $estimateLine)
+    public function update(EstimateLineRequest $request, Estimate $estimate, EstimateLine $estimateLine)
     {
-        //
+        $estimateLine->fill($request->all());
+        $estimateLine->save();
+        return $this->resourceItemResponse('estimateLine', $estimateLine);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param EstimateLine $estimateLine
+     * @return JsonResponse
      */
-    public function destroy(EstimateLine $estimateLine)
+    public function destroy(Estimate $estimate,EstimateLine $estimateLine): JsonResponse
     {
-        //
+        $estimateLine->delete();
+        return $this->emptySuccessResponse();
     }
 }
