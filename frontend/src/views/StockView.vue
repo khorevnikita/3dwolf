@@ -1,5 +1,5 @@
 <template>
-<div>Stock</div>
+<div>Склад</div>
 </template>
 
 <script>
