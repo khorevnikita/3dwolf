@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\CustomerController;
+use \App\Http\Controllers\AccountController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,5 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resources([
         'materials' => MaterialController::class,
         'manufacturers' => ManufacturerController::class,
+        'customers' => CustomerController::class,
+        'accounts' => AccountController::class,
+        'orders' => OrderController::class,
     ]);
 });

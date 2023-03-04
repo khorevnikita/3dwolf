@@ -1,7 +1,11 @@
 <template>
   <v-row class="mx-3 mt-5">
     <v-col cols="12">
-      <div class="text-h6">Клиенты</div>
+      <div class="d-flex align-items-center">
+        <div class="text-h6">Клиенты</div>
+        <v-spacer/>
+        <v-btn small @click="create()" color="primary">Создать</v-btn>
+      </div>
     </v-col>
     <v-col cols="12">
       <v-card>
@@ -32,21 +36,42 @@
           class="elevation-1 mt-3"
       >
         <template v-slot:[`item.actions`]="{item}">
-          <v-btn color="error" icon @click="destroy(item)">
-            <v-icon>mdi-delete</v-icon>
+          <v-btn link :href="`/customers/${item.id}`" icon>
+            <v-icon>mdi-eye</v-icon>
           </v-btn>
         </template>
+
+        <template v-slot:[`item.type`]="{item}">
+          {{ item.type === 'individual' ? 'Физ. лицо' : 'Юр. лицо' }}
+        </template>
+        <template v-slot:[`item.entity_type`]="{item}">
+          {{ item.entity_type === 'self_employed' ? 'ИП' : item.entity_type === 'company' ? 'ООО' : '-' }}
+        </template>
+
       </v-data-table>
     </v-col>
+
+    <v-dialog v-model="editDialog" max-width="700">
+      <CustomerEditor
+          v-if="editDialog"
+          @close="editDialog=false"
+          v-model="editItem"
+          @created="onCreated"
+          @updated="onUpdated"
+          :modal="true"
+      />
+    </v-dialog>
   </v-row>
 </template>
 
 <script>
 
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
+import CustomerEditor from "@/components/Customer/CustomerEditor";
 
 export default {
   name: "CustomersView",
+  components: {CustomerEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {
@@ -65,8 +90,6 @@ export default {
       ],
       resourceKey: "customers",
       resourceApiRoute: `customers`,
-      vehicleGroups: [],
-      deleteSwalTitle: `Безвозвратно удалить клиента?`,
     }
   },
 }

@@ -59,7 +59,6 @@ export default {
       ],
       resourceKey: "accounts",
       resourceApiRoute: `accounts`,
-      vehicleGroups: [],
       deleteSwalTitle: `Безвозвратно удалить счёт?`,
     }
   },

@@ -30,6 +30,12 @@ const routes: Array<RouteConfig> = [
         component: () => import('../views/CustomersView.vue'),
     },
     {
+        path: '/customers/:id',
+        name: 'customer',
+        component: () => import('../views/CustomerItem.vue'),
+    },
+
+    {
         path: '/materials',
         name: 'materials',
         component: () => import('../views/MaterialsView.vue'),

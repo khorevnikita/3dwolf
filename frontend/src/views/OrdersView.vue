@@ -64,7 +64,6 @@ export default {
       ],
       resourceKey: "orders",
       resourceApiRoute: `orders`,
-      vehicleGroups: [],
       deleteSwalTitle: `Безвозвратно удалить заказ?`,
     }
   },

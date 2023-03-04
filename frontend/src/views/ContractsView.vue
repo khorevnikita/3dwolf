@@ -61,7 +61,6 @@ export default {
       ],
       resourceKey: "contracts",
       resourceApiRoute: `contracts`,
-      vehicleGroups: [],
       deleteSwalTitle: `Безвозвратно удалить договор?`,
     }
   },
