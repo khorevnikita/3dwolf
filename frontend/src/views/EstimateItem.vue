@@ -47,6 +47,12 @@
         </template>
       </v-simple-table>
 
+      <div class="mt-5">
+        <div class="subtitle-1">Итого: <b class="text-h6">{{ totalAmount }} руб.</b></div>
+        <div class="subtitle-1">Вес итого: <b class="text-h6">{{ totalWeight }} гр.</b></div>
+        <div class="subtitle-1">Время итого: <b class="text-h6">{{ totalTime }} сек.</b></div>
+      </div>
+
       <v-dialog v-model="editDialog" max-width="500">
         <EstimateLineEditor
             v-if="editDialog"
@@ -83,6 +89,18 @@ export default {
   },
   created() {
     this.getEstimate();
+  },
+  computed: {
+    totalAmount() {
+      return this.items.reduce((acc, item) => acc += (item.price * item.count), 0);
+    },
+    totalWeight() {
+      return this.items.reduce((acc, item) => acc += (item.weight * item.count), 0);
+    },
+    totalTime() {
+      return this.items.reduce((acc, item) => acc += item.print_duration, 0);
+    },
+
   },
   methods: {
     getEstimate() {
