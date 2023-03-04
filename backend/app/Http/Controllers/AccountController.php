@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Paginator;
+use App\Http\Requests\Account\AccountRequest;
 use App\Models\Account;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -10,9 +13,23 @@ class AccountController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        list($page, $skip, $take) = Paginator::get($request);
+        $models = Account::query();
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $models = $models->where("name", "like", "%$search%");
+        }
+        $totalCount = $models->count();
+
+        $models = $models->orderBy('name');
+        if ($take >= 0) {
+            $models = $models->skip($skip)->take($take);
+        }
+        $models = $models->get();
+        $pagesCount = Paginator::pagesCount($take, $totalCount);
+        return $this->resourceListResponse('accounts', $models, $totalCount, $pagesCount);
     }
 
     /**
@@ -24,11 +41,15 @@ class AccountController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param AccountRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(AccountRequest $request): JsonResponse
     {
-        //
+        $account = new Account($request->all());
+        $account->save();
+
+        return $this->resourceItemResponse('account', $account);
     }
 
     /**
@@ -48,18 +69,25 @@ class AccountController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param AccountRequest $request
+     * @param Account $account
+     * @return JsonResponse
      */
-    public function update(Request $request, Account $account)
+    public function update(AccountRequest $request, Account $account): JsonResponse
     {
-        //
+        $account->fill($request->all());
+        $account->save();
+
+        return $this->resourceItemResponse('account', $account);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param Account $account
+     * @return JsonResponse
      */
-    public function destroy(Account $account)
+    public function destroy(Account $account): JsonResponse
     {
-        //
+        $account->delete();
+        return $this->emptySuccessResponse();
     }
 }
