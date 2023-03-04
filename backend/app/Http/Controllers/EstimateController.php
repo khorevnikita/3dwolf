@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Paginator;
+use App\Http\Requests\Estimate\EstimateRequest;
 use App\Models\Estimate;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class EstimateController extends Controller
@@ -10,9 +13,26 @@ class EstimateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        //
+        list($page, $skip, $take) = Paginator::get($request);
+        $models = Estimate::query();
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $models = $models->where("name", "like", "%$search%");
+        }
+        $totalCount = $models->count();
+
+        if ($take >= 0) {
+            $models = $models->skip($skip)->take($take);
+        }
+
+        list($sort, $sortDir) = Paginator::getSorting($request);
+        $models = $models->orderBy($sort, $sortDir);
+
+        $models = $models->get();
+        $pagesCount = Paginator::pagesCount($take, $totalCount);
+        return $this->resourceListResponse('estimates', $models, $totalCount, $pagesCount);
     }
 
     /**
@@ -24,11 +44,14 @@ class EstimateController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param EstimateRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(EstimateRequest $request): JsonResponse
     {
-        //
+        $estimate = new Estimate($request->all());
+        $estimate->save();
+        return $this->resourceItemResponse('estimate', $estimate);
     }
 
     /**
@@ -50,16 +73,20 @@ class EstimateController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Estimate $estimate)
+    public function update(EstimateRequest $request, Estimate $estimate): JsonResponse
     {
-        //
+        $estimate->fill($request->all());
+        $estimate->save();
+        return $this->resourceItemResponse('estimate', $estimate);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param Estimate $estimate
+     * @return JsonResponse
      */
-    public function destroy(Estimate $estimate)
+    public function destroy(Estimate $estimate):JsonResponse
     {
-        //
+        $estimate->delete();
+        return $this->emptySuccessResponse();
     }
 }
