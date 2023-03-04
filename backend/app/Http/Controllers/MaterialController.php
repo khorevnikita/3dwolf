@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Paginator;
+use App\Http\Requests\Material\MaterialRequest;
 use App\Models\Material;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class MaterialController extends Controller
@@ -10,9 +13,23 @@ class MaterialController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        list($page, $skip, $take) = Paginator::get($request);
+        $materials = Material::query();
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $materials = $materials->where("name", "like", "%$search%");
+        }
+        $totalCount = $materials->count();
+
+        $materials = $materials->orderBy('name');
+        if ($take >= 0) {
+            $materials = $materials->skip($skip)->take($take);
+        }
+        $materials = $materials->get();
+        $pagesCount = Paginator::pagesCount($take, $totalCount);
+        return $this->resourceListResponse('materials', $materials, $totalCount, $pagesCount);
     }
 
     /**
@@ -24,11 +41,14 @@ class MaterialController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param MaterialRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(MaterialRequest $request):JsonResponse
     {
-        //
+        $model = new Material($request->all());
+        $model->save();
+        return $this->resourceItemResponse('material',$model);
     }
 
     /**
@@ -50,16 +70,20 @@ class MaterialController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Material $material)
+    public function update(MaterialRequest $request, Material $material)
     {
-        //
+        $material->fill($request->all());
+        $material->save();
+        return $this->resourceItemResponse('material',$material);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param Material $material
+     * @return JsonResponse
      */
-    public function destroy(Material $material)
+    public function destroy(Material $material):JsonResponse
     {
-        //
+        $material->delete();
+        return $this->emptySuccessResponse();
     }
 }

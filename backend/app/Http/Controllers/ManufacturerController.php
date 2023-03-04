@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Paginator;
+use App\Http\Requests\Manufacturer\ManufacturerRequest;
 use App\Models\Manufacturer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ManufacturerController extends Controller
@@ -10,9 +13,23 @@ class ManufacturerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        list($page, $skip, $take) = Paginator::get($request);
+        $models = Manufacturer::query();
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $models = $models->where("name", "like", "%$search%");
+        }
+        $totalCount = $models->count();
+
+        $materials = $models->orderBy('name');
+        if ($take >= 0) {
+            $models = $models->skip($skip)->take($take);
+        }
+        $models = $models->get();
+        $pagesCount = Paginator::pagesCount($take, $totalCount);
+        return $this->resourceListResponse('manufacturers', $models, $totalCount, $pagesCount);
     }
 
     /**
@@ -24,11 +41,14 @@ class ManufacturerController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param ManufacturerRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(ManufacturerRequest $request): JsonResponse
     {
-        //
+        $model = new Manufacturer($request->all());
+        $model->save();
+        return $this->resourceItemResponse('manufacturer', $model);
     }
 
     /**
@@ -48,18 +68,24 @@ class ManufacturerController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param ManufacturerRequest $request
+     * @param Manufacturer $manufacturer
+     * @return JsonResponse
      */
-    public function update(Request $request, Manufacturer $manufacturer)
+    public function update(ManufacturerRequest $request, Manufacturer $manufacturer):JsonResponse
     {
-        //
+        $manufacturer->fill($request->all());
+        $manufacturer->save();
+        return $this->resourceItemResponse('manufacturer', $manufacturer);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param Manufacturer $manufacturer
+     * @return JsonResponse
      */
-    public function destroy(Manufacturer $manufacturer)
+    public function destroy(Manufacturer $manufacturer):JsonResponse
     {
-        //
+        $manufacturer->delete();
+        return $this->emptySuccessResponse();
     }
 }
