@@ -23,7 +23,7 @@ class ManufacturerController extends Controller
         }
         $totalCount = $models->count();
 
-        $materials = $models->orderBy('name');
+        $models = $models->orderBy('name');
         if ($take >= 0) {
             $models = $models->skip($skip)->take($take);
         }

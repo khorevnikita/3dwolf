@@ -25,7 +25,6 @@ class CustomerController extends Controller
         }
         $totalCount = $models->count();
 
-        $models = $models->orderBy('name');
         if ($take >= 0) {
             $models = $models->skip($skip)->take($take);
         }

@@ -2,17 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Paginator;
+use App\Http\Requests\Part\PartRequest;
 use App\Models\Part;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PartController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        //
+        list($page, $skip, $take) = Paginator::get($request);
+        $models = Part::query();
+
+        if ($request->has('search')) {
+            // todo: localScope
+            $search = $request->get('search');
+            $models = $models->where("inv_number", "like", "%$search%");
+        }
+        $totalCount = $models->count();
+
+        if ($take >= 0) {
+            $models = $models->skip($skip)->take($take);
+        }
+
+        list($sort, $sortDir) = Paginator::getSorting($request);
+        $models = $models->orderBy($sort, $sortDir);
+
+        $models = $models->with(['manufacturer', 'material'])->get();
+        $pagesCount = Paginator::pagesCount($take, $totalCount);
+        return $this->resourceListResponse('parts', $models, $totalCount, $pagesCount);
     }
 
     /**
@@ -24,11 +47,14 @@ class PartController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param PartRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(PartRequest $request): JsonResponse
     {
-        //
+        $part = new Part($request->all());
+        $part->save();
+        return $this->resourceItemResponse('part', $part);
     }
 
     /**
@@ -50,16 +76,19 @@ class PartController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Part $part)
+    public function update(PartRequest $request, Part $part): JsonResponse
     {
-        //
+        $part->fill($request->all());
+        $part->save();
+        return $this->resourceItemResponse('part', $part);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Part $part)
+    public function destroy(Part $part): JsonResponse
     {
-        //
+        $part->delete();
+        return $this->emptySuccessResponse();
     }
 }
