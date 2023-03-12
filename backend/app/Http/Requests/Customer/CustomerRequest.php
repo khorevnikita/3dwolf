@@ -31,6 +31,7 @@ class CustomerRequest extends FormRequest
             'telegram' => 'required',
             'type' => 'required|in:individual,entity',
             'entity_type' => 'required_if:type,entity|in:self_employed,company',
+            'title' => 'required_if:type,entity',
             'inn' => 'required_if:type,entity',
             'kpp' => 'required_if:entity_type,company',
             'ogrn' => 'required_if:type,entity',
@@ -42,6 +43,7 @@ class CustomerRequest extends FormRequest
             'ks' => 'required_if:type,entity',
             'bik' => 'required_if:type,entity',
             'bank' => 'required_if:type,entity',
+            'source' => 'required|in:site,avito',
         ];
     }
 }

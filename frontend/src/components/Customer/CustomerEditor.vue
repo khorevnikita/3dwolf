@@ -88,6 +88,15 @@
       />
 
       <v-row v-if="model.type==='entity'">
+        <v-col cols="12">
+          <v-text-field
+              label="Название"
+              v-model="model.title"
+              :error-messages="errors.title"
+              :error-count="1"
+              :error="!!errors.title"
+          />
+        </v-col>
         <v-col cols="12" md="6">
           <v-text-field
               label="ИНН"
@@ -191,6 +200,19 @@
           />
         </v-col>
       </v-row>
+      <v-select
+          label="Источник"
+          v-model="model.source"
+          :error-messages="errors.source"
+          :error-count="1"
+          :error="!!errors.source"
+          :items="[
+              {value:'site',text:'Сайт'},
+              {value:'avito',text:'Авито'},
+          ]"
+          item-text="text"
+          item-value="value"
+      />
     </v-card-text>
     <v-card-actions>
       <v-btn v-if="modal" text @click="$emit('close')">Закрыть</v-btn>
