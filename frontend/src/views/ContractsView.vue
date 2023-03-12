@@ -1,7 +1,11 @@
 <template>
   <v-row class="mx-3 mt-5">
     <v-col cols="12">
-      <div class="text-h6">Договора</div>
+      <div class="d-flex align-items-center">
+        <div class="text-h6">Договора</div>
+        <v-spacer/>
+        <v-btn small @click="create()" color="primary">Создать</v-btn>
+      </div>
     </v-col>
     <v-col cols="12">
       <v-card>
@@ -31,22 +35,47 @@
           :loading="loading"
           class="elevation-1 mt-3"
       >
+        <template v-slot:[`item.status`]="{item}">
+          {{ item.status==='new'?'Новый':item.status==='process'?'В работе':'Завершен' }}
+        </template>
+        <template v-slot:[`item.date`]="{item}">
+          {{ item.date ? moment(item.date).format("DD.MM.YYYY") : '-' }}
+        </template>
+        <template v-slot:[`item.customer_id`]="{item}">
+          {{ item.customer ? item.customer.title : '-' }}
+        </template>
         <template v-slot:[`item.actions`]="{item}">
+          <v-btn color="warning" icon @click="edit(item)">
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
           <v-btn color="error" icon @click="destroy(item)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>
       </v-data-table>
     </v-col>
+
+    <v-dialog v-model="editDialog" max-width="700">
+      <ContractEditor
+          v-if="editDialog"
+          @close="editDialog=false"
+          v-model="editItem"
+          @created="onCreated"
+          @updated="onUpdated"
+          :modal="true"
+      />
+    </v-dialog>
   </v-row>
 </template>
 
 <script>
 
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
+import ContractEditor from "@/components/Contract/ContractEditor";
 
 export default {
   name: "ContractsView",
+  components: {ContractEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {

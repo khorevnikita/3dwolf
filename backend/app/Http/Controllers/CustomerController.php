@@ -21,7 +21,7 @@ class CustomerController extends Controller
         if ($request->has('search')) {
             // todo: localScope
             $search = $request->get('search');
-            $models = $models->where("name", "like", "%$search%");
+            $models = $models->search($search);
         }
         $totalCount = $models->count();
 
@@ -30,6 +30,9 @@ class CustomerController extends Controller
         }
 
         list($sort, $sortDir) = Paginator::getSorting($request);
+        if ($field = $request->get("field")) {
+            $models = $models->orderByRaw("FIELD(customers.id,$field) DESC");
+        }
         $models = $models->orderBy($sort, $sortDir);
 
         $models = $models->get();
@@ -49,20 +52,20 @@ class CustomerController extends Controller
      * @param CustomerRequest $request
      * @return JsonResponse
      */
-    public function store(CustomerRequest $request):JsonResponse
+    public function store(CustomerRequest $request): JsonResponse
     {
         $model = new Customer($request->all());
         $model->save();
-        return $this->resourceItemResponse('customer',$model);
+        return $this->resourceItemResponse('customer', $model);
     }
 
     /**
      * @param Customer $customer
      * @return JsonResponse
      */
-    public function show(Customer $customer):JsonResponse
+    public function show(Customer $customer): JsonResponse
     {
-        return $this->resourceItemResponse('customer',$customer);
+        return $this->resourceItemResponse('customer', $customer);
     }
 
     /**
@@ -78,18 +81,18 @@ class CustomerController extends Controller
      * @param Customer $customer
      * @return JsonResponse
      */
-    public function update(CustomerRequest $request, Customer $customer):JsonResponse
+    public function update(CustomerRequest $request, Customer $customer): JsonResponse
     {
         $customer->fill($request->all());
         $customer->save();
-        return $this->resourceItemResponse('customer',$customer);
+        return $this->resourceItemResponse('customer', $customer);
     }
 
     /**
      *
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer):JsonResponse
+    public function destroy(Customer $customer): JsonResponse
     {
         $customer->delete();
         return $this->emptySuccessResponse();

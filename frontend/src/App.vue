@@ -4,10 +4,10 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
-            3D WOLF
+            <v-img contain position="left" max-height="50" alt="logo" :src="require('@/assets/logo.svg')"/>
           </v-list-item-title>
           <v-list-item-subtitle>
-            admin panel
+            3D WOLF | CRM
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
