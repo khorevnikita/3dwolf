@@ -56,9 +56,13 @@
           </v-btn>
         </template>
         <template v-slot:[`item.actions`]="{item}">
+          <v-btn color="primary" icon :to="`/orders/${item.id}`">
+            <v-icon>mdi-eye</v-icon>
+          </v-btn>
           <v-btn color="warning" icon @click="edit(item)">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
+
           <v-btn color="error" icon @click="destroy(item)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
