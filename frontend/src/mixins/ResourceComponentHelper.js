@@ -1,5 +1,5 @@
 import moment from "moment";
-import Swal from "sweetalert2";
+import Swal from "sweetalert2-khonik";
 import axios from "@/plugins/axios";
 
 export default {

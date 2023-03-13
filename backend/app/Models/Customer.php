@@ -16,6 +16,11 @@ class Customer extends Model
         return $this->hasMany(Contract::class);
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
     public function getTitleAttribute($value)
     {
         if (!$value) {
