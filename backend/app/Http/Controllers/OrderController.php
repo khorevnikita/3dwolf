@@ -60,11 +60,13 @@ class OrderController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @param Order $order
+     * @return JsonResponse
      */
-    public function show(Order $order)
+    public function show(Order $order):JsonResponse
     {
-        //
+        $order->load('customer','payments');
+        return $this->resourceItemResponse('order', $order);
     }
 
     /**

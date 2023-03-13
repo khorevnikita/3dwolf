@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Редактирование наряд-заказа</v-card-title>
+    <v-card-title v-if="modal">Редактирование наряд-заказа</v-card-title>
     <v-card-text>
       <v-menu
           ref="menu"

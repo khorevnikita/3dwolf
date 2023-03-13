@@ -61,6 +61,11 @@ const routes: Array<RouteConfig> = [
         component: () => import('../views/OrdersView.vue'),
     },
     {
+        path: '/orders/:id',
+        name: 'order',
+        component: () => import('../views/OrderItem.vue'),
+    },
+    {
         path: '/contracts',
         name: 'contracts',
         component: () => import('../views/ContractsView.vue'),
