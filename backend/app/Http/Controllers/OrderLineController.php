@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Order\OrderLineRequest;
+use App\Models\Order;
 use App\Models\OrderLine;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class OrderLineController extends Controller
@@ -10,9 +13,13 @@ class OrderLineController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Order $order, Request $request): JsonResponse
     {
-        //
+        $lines = OrderLine::query()
+            ->where("order_id", $order->id)
+            ->with(['part.material','part.manufacturer'])
+            ->get();
+        return $this->resourceListResponse('orderLines', $lines, $lines->count(), 1);
     }
 
     /**
@@ -26,9 +33,12 @@ class OrderLineController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Order $order, OrderLineRequest $request): JsonResponse
     {
-        //
+        $orderLine = new OrderLine($request->all());
+        $orderLine->order_id = $order->id;
+        $orderLine->save();
+        return $this->resourceItemResponse('orderLine', $orderLine);
     }
 
     /**
@@ -50,16 +60,21 @@ class OrderLineController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, OrderLine $orderLine)
+    public function update(OrderLineRequest $request,Order $order, OrderLine $orderLine): JsonResponse
     {
-        //
+        $orderLine->fill($request->all());
+        $orderLine->save();
+        return $this->resourceItemResponse('orderLine', $orderLine);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param Order $order
+     * @param OrderLine $orderLine
+     * @return JsonResponse
      */
-    public function destroy(OrderLine $orderLine)
+    public function destroy(Order $order, OrderLine $orderLine): JsonResponse
     {
-        //
+        $orderLine->delete();
+        return $this->emptySuccessResponse();
     }
 }

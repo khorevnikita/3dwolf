@@ -20,4 +20,9 @@ class Order extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+    public function lines()
+    {
+        return $this->hasMany(OrderLine::class);
+    }
 }

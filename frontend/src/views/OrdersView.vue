@@ -50,11 +50,7 @@
         <template v-slot:[`item.payment_status`]="{item}">
           {{ statusMap[item.payment_status] }}
         </template>
-        <template v-slot:[`item.actions`]="{item}">
-          <v-btn color="warning" icon @click="edit(item)">
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-        </template>
+
         <template v-slot:[`item.actions`]="{item}">
           <v-btn color="primary" icon :to="`/orders/${item.id}`">
             <v-icon>mdi-eye</v-icon>
@@ -66,7 +62,6 @@
           <v-btn color="error" icon @click="destroy(item)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
-
         </template>
       </v-data-table>
     </v-col>

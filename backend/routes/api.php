@@ -12,6 +12,7 @@ use App\Http\Controllers\EstimateController;
 use App\Http\Controllers\EstimateLineController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\OrderLineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'estimates.estimate-lines' => EstimateLineController::class,
         'parts' => PartController::class,
         'orders' => OrderController::class,
+        'orders.order-lines' => OrderLineController::class,
         'contracts' => ContractController::class,
     ]);
 });

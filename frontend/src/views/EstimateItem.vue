@@ -100,7 +100,6 @@ export default {
     totalTime() {
       return this.items.reduce((acc, item) => acc += item.print_duration, 0);
     },
-
   },
   methods: {
     getEstimate() {
