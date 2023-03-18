@@ -1,0 +1,179 @@
+<template>
+  <v-card>
+    <v-card-title>Редактирование платежа</v-card-title>
+    <v-card-text>
+      <v-select
+          label="Тип"
+          v-model="model.type"
+          :items="[
+              {value:'expense',text:'Расход'},
+              {value:'income',text:'Приход'},
+          ]"
+          item-value="value"
+          item-text="text"
+          :error-messages="errors.type"
+          :error-count="1"
+          :error="!!errors.type"
+
+      />
+      <v-select
+          label="Пользователь"
+          v-model="model.user_id"
+          :items="users"
+          item-value="id"
+          item-text="name"
+      >
+        <template v-slot:selection="{ item, index }">
+          {{ item.name }} {{ item.surname }}
+        </template>
+        <template v-slot:item="{ item, index }">
+          {{ item.name }} {{ item.surname }}
+        </template>
+
+      </v-select>
+      <v-select
+          label="Счёт"
+          v-model="model.account_id"
+          :items="accounts"
+          item-value="id"
+          item-text="name"
+          :error-messages="errors.account_id"
+          :error-count="1"
+          :error="!!errors.account_id"
+      />
+
+      <v-text-field
+          label="Сумма"
+          v-model="model.amount"
+          :error-messages="errors.amount"
+          :error-count="1"
+          :error="!!errors.amount"
+      />
+
+      <v-menu
+          ref="menu"
+          v-model="menu"
+          :close-on-content-click="false"
+          :return-value.sync="model.paid_at"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+              v-model="model.paid_at"
+              label="Дата платежа"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+              :error-messages="errors.paid_at"
+              :error-count="1"
+              :error="!!errors.paid_at"
+          ></v-text-field>
+        </template>
+        <v-date-picker
+            v-model="model.paid_at"
+            no-title
+            scrollable
+        >
+          <v-spacer></v-spacer>
+          <v-btn
+              text
+              color="primary"
+              @click="menu = false"
+          >
+            Отменить
+          </v-btn>
+          <v-btn
+              text
+              color="primary"
+              @click="$refs.menu.save(model.paid_at)"
+          >
+            OK
+          </v-btn>
+        </v-date-picker>
+      </v-menu>
+
+      <v-textarea
+          label="Комментарий к платежу"
+          v-model="model.description"
+          :error-messages="errors.description"
+          :error-count="1"
+          :error="!!errors.description"
+      />
+    </v-card-text>
+    <v-card-actions>
+      <v-btn text @click="$emit('close')">Закрыть</v-btn>
+      <v-spacer/>
+      <v-btn color="primary" @click="save()">Сохранить</v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
+
+<script>
+import axios from "@/plugins/axios";
+
+export default {
+  name: "PaymentEditor",
+  props: ['value', 'order_id'],
+  data() {
+    return {
+      model: this.value ? this.value : {},
+      modelName: 'payment',
+      errors: {},
+      users: [],
+      accounts: [],
+      menu: false,
+    }
+  },
+  created() {
+    this.getUsers();
+    this.getAccounts();
+  },
+  computed:{
+    requestData(){
+      return {
+        ...this.model,
+        ...this.order_id ? {order_id: this.order_id} : {}
+      };
+    }
+  },
+  methods: {
+    getUsers() {
+      axios.get(`users`).then(body => this.users = body.users);
+    },
+    getAccounts() {
+      axios.get(`accounts`).then(body => this.accounts = body.accounts)
+    },
+
+    save() {
+      this.errors = {};
+      if (this.model.id) {
+        this.update();
+      } else {
+        this.store();
+      }
+    },
+    store() {
+      axios.post(`${this.modelName}s`, this.requestData).then(body => {
+        this.$emit("created", body[this.modelName]);
+        this.$emit("close");
+      }).catch(err => {
+        this.errors = err.body.errors;
+      })
+    },
+    update() {
+      axios.put(`${this.modelName}s/${this.model.id}`, this.requestData).then(body => {
+        this.$emit("updated", body[this.modelName]);
+        this.$emit("close");
+      }).catch(err => {
+        this.errors = err.body.errors;
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

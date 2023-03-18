@@ -45,6 +45,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function scopeSearch($q, $search)
     {
         return $q->where(function ($q) use ($search) {
@@ -56,5 +61,11 @@ class User extends Authenticatable
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
+    }
+
+    public function updateBalance(float $expense = 0, float $income = 0)
+    {
+        $this->balance = $this->balance - $expense + $income;
+        $this->save();
     }
 }

@@ -6,7 +6,7 @@
       <v-row>
         <v-col cols="12" md="6" order-md="2">
           <CustomerCard :customer="order.customer" class="mb-4"/>
-          <PaymentCard :payments="order.payments"/>
+          <PaymentCard :order-id="order.id"/>
         </v-col>
         <v-col cols="12" md="6" order-md="1">
           <OrderEditor v-model="order"/>

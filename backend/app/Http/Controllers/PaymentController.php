@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Paginator;
+use App\Http\Requests\Payment\PaymentRequest;
 use App\Models\Payment;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -10,9 +13,23 @@ class PaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        //
+        list($page, $skip, $take) = Paginator::get($request);
+        $models = Payment::query();
+        if ($request->has('order_id')) {
+            $order_id = $request->get('order_id');
+            $models = $models->where("order_id", "=", $order_id);
+        }
+        $totalCount = $models->count();
+
+        $models = $models->orderBy('paid_at', "desc");
+        if ($take >= 0) {
+            $models = $models->skip($skip)->take($take);
+        }
+        $models = $models->with(['account', 'user'])->get();
+        $pagesCount = Paginator::pagesCount($take, $totalCount);
+        return $this->resourceListResponse('payments', $models, $totalCount, $pagesCount);
     }
 
     /**
@@ -26,9 +43,12 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PaymentRequest $request): JsonResponse
     {
-        //
+        $payment = new Payment($request->all());
+        $payment->save();
+
+        return $this->resourceItemResponse('payment', $payment);
     }
 
     /**
@@ -48,18 +68,25 @@ class PaymentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param PaymentRequest $request
+     * @param Payment $payment
+     * @return JsonResponse
      */
-    public function update(Request $request, Payment $payment)
+    public function update(PaymentRequest $request, Payment $payment):JsonResponse
     {
-        //
+        $payment->fill($request->all());
+        $payment->save();
+
+        return $this->resourceItemResponse('payment', $payment);
     }
 
     /**
+     *
      * Remove the specified resource from storage.
      */
-    public function destroy(Payment $payment)
+    public function destroy(Payment $payment):JsonResponse
     {
-        //
+        $payment->delete();
+        return $this->emptySuccessResponse();
     }
 }

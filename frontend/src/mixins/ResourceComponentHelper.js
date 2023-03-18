@@ -18,6 +18,7 @@ export default {
 
             resourceKey: "",
             resourceApiRoute: "",
+            resourceApiParams: "",
             deleteSwalTitle: "Вы уверены?"
         }
     },
@@ -57,7 +58,7 @@ export default {
             });
         },
         getItems() {
-            axios.get(`${this.resourceApiRoute}?${this.setQueryString(this.query)}`).then(body => {
+            axios.get(`${this.resourceApiRoute}?${this.resourceApiParams}&${this.setQueryString(this.query)}`).then(body => {
                 this.items = body[this.resourceKey];
                 this.totalItems = body.totalCount;
                 this.loading = false;

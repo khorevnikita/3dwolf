@@ -11,7 +11,7 @@
         />
       </v-col>
       <v-col cols="12" md="6" class="text-right">
-        <v-btn color="primary">Добавить платёж</v-btn>
+        <v-btn color="primary" @click="addPaymentDialog=true">Добавить платёж</v-btn>
       </v-col>
       <v-col cols="12" md="6">
         <v-card>
@@ -120,14 +120,23 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="addPaymentDialog" max-width="500">
+      <PaymentEditor
+          @close="addPaymentDialog=false"
+          @created="getData()"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import axios from "@/plugins/axios";
+import PaymentEditor from "@/components/Payment/PaymentEditor";
 
 export default {
   name: "MoneyView",
+  components: {PaymentEditor},
   data() {
     return {
       year: 2023,
@@ -145,7 +154,8 @@ export default {
         'Ноябрь',
         'Декабрь',
       ],
-      data: {}
+      data: {},
+      addPaymentDialog:false,
     }
   },
   created() {

@@ -65,7 +65,7 @@ class OrderController extends Controller
      */
     public function show(Order $order):JsonResponse
     {
-        $order->load('customer','payments');
+        $order->load('customer');
         return $this->resourceItemResponse('order', $order);
     }
 

@@ -32,7 +32,6 @@ instance.interceptors.response.use(function (response) {
 
 instance.interceptors.request.use(function (config) {
     // Do something before request is sent
-    console.log("before request", config.headers, localStorage.getItem('access_token'))
     config.headers['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
     return config;
 });

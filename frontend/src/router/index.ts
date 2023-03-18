@@ -109,15 +109,11 @@ router.beforeEach(async (to, from, next) => {
 
     const apiToken = !!store.getters.jwt;
     const guestRoute = to.matched.some(record => record.meta.guest);
-    console.log(apiToken, guestRoute)
     if (guestRoute && apiToken) {
-        console.log('instant', 'to', '/')
         next({path: "/"})
     } else if (!guestRoute && !apiToken) {
-        console.log('instant', 'to', 'sign-up')
         next({path: "/login"})
     } else {
-        console.log('instant', 'next()')
         next()
     }
 });
