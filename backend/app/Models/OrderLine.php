@@ -28,7 +28,6 @@ class OrderLine extends Model
         static::updated(function (OrderLine $model) {
             $model->calcOrderAmount();
         });
-
     }
 
     public function order()

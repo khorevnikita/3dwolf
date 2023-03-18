@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -22,7 +23,7 @@ class User extends Authenticatable
         'surname',
         'email',
         'password',
-
+        'balance'
     ];
 
     /**
@@ -43,4 +44,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function scopeSearch($q, $search)
+    {
+        return $q->where(function ($q) use ($search) {
+            $q->where("name", "like", "%$search%")
+                ->orWhere("surname", "like", "%$search%");
+        });
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
+    }
 }

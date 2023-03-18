@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Money\TotalStatistics;
 use App\Models\Account;
 use App\Models\Payment;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -49,12 +50,15 @@ class MoneyController extends Controller
 
         $accounts = Account::query()->get();
 
+        $users = User::query()->get();
+
         return $this->resourceItemResponse('data', [
             'income' => $totalIncome,
             'expense' => $totalExpense,
             'balance' => $balance,
             'months' => $monthData,
             'accounts' => $accounts,
+            'users' => $users
         ]);
     }
 }

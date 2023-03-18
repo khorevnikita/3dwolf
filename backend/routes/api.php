@@ -14,6 +14,7 @@ use App\Http\Controllers\PartController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\OrderLineController;
 use App\Http\Controllers\MoneyController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'orders' => OrderController::class,
         'orders.order-lines' => OrderLineController::class,
         'contracts' => ContractController::class,
+        'users' => UserController::class,
     ]);
 
     Route::prefix('money')->group(function () {
