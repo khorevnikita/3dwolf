@@ -25,6 +25,9 @@
               :loading="loading"
               class="elevation-1 mt-3"
           >
+            <template v-slot:[`item.index`]="{item}">
+              {{ items.indexOf(item) + 1 }}
+            </template>
             <template v-slot:[`item.part_id`]="{item}">
               {{ item.part ? `${item.part.material.name}, ${item.part.color} (${item.part.manufacturer.name})` : '-' }}
             </template>
@@ -80,7 +83,7 @@ export default {
       moment: moment,
       errors: {},
       headers: [
-        {text: "№", value: "number", sortable: true},
+        {text: "№", value: "index", sortable: false},
         {text: "Название", value: "name", sortable: true},
         {text: "Деталь", value: "part_id", sortable: true},
         {text: "Кол-во", value: "count", sortable: true},
