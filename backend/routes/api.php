@@ -13,6 +13,7 @@ use App\Http\Controllers\EstimateLineController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\OrderLineController;
+use App\Http\Controllers\MoneyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,4 +47,8 @@ Route::middleware('auth:sanctum')->group(function () {
         'orders.order-lines' => OrderLineController::class,
         'contracts' => ContractController::class,
     ]);
+
+    Route::prefix('money')->group(function () {
+        Route::get('statistics', [MoneyController::class, 'getTotalStatistics']);
+    });
 });
