@@ -25,7 +25,7 @@ class OrderRequest extends FormRequest
             'date' => 'required|date',
             'customer_id' => 'required|integer|exists:customers,id',
             'phone' => 'required',
-            'amount' => 'required|numeric',
+          #  'amount' => 'required|numeric',
             'deadline' => 'required|date',
             'status' => 'required|in:new,printing,shipping,completed',
             'payment_status' => 'required|in:not_paid,part_paid,full_paid'

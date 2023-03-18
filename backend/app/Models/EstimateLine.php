@@ -20,12 +20,12 @@ class EstimateLine extends Model
 
     public function getAmountAttribute()
     {
-        return $this->price * $this->count;
+        return round($this->price * $this->count, 2);
     }
 
     public function getTotalWeightAttribute()
     {
-        return $this->weight * $this->count;
+        return round($this->weight * $this->count, 2);
     }
 
 }

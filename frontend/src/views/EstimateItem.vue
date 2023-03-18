@@ -92,13 +92,16 @@ export default {
   },
   computed: {
     totalAmount() {
-      return this.items.reduce((acc, item) => acc += (item.price * item.count), 0);
+      const amount = this.items.reduce((acc, item) => acc += (item.price * item.count), 0)
+      return Math.round(amount * 100) / 100;
     },
     totalWeight() {
-      return this.items.reduce((acc, item) => acc += (item.weight * item.count), 0);
+      const weight = this.items.reduce((acc, item) => acc += (item.weight * item.count), 0);
+      return Math.round(weight * 100) / 100;
     },
     totalTime() {
-      return this.items.reduce((acc, item) => acc += item.print_duration, 0);
+      const time = this.items.reduce((acc, item) => acc += item.print_duration, 0);
+      return Math.round(time * 100) / 100;
     },
   },
   methods: {

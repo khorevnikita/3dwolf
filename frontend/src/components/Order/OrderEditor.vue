@@ -56,6 +56,7 @@
           :error-messages="errors.customer_id"
           :error-count="1"
           :error="!!errors.customer_id"
+          clearable
       />
       <v-text-field
           label="Телефон"
@@ -64,13 +65,13 @@
           :error-count="1"
           :error="!!errors.phone"
       />
-      <v-text-field
+      <!--<v-text-field
           label="Сумма"
           v-model="model.amount"
           :error-messages="errors.amount"
           :error-count="1"
           :error="!!errors.amount"
-      />
+      />-->
       <v-menu
           ref="menu2"
           v-model="menu2"
@@ -181,6 +182,12 @@ export default {
     searchCustomer(oldV, newV) {
       if (!newV) return;
       this.getCustomers()
+    },
+    "model.customer_id": function (customerId) {
+      const customer = this.customers.find(c => c.id === customerId);
+      if (customer) {
+        this.model.phone = customer.phone;
+      }
     }
   },
   created() {

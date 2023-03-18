@@ -26,7 +26,7 @@
               class="elevation-1 mt-3"
           >
             <template v-slot:[`item.part_id`]="{item}">
-              {{ item.part?`${item.part.material.name} (${item.part.manufacturer.name} ${item.part.prod_number})`:'-' }}
+              {{ item.part ? `${item.part.material.name}, ${item.part.color} (${item.part.manufacturer.name})` : '-' }}
             </template>
 
             <template v-slot:[`item.actions`]="{item}">
@@ -40,9 +40,9 @@
             </template>
           </v-data-table>
           <div class="text-h6 mt-4 mb-5">
-            Итого: {{totalAmount}} руб.
+            Итого: {{ totalAmount }} руб.
             <br/>
-            Вес: {{totalWeight}}
+            Вес: {{ totalWeight }}
           </div>
         </v-col>
       </v-row>
@@ -103,11 +103,13 @@ export default {
     customer() {
       return this.order?.customer;
     },
-    totalAmount(){
-      return this.items.reduce((acc,item)=>acc+=item.total_amount,0)
+    totalAmount() {
+      const amount = this.items.reduce((acc, item) => acc += item.total_amount, 0)
+      return Math.round(amount * 100) / 100;
     },
     totalWeight() {
-      return this.items.reduce((acc,item)=>acc+=item.total_weight,0);
+      const weight = this.items.reduce((acc, item) => acc += item.total_weight, 0);
+      return Math.round(weight * 100) / 100;
     }
   },
   methods: {

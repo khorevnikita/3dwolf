@@ -2,15 +2,15 @@
   <v-card>
     <v-card-title>Редактирование позиции</v-card-title>
     <v-card-text>
-      <v-text-field
+      <!--<v-text-field
           label="Номер"
           v-model="model.number"
           :error-messages="errors.number"
           :error-count="1"
           :error="!!errors.number"
-      />
+      />-->
       <v-autocomplete
-          label="Деталь"
+          label="Катушка"
           v-model="model.part_id"
           :items="parts"
           :loading="isLoadingParts"
@@ -43,14 +43,31 @@
           :error-count="1"
           :error="!!errors.weight"
       />
-      <v-text-field
-          type="number"
-          label="Длительность печати"
-          v-model="model.print_duration"
-          :error-messages="errors.print_duration"
-          :error-count="1"
-          :error="!!errors.print_duration"
-      />
+      <v-row>
+        <v-col cols="4">
+          <v-text-field
+              type="number"
+              label="Время, часы"
+              v-model="printDuration.h"
+          />
+        </v-col>
+        <v-col cols="4">
+          <v-text-field
+              type="number"
+              max="59"
+              label="Время, минуты"
+              v-model="printDuration.m"
+          />
+        </v-col>
+        <v-col cols="4">
+          <v-text-field
+              type="number"
+              max="59"
+              label="Время, секунды"
+              v-model="printDuration.s"
+          />
+        </v-col>
+      </v-row>
 
       <v-text-field
           type="number"
@@ -85,17 +102,33 @@ export default {
       menu2: false,
       parts: [],
       isLoadingParts: false,
-      searchPart: ''
+      searchPart: '',
+      printDuration: {
+        h: 0,
+        m: 0,
+        s: 0
+      }
     }
   },
   watch: {
     searchPart(oldV, newV) {
       if (!newV) return;
       this.getParts()
+    },
+    printDuration: {
+      handler() {
+        this.model.print_duration = this.printDuration.h * 3600 + this.printDuration.m * 60 + this.printDuration.s;
+      }, deep: true
     }
   },
   created() {
     this.getParts();
+
+    let totalSeconds = this.model.print_duration;
+    this.printDuration.h = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    this.printDuration.m = Math.floor(totalSeconds / 60);
+    this.printDuration.s = totalSeconds % 60;
   },
   methods: {
     getParts() {

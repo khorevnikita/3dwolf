@@ -22,7 +22,10 @@ class PartController extends Controller
         if ($request->has('search')) {
             // todo: localScope
             $search = $request->get('search');
-            $models = $models->where("inv_number", "like", "%$search%");
+            $models = $models->where(function ($q) use ($search) {
+                $q->where("inv_number", "like", "%$search%")
+                    ->orWhere("color", "like", "%$search%");
+            });
         }
         $totalCount = $models->count();
 
