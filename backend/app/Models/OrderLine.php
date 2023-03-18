@@ -16,9 +16,19 @@ class OrderLine extends Model
         static::creating(function (OrderLine $model) {
             $model->setProperties();
         });
+
+        static::created(function (OrderLine $model) {
+            $model->calcOrderAmount();
+        });
+
         static::updating(function (OrderLine $model) {
             $model->setProperties();
         });
+
+        static::updated(function (OrderLine $model) {
+            $model->calcOrderAmount();
+        });
+
     }
 
     public function order()
@@ -35,5 +45,13 @@ class OrderLine extends Model
     {
         $this->total_amount = $this->price * $this->count;
         $this->total_weight = $this->weight * $this->count;
+    }
+
+    public function calcOrderAmount()
+    {
+        $order = $this->order()->first();
+        $amount = OrderLine::query()->where("order_id", $order->id)->sum('total_amount');
+        $order->amount = $amount;
+        $order->save();
     }
 }
