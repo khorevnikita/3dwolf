@@ -55,8 +55,8 @@
                 <tbody>
                 <tr v-for="(monthData,index) in data.months" :key="index">
                   <td>{{ months[monthData.month - 1] }}</td>
-                  <td>{{ formatPrice(monthData.income) }}</td>
-                  <td>{{ formatPrice(monthData.expense) }}</td>
+                  <td class="income">{{ formatPrice(monthData.income) }}</td>
+                  <td class="expense">{{ formatPrice(monthData.expense) }}</td>
                 </tr>
                 </tbody>
               </template>
@@ -85,8 +85,10 @@
                 <tbody>
                 <tr v-for="account in data.accounts" :key="account.id">
                   <td>{{ account.name }}</td>
-                  <td>{{ formatPrice(account.balance) }}</td>
-                  <td>{{ formatPrice(account.expected_income) }}</td>
+                  <td v-bind:class="{'income':account.balance>0,'expense':account.balance<0}">
+                    {{ formatPrice(account.balance) }}
+                  </td>
+                  <td class="expecting">{{ formatPrice(account.expected_income) }}</td>
                 </tr>
                 </tbody>
               </template>
@@ -111,7 +113,7 @@
                 <tbody>
                 <tr v-for="user in data.users" :key="user.id">
                   <td>{{ user.name }} {{ user.surname }}</td>
-                  <td>{{ formatPrice(user.balance) }}</td>
+                  <td v-bind:class="{'income':user.balance>0,'expense':user.balance<0}">{{ formatPrice(user.balance) }}</td>
                 </tr>
                 </tbody>
               </template>
@@ -130,7 +132,9 @@
         class="elevation-1 mt-3"
     >
       <template v-slot:[`item.type`]="{item}">
-        {{ types[item.type] }}
+        <v-icon :color="item.type==='income'?'success':'error'">
+          {{item.type==='income'?'mdi-chevron-up':'mdi-chevron-down'}}
+        </v-icon>
       </template>
       <template v-slot:[`item.user_id`]="{item}">
         {{ item.user ? `${item.user.name} ${item.user.surname}` : '-' }}
@@ -201,6 +205,7 @@ export default {
       deleteSwalTitle: `Безвозвратно удалить платёж`,
       headers: [
         {text: "ID", value: "id", sortable: false},
+        {text: "Тип", value: "type", sortable: false},
         {text: "Дата", value: "paid_at", sortable: false},
         {text: "Пользователь", value: "user_id", sortable: false},
         {text: "Заказ", value: "order_id", sortable: false},
@@ -230,5 +235,15 @@ export default {
 </script>
 
 <style scoped>
+.income {
+  background: #dfffae;
+}
 
+.expense {
+  background: #ffaed0;
+}
+
+.expecting {
+  background: #ebebeb;
+}
 </style>

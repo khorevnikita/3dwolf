@@ -36,14 +36,23 @@ class MoneyController extends Controller
         $monthData = [];
 
         while ($pointer <= $endDate) {
+            $endPeriod = Carbon::parse($pointer)->endOfMonth()->format("Y-m-d H:i:s");
+            $startPeriod = Carbon::parse($pointer)->startOfMonth()->format("Y-m-d H:i:s");
+
+            $in = clone $incomePayments;
+            $inPeriod = $in->where("paid_at", ">=", $startPeriod)
+                ->where("paid_at", "<=", $endPeriod);
+            $exp = clone $expensePayments;
+            $expPeriod = $exp->where("paid_at", ">=", $startPeriod)
+                ->where("paid_at", "<=", $endPeriod);
             $monthData[] = [
                 'month' => $pointer->month,
-                'income' => $incomePayments->where("paid_at", ">=", Carbon::parse($pointer)->startOfMonth())
-                    ->where("paid_at", ">=", Carbon::parse($pointer)->endOfMonth())
-                    ->sum("amount"),
-                'expense' => $expensePayments->where("paid_at", ">=", Carbon::parse($pointer)->startOfMonth())
-                    ->where("paid_at", ">=", Carbon::parse($pointer)->endOfMonth())
-                    ->sum("amount")
+                'start' => $startPeriod,
+                'end' => $endPeriod,
+                'in' => $inPeriod,
+                'exp' => $expPeriod,
+                'income' => $inPeriod->sum("amount"),
+                'expense' => $expPeriod->sum("amount")
             ];
             $pointer->addMonth();
         }

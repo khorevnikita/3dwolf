@@ -1,4 +1,4 @@
-export const formatPrice = (price: number) => {
+export const formatPrice = (price: number = 0) => {
     return price.toLocaleString().replace(/,/g, ' ') + ' ₽';
 }
 
