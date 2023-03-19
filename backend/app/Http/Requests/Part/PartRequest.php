@@ -30,7 +30,7 @@ class PartRequest extends FormRequest
             'color'=>'sometimes',
             'weight'=>'numeric',
             'price'=>'numeric',
-            'status'=>'required|in:new,opened,finished'
+            'status'=>'required|in:new,opened,ended'
         ];
     }
 }

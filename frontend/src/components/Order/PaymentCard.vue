@@ -36,7 +36,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer/>
-      <v-btn text @click="editDialog=true">Добавить платёж</v-btn>
+      <v-btn text @click="create()">Добавить платёж</v-btn>
     </v-card-actions>
 
     <v-dialog v-model="editDialog" max-width="500">
@@ -46,6 +46,8 @@
           @close="editDialog=false"
           @created="onCreated"
           v-model="editItem"
+          :income-only="true"
+          :auto-description="true"
       />
     </v-dialog>
   </v-card>

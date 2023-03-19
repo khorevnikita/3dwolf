@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Customer;
 
+use App\Models\Customer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -33,7 +34,17 @@ class CustomerRequest extends FormRequest
             'type' => 'required|in:individual,entity',
             'entity_type' => 'required_if:type,entity|in:self_employed,company|nullable',
             'title' => 'required_if:type,entity',
-            'inn' => ['required_if:type,entity',Rule::unique('customers', 'inn')->ignore($modelId)],
+            'inn' => ['required_if:type,entity', function ($attribute, $value, $fail) use ($modelId) {
+                if ($value) {
+                    $customer = Customer::query()
+                        ->where("inn", $value)
+                        ->where("id", "!=", $modelId)
+                        ->exists();
+                    if ($customer) {
+                        $fail("The inn is already in use");
+                    }
+                }
+            }],
             'kpp' => 'required_if:entity_type,company',
             'ogrn' => 'required_if:type,entity',
             'okpo' => 'required_if:type,entity',

@@ -3,6 +3,7 @@
     <v-card-title>Редактирование платежа</v-card-title>
     <v-card-text>
       <v-select
+          v-if="!incomeOnly"
           label="Тип"
           v-model="model.type"
           :items="[
@@ -61,8 +62,8 @@
           :error-count="1"
           :error="!!errors.order_id"
       >
-        <template #item="{item}">Заказ №{{item.id}}</template>
-        <template #selection="{item}">Заказ №{{item.id}}</template>
+        <template #item="{item}">Заказ №{{ item.id }}</template>
+        <template #selection="{item}">Заказ №{{ item.id }}</template>
       </v-autocomplete>
 
       <v-text-field
@@ -118,6 +119,7 @@
       </v-menu>
 
       <v-textarea
+          v-if="!autoDescription"
           label="Комментарий к платежу"
           v-model="model.description"
           :error-messages="errors.description"
@@ -138,11 +140,12 @@ import axios from "@/plugins/axios";
 
 export default {
   name: "PaymentEditor",
-  props: ['value', 'order_id', 'showUser'],
+  props: ['value', 'order_id', 'showUser', 'incomeOnly', 'autoDescription'],
   data() {
     return {
       model: this.value ? this.value : {
-        order_id: this.order_id
+        order_id: this.order_id,
+        type: 'income'
       },
       modelName: 'payment',
       errors: {},
@@ -156,13 +159,17 @@ export default {
     }
   },
   created() {
+    this.model.order_id = this.order_id;
+    if (this.autoDescription) this.model.description = `Оплата по наряд-заказу №${this.model.order_id}`;
+    if (this.incomeOnly) this.model.type = 'income';
+
     this.getUsers();
     this.getAccounts();
   },
   watch: {
     searchOrder() {
       this.getOrders();
-    }
+    },
   },
   methods: {
     getUsers() {
@@ -174,9 +181,9 @@ export default {
     getOrders() {
       if (this.isLoadingOrders) return;
       this.isLoadingOrders = true;
-      axios.get(`orders?search=${this.searchOrder?this.searchOrder:''}`).then(body => {
+      axios.get(`orders?search=${this.searchOrder ? this.searchOrder : ''}`).then(body => {
         this.orders = body.orders;
-        this.isLoadingOrders=false;
+        this.isLoadingOrders = false;
       })
     },
     save() {

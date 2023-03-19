@@ -35,29 +35,27 @@
           :loading="loading"
           class="elevation-1 mt-3"
       >
-        <template v-slot:[`item.bought_at`]="{item}">
-          {{ moment(item.bought_at).format("DD.MM.YYYY") }}
-        </template>
-        <template v-slot:[`item.manufacturer_id`]="{item}">
-          {{ item.manufacturer ? item.manufacturer.name : '-' }}
-        </template>
-        <template v-slot:[`item.material_id`]="{item}">
-          {{ item.material ? item.material.name : '-' }}
-        </template>
-        <template v-slot:[`item.price`]="{item}">
-          {{ formatPrice(item.price) }}
-        </template>
-        <template v-slot:[`item.status`]="{item}">
-          {{ statuses[item.status] }}
-        </template>
-
-        <template v-slot:[`item.actions`]="{item}">
-          <v-btn color="warning" icon @click="edit(item)">
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-          <v-btn color="error" icon @click="destroy(item)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
+        <template #item="{item}">
+          <tr v-bind:class="{'is-new':item.status==='new','is-opened':item.status==='opened','is-finished':item.status==='ended'}">
+            <td>{{ item.id }}</td>
+            <td>{{ moment(item.bought_at).format("DD.MM.YYYY") }}</td>
+            <td>{{ item.inv_number }}</td>
+            <td>{{ item.prod_number }}</td>
+            <td>{{ item.manufacturer ? item.manufacturer.name : '-' }}</td>
+            <td>{{ item.material ? item.material.name : '-' }}</td>
+            <td>{{ item.color }}</td>
+            <td>{{ item.weight }}</td>
+            <td>{{ formatPrice(item.price) }}</td>
+            <td>{{ statuses[item.status] }}</td>
+            <td>
+              <v-btn color="warning" icon @click="edit(item)">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn color="error" icon @click="destroy(item)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
         </template>
       </v-data-table>
     </v-col>
@@ -101,16 +99,27 @@ export default {
       resourceKey: "parts",
       resourceApiRoute: `parts`,
       deleteSwalTitle: `Безвозвратно удалить позицию?`,
-      statuses:{
-        new:"Новая",
-        opened:"Вскрытая",
-        ended:"Закончилась"
+      statuses: {
+        new: "Новая",
+        opened: "Вскрытая",
+        ended: "Закончилась"
       }
     }
   },
 }
 </script>
 
-<style scoped>
+<style>
+.is-new {
+  background: #dfffae;
+}
 
+.is-opened {
+  background: #bbe8ff;
+}
+
+.is-finished {
+  color: gray;
+  text-decoration: line-through;
+}
 </style>

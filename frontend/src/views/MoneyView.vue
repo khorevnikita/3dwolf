@@ -11,7 +11,7 @@
         />
       </v-col>
       <v-col cols="12" md="6" class="text-right">
-        <v-btn color="primary" @click="addPaymentDialog=true">Добавить платёж</v-btn>
+        <v-btn color="primary" @click="create()">Добавить платёж</v-btn>
       </v-col>
       <v-col cols="12" md="6">
         <v-card>
@@ -120,12 +120,47 @@
         </v-card>
       </v-col>
     </v-row>
+    <h5 class="text-h5 mt-4 mb-3">Все платежи</h5>
+    <v-data-table
+        :headers="headers"
+        :items="items"
+        :options.sync="options"
+        :server-items-length="totalItems"
+        :loading="loading"
+        class="elevation-1 mt-3"
+    >
+      <template v-slot:[`item.type`]="{item}">
+        {{ types[item.type] }}
+      </template>
+      <template v-slot:[`item.user_id`]="{item}">
+        {{ item.user ? `${item.user.name} ${item.user.surname}` : '-' }}
+      </template>
+      <template v-slot:[`item.order_id`]="{item}">
+        {{ item.order_id ? `Заказ №${item.order_id}` : '-' }}
+      </template>
+      <template v-slot:[`item.account_id`]="{item}">
+        {{ item.account ? item.account.name : '-' }}
+      </template>
+      <template v-slot:[`item.paid_at`]="{item}">
+        {{ moment(item.paid_at).format("DD.MM.YYYY") }}
+      </template>
+      <template v-slot:[`item.actions`]="{item}">
+        <v-btn color="warning" icon @click="edit(item)">
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
 
-    <v-dialog v-model="addPaymentDialog" max-width="500">
+        <v-btn color="error" icon @click="destroy(item)">
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
+
+    <v-dialog v-model="editDialog" max-width="500">
       <PaymentEditor
-          @close="addPaymentDialog=false"
+          @close="editDialog=false"
           @created="getData()"
           :show-user="true"
+          v-model="editItem"
       />
     </v-dialog>
   </div>
@@ -135,10 +170,12 @@
 import axios from "@/plugins/axios";
 import PaymentEditor from "@/components/Payment/PaymentEditor";
 import {formatPrice} from "@/plugins/formats";
+import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 
 export default {
   name: "MoneyView",
   components: {PaymentEditor},
+  mixins: [ResourceComponentHelper],
   data() {
     return {
       year: 2023,
@@ -157,8 +194,21 @@ export default {
         'Декабрь',
       ],
       data: {},
-      addPaymentDialog:false,
-      formatPrice:formatPrice,
+      addPaymentDialog: false,
+      formatPrice: formatPrice,
+      resourceKey: "payments",
+      resourceApiRoute: `payments`,
+      deleteSwalTitle: `Безвозвратно удалить платёж`,
+      headers: [
+        {text: "ID", value: "id", sortable: false},
+        {text: "Дата", value: "paid_at", sortable: false},
+        {text: "Пользователь", value: "user_id", sortable: false},
+        {text: "Заказ", value: "order_id", sortable: false},
+        {text: "Аккаунт", value: "account_id", sortable: false},
+        {text: "Сумма", value: "amount", sortable: false},
+        {text: "Описание", value: "description", sortable: false},
+        {text: "", value: "actions", sortable: false},
+      ],
     }
   },
   created() {
