@@ -113,7 +113,10 @@
                 <tbody>
                 <tr v-for="user in data.users" :key="user.id">
                   <td>{{ user.name }} {{ user.surname }}</td>
-                  <td v-bind:class="{'income':user.balance>0,'expense':user.balance<0}">{{ formatPrice(user.balance) }}</td>
+                  <td v-bind:class="{'income':user.balance>0,'expense':user.balance<0}">{{
+                      formatPrice(user.balance)
+                    }}
+                  </td>
                 </tr>
                 </tbody>
               </template>
@@ -133,7 +136,7 @@
     >
       <template v-slot:[`item.type`]="{item}">
         <v-icon :color="item.type==='income'?'success':'error'">
-          {{item.type==='income'?'mdi-chevron-up':'mdi-chevron-down'}}
+          {{ item.type === 'income' ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
         </v-icon>
       </template>
       <template v-slot:[`item.user_id`]="{item}">
@@ -146,7 +149,7 @@
         {{ item.account ? item.account.name : '-' }}
       </template>
       <template v-slot:[`item.paid_at`]="{item}">
-        {{ moment(item.paid_at).format("DD.MM.YYYY") }}
+        {{ item.paid_at ? moment(item.paid_at).format("DD.MM.YYYY") : '-' }}
       </template>
       <template v-slot:[`item.actions`]="{item}">
         <v-btn color="warning" icon @click="edit(item)">

@@ -25,7 +25,7 @@ class Payment extends Model
 
             if ($model->account_id) {
                 $account = Account::query()->find($model->account_id);
-                $account?->updateBalance(0, $amountChange);
+                $account?->updateBalance(0, false, $amountChange, is_null($model->paid_at));
             }
 
             if ($model->user_id) {
@@ -37,11 +37,12 @@ class Payment extends Model
         static::updated(function (Payment $model) {
             $dir = $model->type === Payment::TYPES["INCOME"] ? 1 : -1;
             $originalAmount = $dir * $model->getOriginal('amount');
+            $originalPaidDate = $model->getOriginal('paid_at');
             $amountChange = $dir * $model->amount;
 
             if ($model->account_id) {
                 $account = Account::query()->find($model->account_id);
-                $account?->updateBalance($originalAmount, $amountChange);
+                $account?->updateBalance($originalAmount, is_null($originalPaidDate), $amountChange, is_null($model->paid_at));
             }
 
             if ($model->user_id) {
@@ -56,7 +57,7 @@ class Payment extends Model
 
             if ($model->account_id) {
                 $account = Account::query()->find($model->account_id);
-                $account?->updateBalance($amountChange, 0);
+                $account?->updateBalance($amountChange, is_null($model->paid_at), 0, false);
             }
 
             if ($model->user_id) {

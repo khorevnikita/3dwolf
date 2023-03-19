@@ -23,7 +23,7 @@ class PaymentController extends Controller
         }
         $totalCount = $models->count();
 
-        $models = $models->orderBy('paid_at', "desc");
+        $models = $models->orderByRaw("CASE WHEN paid_at is null THEN 1 ELSE 0 END DESC")->orderBy('paid_at', "desc");
         if ($take >= 0) {
             $models = $models->skip($skip)->take($take);
         }

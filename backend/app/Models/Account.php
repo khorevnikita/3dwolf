@@ -16,9 +16,21 @@ class Account extends Model
         return $this->hasMany(Payment::class);
     }
 
-    public function updateBalance(float $expense = 0, float $income = 0)
+    public function updateBalance(float $expense = 0, $expenseExpected = false, $income = 0, $incomeExpected = false)
     {
-        $this->balance = $this->balance - $expense + $income;
+        var_dump($expense, $expenseExpected, $income, $incomeExpected);
+        if ($expenseExpected) {
+            $this->expected_income = $this->expected_income - $expense;
+        } else {
+            $this->balance = $this->balance - $expense;
+        }
+
+        if ($incomeExpected) {
+            $this->expected_income = $this->expected_income + $income;
+        } else {
+            $this->balance = $this->balance + $income;
+        }
+
         $this->save();
     }
 }

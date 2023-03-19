@@ -26,8 +26,8 @@ class PaymentRequest extends FormRequest
             "type" => "required|in:" . implode(',', Payment::TYPES),
             "user_id" => "sometimes|integer|exists:users,id|nullable",
             "order_id" => "sometimes|integer|exists:orders,id|nullable",
-            "account_id" => "required|integer|exists:orders,id",
-            "paid_at" => "required|date",
+            "account_id" => "required|integer|exists:accounts,id",
+            "paid_at" => "sometimes|date|nullable",
             "amount" => "required|numeric",
             "description" => "sometimes|max:5000",
 
