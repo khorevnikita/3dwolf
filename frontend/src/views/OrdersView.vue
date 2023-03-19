@@ -111,7 +111,7 @@ export default {
         new: "Новый",
         printing: "В печати",
         shipping: "К откгрузке",
-        complete: "Отгружено",
+        completed: "Отгружено",
         not_paid: "Не оплачено",
         part_paid: "Частично оплачено",
         full_paid: "Полносью оплачено",

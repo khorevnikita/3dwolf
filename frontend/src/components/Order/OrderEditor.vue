@@ -126,7 +126,7 @@
               {value:'new',text:'Новый'},
               {value:'printing',text:'В печати'},
               {value:'shipping',text:'К отгрузке'},
-              {value:'complete',text:'Отгружен'},
+              {value:'completed',text:'Отгружен'},
           ]"
           item-value="value"
           item-text="text"
