@@ -50,7 +50,9 @@
         <template v-slot:[`item.payment_status`]="{item}">
           {{ statusMap[item.payment_status] }}
         </template>
-
+        <template v-slot:[`item.amount`]="{item}">
+          {{ formatPrice(item.amount) }}
+        </template>
         <template v-slot:[`item.actions`]="{item}">
           <v-btn color="primary" icon :to="`/orders/${item.id}`">
             <v-icon>mdi-eye</v-icon>

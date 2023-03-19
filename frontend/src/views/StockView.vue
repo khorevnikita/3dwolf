@@ -44,11 +44,14 @@
         <template v-slot:[`item.material_id`]="{item}">
           {{ item.material ? item.material.name : '-' }}
         </template>
+        <template v-slot:[`item.price`]="{item}">
+          {{ formatPrice(item.price) }}
+        </template>
+        <template v-slot:[`item.status`]="{item}">
+          {{ statuses[item.status] }}
+        </template>
 
         <template v-slot:[`item.actions`]="{item}">
-          <!--<v-btn color="primary" icon :href="`/estimates/${item.id}`">
-            <v-icon>mdi-eye</v-icon>
-          </v-btn>-->
           <v-btn color="warning" icon @click="edit(item)">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
@@ -98,6 +101,11 @@ export default {
       resourceKey: "parts",
       resourceApiRoute: `parts`,
       deleteSwalTitle: `Безвозвратно удалить позицию?`,
+      statuses:{
+        new:"Новая",
+        opened:"Вскрытая",
+        ended:"Закончилась"
+      }
     }
   },
 }

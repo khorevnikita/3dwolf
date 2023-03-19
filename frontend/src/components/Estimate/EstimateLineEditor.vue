@@ -41,13 +41,41 @@
           :error="!!errors.count"
       />
 
+      <!--
       <v-text-field
           label="Продолжительность печати"
           v-model="model.print_duration"
           :error-messages="errors.print_duration"
           :error-count="1"
           :error="!!errors.print_duration"
-      />
+      />-->
+
+      <v-row>
+        <v-col cols="4">
+          <v-text-field
+              type="number"
+              label="Время, часы"
+              v-model="printDuration.h"
+          />
+        </v-col>
+        <v-col cols="4">
+          <v-text-field
+              type="number"
+              max="59"
+              label="Время, минуты"
+              v-model="printDuration.m"
+          />
+        </v-col>
+        <v-col cols="4">
+          <v-text-field
+              type="number"
+              max="59"
+              label="Время, секунды"
+              v-model="printDuration.s"
+          />
+        </v-col>
+      </v-row>
+
     </v-card-text>
     <v-card-actions>
       <v-btn text @click="$emit('close')">Закрыть</v-btn>
@@ -69,7 +97,26 @@ export default {
       modelName: 'estimateLine',
       errors: {},
       menu: false,
+      printDuration: {
+        h: 0,
+        m: 0,
+        s: 0
+      }
     }
+  },
+  watch:{
+    printDuration: {
+      handler() {
+        this.model.print_duration = this.printDuration.h * 3600 + this.printDuration.m * 60 + this.printDuration.s;
+      }, deep: true
+    }
+  },
+  created() {
+    let totalSeconds = this.model.print_duration;
+    this.printDuration.h = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    this.printDuration.m = Math.floor(totalSeconds / 60);
+    this.printDuration.s = totalSeconds % 60;
   },
   methods: {
     save() {

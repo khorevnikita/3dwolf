@@ -6,7 +6,10 @@ import store from './store'
 import vuetify from './plugins/vuetify';
 // @ts-ignore
 import QueryHelper from "./mixins/QueryHelper.js";
+import VueMask from 'v-mask';
 
+// @ts-ignore
+Vue.use(VueMask)
 Vue.config.productionTip = false
 Vue.mixin(QueryHelper);
 Vue.mixin({

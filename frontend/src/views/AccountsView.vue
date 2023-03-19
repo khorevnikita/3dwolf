@@ -35,6 +35,14 @@
           :loading="loading"
           class="elevation-1 mt-3"
       >
+        <template v-slot:[`item.balance`]="{item}">
+          {{ formatPrice(item.balance) }}
+        </template>
+
+        <template v-slot:[`item.expected_income`]="{item}">
+          {{ formatPrice(item.expected_income) }}
+        </template>
+
         <template v-slot:[`item.actions`]="{item}">
           <v-btn color="warning" icon @click="edit(item)">
             <v-icon>mdi-pencil</v-icon>
@@ -42,7 +50,6 @@
           <v-btn color="error" icon @click="destroy(item)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
-
         </template>
       </v-data-table>
     </v-col>

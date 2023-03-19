@@ -35,6 +35,10 @@
           :loading="loading"
           class="elevation-1 mt-3"
       >
+        <template v-slot:[`item.balance`]="{item}">
+          {{ formatPrice(item.balance) }}
+        </template>
+
         <template v-slot:[`item.actions`]="{item}">
           <v-btn color="warning" icon @click="edit(item)">
             <v-icon>mdi-pencil</v-icon>
@@ -62,6 +66,7 @@
 <script>
 import UserEditor from "@/components/User/UserEditor";
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
+
 export default {
   name: "UsersView",
   components: {UserEditor},

@@ -1,6 +1,7 @@
 import moment from "moment";
 import Swal from "sweetalert2-khonik";
 import axios from "@/plugins/axios";
+import {formatPrice,formatDuration} from "@/plugins/formats";
 
 export default {
     data() {
@@ -15,6 +16,8 @@ export default {
             moment: moment,
             editItem: undefined,
             editDialog: false,
+            formatPrice: formatPrice,
+            formatDuration: formatDuration,
 
             resourceKey: "",
             resourceApiRoute: "",
@@ -71,6 +74,9 @@ export default {
             });
         },
         onCreated(resource) {
+            if (this.items.length === 0) {
+                this.$set(this, 'items', []);
+            }
             this.items.unshift(resource);
         },
         onUpdated(resource) {

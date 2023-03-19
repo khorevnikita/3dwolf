@@ -23,11 +23,11 @@
             <td>{{ line.key }}</td>
             <td>{{ line.name }}</td>
             <td>{{ line.count }}</td>
-            <td>{{ line.price }}</td>
-            <td>{{ line.amount }}</td>
+            <td>{{ formatPrice(line.price) }}</td>
+            <td>{{ formatPrice(line.amount) }}</td>
             <td>{{ line.weight }}</td>
             <td>{{ line.total_weight }}</td>
-            <td>{{ line.print_duration }}</td>
+            <td>{{ formatDuration(line.print_duration) }}</td>
             <td>
               <v-btn color="warning" icon @click="edit(line)">
                 <v-icon>mdi-pencil</v-icon>
@@ -48,9 +48,9 @@
       </v-simple-table>
 
       <div class="mt-5">
-        <div class="subtitle-1">Итого: <b class="text-h6">{{ totalAmount }} руб.</b></div>
+        <div class="subtitle-1">Итого: <b class="text-h6">{{ formatPrice(totalAmount) }}</b></div>
         <div class="subtitle-1">Вес итого: <b class="text-h6">{{ totalWeight }} гр.</b></div>
-        <div class="subtitle-1">Время итого: <b class="text-h6">{{ totalTime }} сек.</b></div>
+        <div class="subtitle-1">Время итого: <b class="text-h6">{{ formatDuration(totalTime) }}</b></div>
       </div>
 
       <v-dialog v-model="editDialog" max-width="500">

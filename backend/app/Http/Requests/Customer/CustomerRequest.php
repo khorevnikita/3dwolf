@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CustomerRequest extends FormRequest
 {
@@ -26,13 +27,13 @@ class CustomerRequest extends FormRequest
             'name' => 'required',
             'surname' => 'required',
             'father_name' => 'required',
-            'phone' => 'required',
+            'phone' => ['required', Rule::unique('customers', 'phone')->ignore($modelId)],
             'email' => 'required|email',
-            'telegram' => 'required',
+            #'telegram' => 'required',
             'type' => 'required|in:individual,entity',
-            'entity_type' => 'required_if:type,entity|in:self_employed,company',
+            'entity_type' => 'required_if:type,entity|in:self_employed,company|nullable',
             'title' => 'required_if:type,entity',
-            'inn' => 'required_if:type,entity',
+            'inn' => ['required_if:type,entity',Rule::unique('customers', 'inn')->ignore($modelId)],
             'kpp' => 'required_if:entity_type,company',
             'ogrn' => 'required_if:type,entity',
             'okpo' => 'required_if:type,entity',

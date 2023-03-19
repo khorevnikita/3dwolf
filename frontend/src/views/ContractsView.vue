@@ -44,6 +44,9 @@
         <template v-slot:[`item.customer_id`]="{item}">
           {{ item.customer ? item.customer.title : '-' }}
         </template>
+        <template v-slot:[`item.amount`]="{item}">
+          {{ formatPrice(item.amount) }}
+        </template>
         <template v-slot:[`item.actions`]="{item}">
           <v-btn color="warning" icon @click="edit(item)">
             <v-icon>mdi-pencil</v-icon>

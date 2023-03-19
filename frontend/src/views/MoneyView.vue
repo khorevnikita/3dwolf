@@ -19,7 +19,7 @@
             Оборотка
           </v-card-subtitle>
           <v-card-title>
-            {{ data.income }}
+            {{ formatPrice(data.income) }}
           </v-card-title>
         </v-card>
       </v-col>
@@ -29,7 +29,7 @@
             Остаток
           </v-card-subtitle>
           <v-card-title>
-            {{ data.balance }}
+            {{ formatPrice(data.balance) }}
           </v-card-title>
         </v-card>
       </v-col>
@@ -55,8 +55,8 @@
                 <tbody>
                 <tr v-for="(monthData,index) in data.months" :key="index">
                   <td>{{ months[monthData.month - 1] }}</td>
-                  <td>{{ monthData.income }}</td>
-                  <td>{{ monthData.expense }}</td>
+                  <td>{{ formatPrice(monthData.income) }}</td>
+                  <td>{{ formatPrice(monthData.expense) }}</td>
                 </tr>
                 </tbody>
               </template>
@@ -85,8 +85,8 @@
                 <tbody>
                 <tr v-for="account in data.accounts" :key="account.id">
                   <td>{{ account.name }}</td>
-                  <td>{{ account.balance }}</td>
-                  <td>{{ account.expected_income }}</td>
+                  <td>{{ formatPrice(account.balance) }}</td>
+                  <td>{{ formatPrice(account.expected_income) }}</td>
                 </tr>
                 </tbody>
               </template>
@@ -111,7 +111,7 @@
                 <tbody>
                 <tr v-for="user in data.users" :key="user.id">
                   <td>{{ user.name }} {{ user.surname }}</td>
-                  <td>{{ user.balance }}</td>
+                  <td>{{ formatPrice(user.balance) }}</td>
                 </tr>
                 </tbody>
               </template>
@@ -125,6 +125,7 @@
       <PaymentEditor
           @close="addPaymentDialog=false"
           @created="getData()"
+          :show-user="true"
       />
     </v-dialog>
   </div>
@@ -133,6 +134,7 @@
 <script>
 import axios from "@/plugins/axios";
 import PaymentEditor from "@/components/Payment/PaymentEditor";
+import {formatPrice} from "@/plugins/formats";
 
 export default {
   name: "MoneyView",
@@ -156,6 +158,7 @@ export default {
       ],
       data: {},
       addPaymentDialog:false,
+      formatPrice:formatPrice,
     }
   },
   created() {

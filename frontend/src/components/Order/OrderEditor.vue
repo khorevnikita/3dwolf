@@ -64,6 +64,7 @@
           :error-messages="errors.phone"
           :error-count="1"
           :error="!!errors.phone"
+          v-mask="'+7 (###) ###-##-##'"
       />
       <!--<v-text-field
           label="Сумма"

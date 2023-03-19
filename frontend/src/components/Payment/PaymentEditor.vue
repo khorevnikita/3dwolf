@@ -17,6 +17,7 @@
 
       />
       <v-select
+          v-if="showUser"
           label="Пользователь"
           v-model="model.user_id"
           :items="users"
@@ -41,6 +42,28 @@
           :error-count="1"
           :error="!!errors.account_id"
       />
+
+      <v-switch
+          v-if="!order_id"
+          label="По наряд-заказу"
+          v-model="showOrder"
+          dense
+      />
+      <v-autocomplete
+          v-if="showOrder"
+          label="Наряд-заказ"
+          v-model="model.order_id"
+          :items="orders"
+          :loading="isLoadingOrders"
+          :search-input.sync="searchOrder"
+          item-value="id"
+          :error-messages="errors.order_id"
+          :error-count="1"
+          :error="!!errors.order_id"
+      >
+        <template #item="{item}">Заказ №{{item.id}}</template>
+        <template #selection="{item}">Заказ №{{item.id}}</template>
+      </v-autocomplete>
 
       <v-text-field
           label="Сумма"
@@ -115,27 +138,30 @@ import axios from "@/plugins/axios";
 
 export default {
   name: "PaymentEditor",
-  props: ['value', 'order_id'],
+  props: ['value', 'order_id', 'showUser'],
   data() {
     return {
-      model: this.value ? this.value : {},
+      model: this.value ? this.value : {
+        order_id: this.order_id
+      },
       modelName: 'payment',
       errors: {},
       users: [],
       accounts: [],
       menu: false,
+      showOrder: false,
+      searchOrder: "",
+      isLoadingOrders: false,
+      orders: []
     }
   },
   created() {
     this.getUsers();
     this.getAccounts();
   },
-  computed:{
-    requestData(){
-      return {
-        ...this.model,
-        ...this.order_id ? {order_id: this.order_id} : {}
-      };
+  watch: {
+    searchOrder() {
+      this.getOrders();
     }
   },
   methods: {
@@ -145,7 +171,14 @@ export default {
     getAccounts() {
       axios.get(`accounts`).then(body => this.accounts = body.accounts)
     },
-
+    getOrders() {
+      if (this.isLoadingOrders) return;
+      this.isLoadingOrders = true;
+      axios.get(`orders?search=${this.searchOrder?this.searchOrder:''}`).then(body => {
+        this.orders = body.orders;
+        this.isLoadingOrders=false;
+      })
+    },
     save() {
       this.errors = {};
       if (this.model.id) {
@@ -155,7 +188,7 @@ export default {
       }
     },
     store() {
-      axios.post(`${this.modelName}s`, this.requestData).then(body => {
+      axios.post(`${this.modelName}s`, this.model).then(body => {
         this.$emit("created", body[this.modelName]);
         this.$emit("close");
       }).catch(err => {
@@ -163,7 +196,7 @@ export default {
       })
     },
     update() {
-      axios.put(`${this.modelName}s/${this.model.id}`, this.requestData).then(body => {
+      axios.put(`${this.modelName}s/${this.model.id}`, this.model).then(body => {
         this.$emit("updated", body[this.modelName]);
         this.$emit("close");
       }).catch(err => {

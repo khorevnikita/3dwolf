@@ -37,6 +37,7 @@
               :error-messages="errors.phone"
               :error-count="1"
               :error="!!errors.phone"
+              v-mask="'+7 (###) ###-##-##'"
           />
         </v-col>
         <v-col cols="12" md="4">

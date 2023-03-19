@@ -29,7 +29,16 @@
               {{ items.indexOf(item) + 1 }}
             </template>
             <template v-slot:[`item.part_id`]="{item}">
-              {{ item.part ? `${item.part.material.name}, ${item.part.color} (${item.part.manufacturer.name})` : '-' }}
+              {{ item.part ? `${item.part.material.name}, ${item.part.color} (${item.part.prod_number})` : '-' }}
+            </template>
+            <template v-slot:[`item.price`]="{item}">
+              {{ formatPrice(item.price) }}
+            </template>
+            <template v-slot:[`item.total_amount`]="{item}">
+              {{ formatPrice(item.total_amount) }}
+            </template>
+            <template v-slot:[`item.print_duration`]="{item}">
+              {{ formatDuration(item.print_duration) }}
             </template>
 
             <template v-slot:[`item.actions`]="{item}">
