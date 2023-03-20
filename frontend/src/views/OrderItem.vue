@@ -4,10 +4,16 @@
     <div v-else>
       <div class="d-flex align-items-center justify-space-between">
         <div class="text-h6 mb-4">Заказ-наряд №{{ order.id }} от {{ moment(order.date).format("DD.MM.YYYY") }}</div>
-        <v-btn color="success" @click="exportFile()">
-          <v-icon>mdi-microsoft-excel</v-icon>&nbsp;
-          Экспорт
-        </v-btn>
+        <div>
+          <v-btn color="error" class="mr-2" @click="exportFile('pdf')">
+            <v-icon>mdi-file-pdf-box</v-icon>&nbsp;
+            Скачать
+          </v-btn>
+          <v-btn color="success" @click="exportFile('xlsx')">
+            <v-icon>mdi-microsoft-excel</v-icon>&nbsp;
+            Экспорт
+          </v-btn>
+        </div>
       </div>
       <v-row>
         <v-col cols="12" md="6" order-md="2">
@@ -137,8 +143,8 @@ export default {
         this.order = body.order;
       })
     },
-    exportFile() {
-      axios.get(`orders/${this.order_id}/export-auth`).then(body => {
+    exportFile(type) {
+      axios.get(`orders/${this.order_id}/export-auth?type=${type}`).then(body => {
         window.open(body.download_link, '_blank')
       })
     }

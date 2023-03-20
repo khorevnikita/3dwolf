@@ -6,6 +6,7 @@ use App\Exports\OrderExport;
 use App\Helpers\Paginator;
 use App\Http\Requests\Order\OrderRequest;
 use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -109,18 +110,41 @@ class OrderController extends Controller
         return $this->emptySuccessResponse();
     }
 
-    public function exportAuth(Order $order)
+    public function exportAuth(Order $order, Request $request)
     {
         auth('web')->login(auth('sanctum')->user());
         $hash = Hash::make("wolf-export-hash-$order->id");
-        return $this->resourceItemResponse('download_link', url("api/orders/$order->id/export?hash=$hash"));
+        $type = $request->get('type');
+        return $this->resourceItemResponse('download_link', url("api/orders/$order->id/export/$type?hash=$hash"));
     }
 
-    public function export(Order $order, Request $request)
+    public function exportXlsx(Order $order, Request $request)
     {
         if (!Hash::check("wolf-export-hash-$order->id", $request->get('hash'))) abort(403);
         $time = Carbon::now()->format("Y-m-d_H:i:s");
         $filename = "order_$order->id" . "_by_$time.xlsx";
         return Excel::download(new OrderExport($order), $filename);
+    }
+
+    public function exportPDF(Order $order, Request $request)
+    {
+        if (!Hash::check("wolf-export-hash-$order->id", $request->get('hash'))) abort(403);
+        $time = Carbon::now()->format("Y-m-d_H:i:s");
+        $filename = "order_$order->id" . "_by_$time.pdf";
+
+        $pdf = Pdf::loadView('exports.order', [
+            'order' => $order,
+            'customer' => $order->customer,
+        ])
+            ->setPaper('a4', 'portrait');
+        return $pdf->download($filename);
+    }
+
+    public function testExport(Order $order)
+    {
+        return view('exports.order', [
+            'order' => $order,
+            'customer' => $order->customer,
+        ]);
     }
 }

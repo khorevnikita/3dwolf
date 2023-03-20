@@ -59,5 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::prefix('orders')->group(function () {
     Route::get('{order}/export-auth', [OrderController::class, 'exportAuth'])->middleware('auth:sanctum');
-    Route::get('{order}/export', [OrderController::class, 'export']);
+    Route::get('{order}/export/pdf', [OrderController::class, 'exportPDF']);
+    Route::get('{order}/export/xlsx', [OrderController::class, 'exportXlsx']);
+    Route::get('{order}/export/test', [OrderController::class, 'testExport']);
 });
