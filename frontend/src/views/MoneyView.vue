@@ -113,9 +113,8 @@
                 <tbody>
                 <tr v-for="user in data.users" :key="user.id">
                   <td>{{ user.name }} {{ user.surname }}</td>
-                  <td v-bind:class="{'income':user.balance>0,'expense':user.balance<0}">{{
-                      formatPrice(user.balance)
-                    }}
+                  <td v-bind:class="{'income':user.balance>0,'expense':user.balance<0}">
+                    {{ formatPrice(user.balance) }}
                   </td>
                 </tr>
                 </tbody>

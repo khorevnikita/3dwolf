@@ -23,7 +23,9 @@ class PaymentController extends Controller
         }
         $totalCount = $models->count();
 
-        $models = $models->orderByRaw("CASE WHEN paid_at is null THEN 1 ELSE 0 END DESC")->orderBy('paid_at', "desc");
+        $models = $models->orderByRaw("CASE WHEN paid_at is null THEN 1 ELSE 0 END DESC")
+            ->orderBy('paid_at', "desc")
+            ->orderBy("id", "desc");
         if ($take >= 0) {
             $models = $models->skip($skip)->take($take);
         }
@@ -72,7 +74,7 @@ class PaymentController extends Controller
      * @param Payment $payment
      * @return JsonResponse
      */
-    public function update(PaymentRequest $request, Payment $payment):JsonResponse
+    public function update(PaymentRequest $request, Payment $payment): JsonResponse
     {
         $payment->fill($request->all());
         $payment->save();
@@ -84,7 +86,7 @@ class PaymentController extends Controller
      *
      * Remove the specified resource from storage.
      */
-    public function destroy(Payment $payment):JsonResponse
+    public function destroy(Payment $payment): JsonResponse
     {
         $payment->delete();
         return $this->emptySuccessResponse();

@@ -27,8 +27,9 @@ class MoneyController extends Controller
             ->get();
 
         $totalExpense = $expensePayments->sum("amount");
+        $totalAccountSum = Account::query()->sum('balance');
 
-        $balance = $totalIncome - $totalExpense;
+        $balance = $totalAccountSum - $totalExpense;
 
         $fromDate = Carbon::create($year);
         $endDate = Carbon::create($year)->endOfYear();
@@ -62,7 +63,7 @@ class MoneyController extends Controller
         $users = User::query()->get();
 
         return $this->resourceItemResponse('data', [
-            'income' => $totalIncome,
+            'income' => $totalAccountSum,
             'expense' => $totalExpense,
             'balance' => $balance,
             'months' => $monthData,
