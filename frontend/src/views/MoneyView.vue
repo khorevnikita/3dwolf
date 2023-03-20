@@ -138,9 +138,13 @@
           {{ item.type === 'income' ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
         </v-icon>
       </template>
+      <template v-slot:[`item.amount`]="{item}">
+        {{ formatPrice(item.amount) }}
+      </template>
       <template v-slot:[`item.user_id`]="{item}">
         {{ item.user ? `${item.user.name} ${item.user.surname}` : '-' }}
       </template>
+
       <template v-slot:[`item.order_id`]="{item}">
         {{ item.order_id ? `Заказ №${item.order_id}` : '-' }}
       </template>
@@ -151,11 +155,14 @@
         {{ item.paid_at ? moment(item.paid_at).format("DD.MM.YYYY") : '-' }}
       </template>
       <template v-slot:[`item.actions`]="{item}">
-        <v-btn color="warning" icon @click="edit(item)">
+        <v-btn color="warning" icon @click="edit(item);">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
 
-        <v-btn color="error" icon @click="destroy(item)">
+        <v-btn color="error" icon @click="destroy(item,()=>{
+          getData();
+          getItems();
+        })">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </template>
@@ -163,8 +170,13 @@
 
     <v-dialog v-model="editDialog" max-width="500">
       <PaymentEditor
+          v-if="editDialog"
           @close="editDialog=false"
-          @created="getData()"
+          @created="i=>{
+            onCreated(i);
+            getData();
+            getItems();
+          }"
           :show-user="true"
           v-model="editItem"
       />

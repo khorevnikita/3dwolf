@@ -1,7 +1,7 @@
 import moment from "moment";
 import Swal from "sweetalert2-khonik";
 import axios from "@/plugins/axios";
-import {formatPrice,formatDuration} from "@/plugins/formats";
+import {formatPrice, formatDuration} from "@/plugins/formats";
 
 export default {
     data() {
@@ -91,7 +91,7 @@ export default {
                 this.editDialog = true;
             })
         },
-        destroy(item) {
+        destroy(item, onDeleted = undefined) {
             Swal.fire({
                 title: this.deleteSwalTitle,
                 showDenyButton: true,
@@ -105,6 +105,7 @@ export default {
                 if (result.isDenied) {
                     axios.delete(`${this.resourceApiRoute}/${item.id}`).then(() => {
                         this.items.splice(this.items.indexOf(item), 1);
+                        if (onDeleted) onDeleted();
                     })
                 }
             })
