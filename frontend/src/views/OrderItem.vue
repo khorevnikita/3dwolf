@@ -2,7 +2,13 @@
   <div>
     <v-progress-circular indeterminate v-if="!order"/>
     <div v-else>
-      <div class="text-h6 mb-4">Заказ-наряд №{{ order.id }} от {{ moment(order.date).format("DD.MM.YYYY") }}</div>
+      <div class="d-flex align-items-center justify-space-between">
+        <div class="text-h6 mb-4">Заказ-наряд №{{ order.id }} от {{ moment(order.date).format("DD.MM.YYYY") }}</div>
+        <v-btn color="success" @click="exportFile()">
+          <v-icon>mdi-microsoft-excel</v-icon>&nbsp;
+          Экспорт
+        </v-btn>
+      </div>
       <v-row>
         <v-col cols="12" md="6" order-md="2">
           <CustomerCard :customer="order.customer" class="mb-4"/>
@@ -106,6 +112,7 @@ export default {
       resourceKey: "orderLines",
       resourceApiRoute: `orders/${this.$route.params.id}/order-lines`,
       deleteSwalTitle: `Безвозвратно удалить позицию?`,
+      endpoint: process.env.VUE_APP_API_ENDPOINT,
     }
   },
   created() {
@@ -128,6 +135,11 @@ export default {
     getOrder() {
       axios.get(`orders/${this.order_id}`).then(body => {
         this.order = body.order;
+      })
+    },
+    exportFile() {
+      axios.get(`orders/${this.order_id}/export-auth`).then(body => {
+        window.open(body.download_link, '_blank')
       })
     }
   }

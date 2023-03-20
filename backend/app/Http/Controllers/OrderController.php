@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrderExport;
 use App\Helpers\Paginator;
 use App\Http\Requests\Order\OrderRequest;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends Controller
 {
@@ -102,5 +107,20 @@ class OrderController extends Controller
     {
         $order->delete();
         return $this->emptySuccessResponse();
+    }
+
+    public function exportAuth(Order $order)
+    {
+        auth('web')->login(auth('sanctum')->user());
+        $hash = Hash::make("wolf-export-hash-$order->id");
+        return $this->resourceItemResponse('download_link', url("api/orders/$order->id/export?hash=$hash"));
+    }
+
+    public function export(Order $order, Request $request)
+    {
+        if (!Hash::check("wolf-export-hash-$order->id", $request->get('hash'))) abort(403);
+        $time = Carbon::now()->format("Y-m-d_H:i:s");
+        $filename = "order_$order->id" . "_by_$time.xlsx";
+        return Excel::download(new OrderExport($order), $filename);
     }
 }

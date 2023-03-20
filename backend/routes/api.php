@@ -56,3 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('statistics', [MoneyController::class, 'getTotalStatistics']);
     });
 });
+
+Route::prefix('orders')->group(function () {
+    Route::get('{order}/export-auth', [OrderController::class, 'exportAuth'])->middleware('auth:sanctum');
+    Route::get('{order}/export', [OrderController::class, 'export']);
+});
