@@ -17,7 +17,7 @@
           <v-list-item-content>
             <v-list-item-title>{{ payment.amount }}</v-list-item-title>
             <v-list-item-subtitle>
-              от {{ moment(payment.paid_at).format("DD.MM.YYYY") }} на
+              от {{ payment.paid_at ? moment(payment.paid_at).format("DD.MM.YYYY") : '-' }} на
               {{ payment.account ? payment.account.name : '-' }}
             </v-list-item-subtitle>
             <v-list-item-subtitle>{{ payment.description }}</v-list-item-subtitle>
@@ -29,7 +29,6 @@
             <v-btn icon color="error" @click="destroy(payment)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
-
           </v-list-item-action>
         </v-list-item>
       </v-list>

@@ -18,7 +18,6 @@ class Account extends Model
 
     public function updateBalance(float $expense = 0, $expenseExpected = false, $income = 0, $incomeExpected = false)
     {
-        var_dump($expense, $expenseExpected, $income, $incomeExpected);
         if ($expenseExpected) {
             $this->expected_income = $this->expected_income - $expense;
         } else {
