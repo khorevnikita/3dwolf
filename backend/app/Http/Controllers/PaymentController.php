@@ -50,6 +50,7 @@ class PaymentController extends Controller
         $payment = new Payment($request->all());
         $payment->save();
 
+        $payment->load('account');
         return $this->resourceItemResponse('payment', $payment);
     }
 
@@ -79,6 +80,7 @@ class PaymentController extends Controller
         $payment->fill($request->all());
         $payment->save();
 
+        $payment->load('account');
         return $this->resourceItemResponse('payment', $payment);
     }
 

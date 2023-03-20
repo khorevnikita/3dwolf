@@ -34,6 +34,10 @@
       </v-list>
     </v-card-text>
     <v-card-actions>
+      <v-pagination
+          v-model="page"
+          :length="pagesCount"
+      />
       <v-spacer/>
       <v-btn text @click="create()">Добавить платёж</v-btn>
     </v-card-actions>
@@ -67,9 +71,15 @@ export default {
       resourceApiRoute: `payments`,
       resourceApiParams: `order_id=${this.orderId}`,
       deleteSwalTitle: `Безвозвратно удалить платёж?`,
+      page: 1,
+    }
+  }, watch: {
+    page() {
+      this.query.page = this.page;
+      this.getItems();
     }
   },
-  methods: {}
+
 }
 </script>
 
