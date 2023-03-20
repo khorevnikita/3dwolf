@@ -87,6 +87,7 @@ export default {
         {text: "Тип ЮЛ", value: "entity_type", sortable: false},
         {text: "Название", value: "title", sortable: false},
         {text: "ИНН", value: "inn", sortable: false},
+        {text: "Баланс", value: "balance", sortable: false},
         {text: "", value: "actions", sortable: false},
       ],
       resourceKey: "customers",

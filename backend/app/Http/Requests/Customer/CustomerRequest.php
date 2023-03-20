@@ -56,6 +56,7 @@ class CustomerRequest extends FormRequest
             'bik' => 'required_if:type,entity',
             'bank' => 'required_if:type,entity',
             'source' => 'required|in:site,avito',
+            'balance' => 'sometimes|numeric'
         ];
     }
 }

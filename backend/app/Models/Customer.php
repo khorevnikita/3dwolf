@@ -9,7 +9,7 @@ class Customer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'surname', 'father_name', 'phone', 'email', 'telegram', 'type', 'entity_type', 'title', 'inn', 'kpp', 'ogrn', 'okpo', 'okved', 'address', 'ceo', 'rs', 'ks', 'bik', 'bank', 'source'];
+    protected $fillable = ['name', 'surname', 'father_name', 'phone', 'email', 'telegram', 'type', 'entity_type', 'title', 'inn', 'kpp', 'ogrn', 'okpo', 'okved', 'address', 'ceo', 'rs', 'ks', 'bik', 'bank', 'source', 'balance'];
 
     public function contracts()
     {
@@ -39,5 +39,11 @@ class Customer extends Model
                 ->orWhere("inn", "like", "%$search%")
                 ->orWhere("title", "like", "%$search%");
         });
+    }
+
+    public function updateBalance(float $expense = 0, float $income = 0)
+    {
+        $this->balance = $this->balance - $expense + $income;
+        $this->save();
     }
 }

@@ -214,6 +214,13 @@
           item-text="text"
           item-value="value"
       />
+      <v-text-field
+          label="Баланс"
+          v-model="model.balance"
+          :error-messages="errors.balance"
+          :error-count="1"
+          :error="!!errors.balance"
+      />
     </v-card-text>
     <v-card-actions>
       <v-btn v-if="modal" text @click="$emit('close')">Закрыть</v-btn>

@@ -24,6 +24,9 @@ class OrderController extends Controller
                 $q->search($search);
             });
         }
+        if ($customerId = $request->get("customer_id")) {
+            $models = $models->where("customer_id", $customerId);
+        }
         $totalCount = $models->count();
 
         if ($take >= 0) {
@@ -63,7 +66,7 @@ class OrderController extends Controller
      * @param Order $order
      * @return JsonResponse
      */
-    public function show(Order $order):JsonResponse
+    public function show(Order $order): JsonResponse
     {
         $order->load('customer');
         return $this->resourceItemResponse('order', $order);

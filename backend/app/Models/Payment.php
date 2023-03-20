@@ -32,6 +32,11 @@ class Payment extends Model
                 $user = User::query()->find($model->user_id);
                 $user?->updateBalance(0, $amountChange);
             }
+
+            if ($model->order_id) {
+                $customer = $model->order?->customer;
+                $customer->updateBalance(0,$amountChange);
+            }
         });
 
         static::updated(function (Payment $model) {
@@ -49,6 +54,11 @@ class Payment extends Model
                 $user = User::query()->find($model->user_id);
                 $user?->updateBalance($originalAmount, $amountChange);
             }
+
+            if ($model->order_id) {
+                $customer = $model->order?->customer;
+                $customer->updateBalance($originalAmount, $amountChange);
+            }
         });
 
         static::deleted(function (Payment $model) {
@@ -63,6 +73,11 @@ class Payment extends Model
             if ($model->user_id) {
                 $user = User::query()->find($model->user_id);
                 $user?->updateBalance($amountChange, 0);
+            }
+
+            if ($model->order_id) {
+                $customer = $model->order?->customer;
+                $customer->updateBalance($amountChange, 0);
             }
         });
 

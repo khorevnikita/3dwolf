@@ -9,6 +9,7 @@ export default {
             headers: [],
             items: [],
             options: {},
+            pagesCount: 1,
             totalItems: 0,
             loading: true,
             query: {},
@@ -64,6 +65,7 @@ export default {
             axios.get(`${this.resourceApiRoute}?${this.resourceApiParams}&${this.setQueryString(this.query)}`).then(body => {
                 this.items = body[this.resourceKey];
                 this.totalItems = body.totalCount;
+                this.pagesCount = body.pagesCount;
                 this.loading = false;
             })
         },
