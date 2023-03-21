@@ -136,7 +136,7 @@ class OrderController extends Controller
             'order' => $order,
             'customer' => $order->customer,
         ])
-            ->setPaper('a4', 'portrait');
+            ->setPaper('a4', 'landscape');
         return $pdf->download($filename);
     }
 
