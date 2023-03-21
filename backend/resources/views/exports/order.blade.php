@@ -23,6 +23,15 @@
         width: 100%;
     }
 
+    .item-lines{
+        font-size: 11px;
+    }
+
+
+    .title {
+        font-size: 10px;
+    }
+
     .bordered {
         border-top: 1px solid;
     }
@@ -40,11 +49,6 @@
     .cell-short {
         width: 30px;
     }
-
-    .title {
-        font-size: 11px;
-    }
-
 
 </style>
 
@@ -137,25 +141,25 @@
     <tbody>
     <tr class="text-center bordered" style="background: gray;font-weight: bold;">
         <td class="title" style="width: 20px;">#</td>
-        <td colspan="8" class="title" style="width: 200px;">Наименование</td>
-        <td colspan="2" class="title" style="width: 40px;">Вес детали (гр./мл.)</td>
-        <td colspan="2" class="title" style="width: 40px;">Время печати</td>
+        <td colspan="8" class="title" style="width: 200px;max-width: 200px;">Наименование</td>
+        <td colspan="2" class="title" style="width: 90px;">Вес детали (гр./мл.)</td>
+        <td colspan="2" class="title" style="width: 70px;">Время печати</td>
         <td colspan="4" class="title" style="width: 100px;">Материал</td>
-        <td colspan="1" class="title" style="width: 40px;">Цвет / Артикул</td>
-        <td colspan="1" class="title" style="width: 40px;">Кол-во в партии</td>
-        <td colspan="1" class="title" style="width: 40px;">Цена единицы</td>
-        <td colspan="2" class="title" style="width: 80px;">ИТОГО</td>
+        <td colspan="1" class="title" style="width: 70px;">Цвет / Артикул</td>
+        <td colspan="1" class="title" style="width: 50px;">Кол-во в партии</td>
+        <td colspan="1" class="title" style="width: 60px;">Цена единицы</td>
+        <td colspan="2" class="title" style="width: 140px;">ИТОГО</td>
     </tr>
 
     @foreach($order->lines as $k=>$line)
         <tr class="bordered">
             <td class="text-center">{{$k+1}}</td>
             <td colspan="8">{{$line->name}}</td>
-            <td colspan="2">{{$line->weight}}</td>
-            <td colspan="2">{{$line->print_duration}}</td>
+            <td class="text-center" colspan="2">{{$line->weight}}</td>
+            <td class="text-center" colspan="2">{{$line->print_duration}}</td>
             <td colspan="4">{{$line->part->material->name}}</td>
             <td colspan="1">{{$line->part->color}}</td>
-            <td colspan="1">{{$line->count}}</td>
+            <td class="text-center" colspan="1">{{$line->count}}</td>
             <td colspan="1">{{number_format($line->price, 2, ',', ' ')}} ₽</td>
             <td colspan="2">{{number_format($line->total_amount, 2, ',', ' ')}} ₽</td>
         </tr>
@@ -165,7 +169,7 @@
     </tr>
     </tbody>
 </table>
-<table>
+<table class="item-lines">
     <tbody>
     <tr>
         <td colspan="20"></td>
