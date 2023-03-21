@@ -21,6 +21,14 @@ class PaymentController extends Controller
             $order_id = $request->get('order_id');
             $models = $models->where("order_id", "=", $order_id);
         }
+
+        if ($request->has("customer_id")) {
+            $customer_id = $request->get('customer_id');
+            $models = $models->whereHas("order", function ($q) use ($customer_id) {
+                $q->where("customer_id", $customer_id);
+            });
+        }
+
         $totalCount = $models->count();
 
         $models = $models->orderByRaw("CASE WHEN paid_at is null THEN 1 ELSE 0 END DESC")

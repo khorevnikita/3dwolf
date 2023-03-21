@@ -15,7 +15,7 @@
             </v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>{{ payment.amount }}</v-list-item-title>
+            <v-list-item-title>{{ formatPrice(payment.amount) }}</v-list-item-title>
             <v-list-item-subtitle>
               от {{ payment.paid_at ? moment(payment.paid_at).format("DD.MM.YYYY") : '-' }} на
               {{ payment.account ? payment.account.name : '-' }}

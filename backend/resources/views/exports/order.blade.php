@@ -19,6 +19,10 @@
         text-align: center;
     }
 
+    table {
+        width: 100%;
+    }
+
     .bordered {
         border-top: 1px solid;
     }
@@ -37,7 +41,7 @@
         width: 30px;
     }
 
-    .title{
+    .title {
         font-size: 11px;
     }
 
@@ -58,14 +62,20 @@
             co@3dwolf.ru
         </td>
     </tr>
-    <tr><td colspan="24">&nbsp;</td></tr>
+    <tr>
+        <td colspan="24">&nbsp;</td>
+    </tr>
     <tr>
         <td colspan="24" class="text-center">
             <b style="font-size: 24px">Наряд заказ № {{$order->id}}</b>
         </td>
     </tr>
-    <tr><td colspan="24">&nbsp;</td></tr>
-    <tr><td colspan="24">&nbsp;</td></tr>
+    <tr>
+        <td colspan="24">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="24">&nbsp;</td>
+    </tr>
     <tr>
         <td></td>
         <td>
@@ -118,45 +128,63 @@
         </td>
         <td colspan="18"></td>
     </tr>
-    <tr><td colspan="24">&nbsp;</td></tr>
+    <tr>
+        <td colspan="24">&nbsp;</td>
+    </tr>
+    </tbody>
+</table>
+<table>
+    <tbody>
     <tr class="text-center bordered" style="background: gray;font-weight: bold;">
-        <td class="text-right title">#</td>
-        <td colspan="8" class="title">Наименование</td>
-        <td colspan="2" class="title">Вес детали (гр./мл.)</td>
-        <td colspan="2" class="title">Время печати</td>
-        <td colspan="3" class="title">Материал</td>
-        <td colspan="2" class="title">Цвет / Артикул</td>
-        <td colspan="2" class="title">Кол-во в партии</td>
-        <td colspan="1" class="title">Цена единицы</td>
-        <td colspan="3" class="title">ИТОГО</td>
+        <td class="title" style="width: 20px;">#</td>
+        <td colspan="8" class="title" style="width: 200px;">Наименование</td>
+        <td colspan="2" class="title" style="width: 40px;">Вес детали (гр./мл.)</td>
+        <td colspan="2" class="title" style="width: 40px;">Время печати</td>
+        <td colspan="4" class="title" style="width: 100px;">Материал</td>
+        <td colspan="1" class="title" style="width: 40px;">Цвет / Артикул</td>
+        <td colspan="1" class="title" style="width: 40px;">Кол-во в партии</td>
+        <td colspan="1" class="title" style="width: 40px;">Цена единицы</td>
+        <td colspan="2" class="title" style="width: 80px;">ИТОГО</td>
     </tr>
 
     @foreach($order->lines as $k=>$line)
         <tr class="bordered">
-            <td class="text-right">{{$k+1}}</td>
+            <td class="text-center">{{$k+1}}</td>
             <td colspan="8">{{$line->name}}</td>
             <td colspan="2">{{$line->weight}}</td>
             <td colspan="2">{{$line->print_duration}}</td>
-            <td colspan="3">{{$line->part->material->name}}</td>
-            <td colspan="2">{{$line->part->color}}</td>
-            <td colspan="2">{{$line->count}}</td>
-            <td colspan="1">{{$line->price}}</td>
-            <td colspan="3">{{$line->total_amount}}</td>
+            <td colspan="4">{{$line->part->material->name}}</td>
+            <td colspan="1">{{$line->part->color}}</td>
+            <td colspan="1">{{$line->count}}</td>
+            <td colspan="1">{{number_format($line->price, 2, ',', ' ')}} ₽</td>
+            <td colspan="2">{{number_format($line->total_amount, 2, ',', ' ')}} ₽</td>
         </tr>
     @endforeach
-    <tr><td colspan="24">&nbsp;</td></tr>
+    <tr>
+        <td colspan="24">&nbsp;</td>
+    </tr>
+    </tbody>
+</table>
+<table>
+    <tbody>
     <tr>
         <td colspan="20"></td>
         <td><b>ИТОГО</b></td>
-        <td><b>{{$order->amount}}</b></td>
+        <td><b>{{number_format($order->amount, 2, ',', ' ')}} ₽</b></td>
     </tr>
-    <tr><td colspan="24">&nbsp;</td></tr>
-    <tr><td colspan="24">&nbsp;</td></tr>
+    <tr>
+        <td colspan="24">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="24">&nbsp;</td>
+    </tr>
     <tr>
         <td colspan="2">Исполнитель</td>
         <td colspan="6">______________________</td>
     </tr>
-    <tr><td colspan="24">&nbsp;</td></tr>
+    <tr>
+        <td colspan="24">&nbsp;</td>
+    </tr>
     <tr>
         <td colspan="2">Дата</td>
         <td colspan="6">______________________</td>

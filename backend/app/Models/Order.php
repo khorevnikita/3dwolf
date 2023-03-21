@@ -15,9 +15,11 @@ class Order extends Model
     {
         static::updated(function (Order $model) {
             if ($model->getOriginal('status') !== $model->status) {
+                $customer = $model->customer;
                 if ($model->status === "completed") {
-                    $customer = $model->customer;
                     $customer?->updateBalance($model->amount, 0);
+                } elseif ($model->getOriginal('status') === "completed") {
+                    $customer?->updateBalance(0, $model->amount);
                 }
             }
         });
