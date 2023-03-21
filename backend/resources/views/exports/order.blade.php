@@ -152,32 +152,32 @@
 <table>
     <tbody>
     <tr class="text-center bordered" style="background: gray;font-weight: bold;">
-        <td class="title" style="width: 20px;">#</td>
-        <td colspan="8" class="title" style="width: 200px;max-width: 200px;">Наименование</td>
-        <td colspan="2" class="title" style="width: 90px;">Вес детали (гр./мл.)</td>
-        <td colspan="2" class="title" style="width: 90px;">Время печати</td>
-        <td colspan="4" class="title" style="width: 100px;">Материал</td>
-        <td colspan="1" class="title" style="width: 70px;">Цвет / Артикул</td>
-        <td colspan="1" class="title" style="width: 50px;">Кол-во в партии</td>
-        <td colspan="1" class="title" style="width: 60px;">Цена единицы, ₽</td>
-        <td colspan="2" class="title" style="width: 140px;">ИТОГО ,₽</td>
+        <td class="title" >#</td>
+        <td class="title" >Наименование</td>
+        <td class="title" >Вес детали (гр./мл.)</td>
+        <td class="title" >Время печати</td>
+        <td class="title" >Материал</td>
+        <td class="title" >Цвет / Артикул</td>
+        <td class="title" >Кол-во</td>
+        <td class="title" >Цена единицы, ₽</td>
+        <td class="title" style="min-width: 65px" >ИТОГО ,₽</td>
     </tr>
 
     @foreach($order->lines as $k=>$line)
         <tr class="bordered">
             <td class="text-center">{{$k+1}}</td>
-            <td colspan="8">{{$line->name}}</td>
-            <td class="text-center" colspan="2">{{$line->weight}}</td>
-            <td class="text-center" colspan="2">{{secondsToTime($line->print_duration)}}</td>
-            <td colspan="4">{{$line->part->material->name}}</td>
-            <td colspan="1">{{$line->part->color}}</td>
+            <td>{{$line->name}}</td>
+            <td class="text-center">{{$line->weight}}</td>
+            <td class="text-center">{{secondsToTime($line->print_duration)}}</td>
+            <td class="text-center">{{$line->part->material->name}}</td>
+            <td>{{$line->part->color}}</td>
             <td class="text-center" colspan="1">{{$line->count}}</td>
-            <td colspan="1">{{number_format($line->price, 2, ',', ' ')}}</td>
-            <td colspan="2">{{number_format($line->total_amount, 2, ',', ' ')}}</td>
+            <td class="text-center">{{number_format($line->price, 2, ',', ' ')}}</td>
+            <td class="text-center">{{number_format($line->total_amount, 2, ',', ' ')}}</td>
         </tr>
     @endforeach
     <tr>
-        <td colspan="24">&nbsp;</td>
+        <td colspan="9">&nbsp;</td>
     </tr>
     </tbody>
 </table>
