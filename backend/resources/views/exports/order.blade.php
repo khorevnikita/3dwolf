@@ -1,3 +1,15 @@
+@php
+    function secondsToTime($sec){
+        $h = floor($sec / 3600);
+        $sec = $sec % 3600;
+        $m = floor($sec/60);
+        $mString = $m<10?"0$m":$m;
+        $s = $sec % 60;
+        $sString = $s<10?"0$s":$s;
+
+        return "$h:$mString:$sString";
+    }
+@endphp
 <style>
     @font-face {
         font-family: "Dojo Sans Serif";
@@ -23,7 +35,7 @@
         width: 100%;
     }
 
-    .item-lines{
+    .item-lines {
         font-size: 11px;
     }
 
@@ -143,12 +155,12 @@
         <td class="title" style="width: 20px;">#</td>
         <td colspan="8" class="title" style="width: 200px;max-width: 200px;">Наименование</td>
         <td colspan="2" class="title" style="width: 90px;">Вес детали (гр./мл.)</td>
-        <td colspan="2" class="title" style="width: 70px;">Время печати</td>
+        <td colspan="2" class="title" style="width: 90px;">Время печати</td>
         <td colspan="4" class="title" style="width: 100px;">Материал</td>
         <td colspan="1" class="title" style="width: 70px;">Цвет / Артикул</td>
         <td colspan="1" class="title" style="width: 50px;">Кол-во в партии</td>
-        <td colspan="1" class="title" style="width: 60px;">Цена единицы</td>
-        <td colspan="2" class="title" style="width: 140px;">ИТОГО</td>
+        <td colspan="1" class="title" style="width: 60px;">Цена единицы, ₽</td>
+        <td colspan="2" class="title" style="width: 140px;">ИТОГО ,₽</td>
     </tr>
 
     @foreach($order->lines as $k=>$line)
@@ -156,12 +168,12 @@
             <td class="text-center">{{$k+1}}</td>
             <td colspan="8">{{$line->name}}</td>
             <td class="text-center" colspan="2">{{$line->weight}}</td>
-            <td class="text-center" colspan="2">{{$line->print_duration}}</td>
+            <td class="text-center" colspan="2">{{secondsToTime($line->print_duration)}}</td>
             <td colspan="4">{{$line->part->material->name}}</td>
             <td colspan="1">{{$line->part->color}}</td>
             <td class="text-center" colspan="1">{{$line->count}}</td>
-            <td colspan="1">{{number_format($line->price, 2, ',', ' ')}} ₽</td>
-            <td colspan="2">{{number_format($line->total_amount, 2, ',', ' ')}} ₽</td>
+            <td colspan="1">{{number_format($line->price, 2, ',', ' ')}}</td>
+            <td colspan="2">{{number_format($line->total_amount, 2, ',', ' ')}}</td>
         </tr>
     @endforeach
     <tr>
