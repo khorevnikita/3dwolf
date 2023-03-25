@@ -17,6 +17,8 @@ class Payment extends Model
         'EXPENSE' => 'expense',
     ];
 
+    protected $casts = ['amount' => 'float'];
+
     protected static function booted(): void
     {
         static::created(function (Payment $model) {
@@ -35,7 +37,7 @@ class Payment extends Model
 
             if ($model->order_id) {
                 $customer = $model->order?->customer;
-                $customer->updateBalance(0,$amountChange);
+                $customer->updateBalance(0, $amountChange);
             }
         });
 
