@@ -20,7 +20,12 @@
           :error-messages="errors.part_id"
           :error-count="1"
           :error="!!errors.part_id"
-      />
+          :filter="()=>true"
+      >
+        <template #item="{item}">
+          {{ item.inv_number }}. {{ `${item.material.name}, ${item.color} (${item.prod_number})` }}
+        </template>
+      </v-autocomplete>
       <v-text-field
           label="Название"
           v-model="model.name"
@@ -117,9 +122,26 @@ export default {
     },
     printDuration: {
       handler() {
-        this.model.print_duration = this.printDuration.h * 3600 + this.printDuration.m * 60 + this.printDuration.s;
+        this.model.print_duration = this.printHours * 3600 + this.printMinutes * 60 + this.printSeconds;
       }, deep: true
     }
+  },
+  computed: {
+    printHours() {
+      const h = Number(this.printDuration.h);
+      if (!h) return 0;
+      return h;
+    },
+    printMinutes() {
+      const m = Number(this.printDuration.m);
+      if (!m) return 0;
+      return m;
+    },
+    printSeconds() {
+      const s = Number(this.printDuration.s);
+      if (!s) return 0;
+      return s;
+    },
   },
   created() {
     this.getParts();
@@ -149,6 +171,7 @@ export default {
       }
     },
     store() {
+      console.log(this.printDuration);
       axios.post(`orders/${this.$route.params.id}/order-lines`, this.model).then(body => {
         this.$emit("created", body[this.modelName]);
         this.$emit("close");

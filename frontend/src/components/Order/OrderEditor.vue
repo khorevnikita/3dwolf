@@ -57,7 +57,12 @@
           :error-count="1"
           :error="!!errors.customer_id"
           clearable
-      />
+          :filter="()=>true"
+      >
+        <template #item="{item}">
+          {{item.title}}, {{item.phone}}, {{item.email}}
+        </template>
+      </v-autocomplete>
       <v-text-field
           label="Телефон"
           v-model="model.phone"

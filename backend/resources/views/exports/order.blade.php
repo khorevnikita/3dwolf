@@ -140,7 +140,7 @@
         <td></td>
         <td>Адрес доставки</td>
         <td>
-            <b>{{$customer->delivery_address}}</b>
+            <b>{{$order->delivery_address}}</b>
         </td>
         <td colspan="18"></td>
     </tr>

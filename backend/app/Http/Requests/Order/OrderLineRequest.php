@@ -22,14 +22,14 @@ class OrderLineRequest extends FormRequest
      */
     public function rules(): array
     {
-       # $modelId = request()->route('order_line')?->id ?? 0;
+        # $modelId = request()->route('order_line')?->id ?? 0;
         return [
-           # "order_id" => "required|integer|exists:orders,id",
-         #   "number" => ['required', Rule::unique('order_lines', 'number')->ignore($modelId)],
+            # "order_id" => "required|integer|exists:orders,id",
+            #   "number" => ['required', Rule::unique('order_lines', 'number')->ignore($modelId)],
             "name" => "required",
             "weight" => "sometimes|numeric",
-            "print_duration" => "sometimes|numeric",
-            "part_id" => "required|integer|exists:parts,id",
+            "print_duration" => "sometimes|numeric|nullable",
+            "part_id" => "sometimes|integer|exists:parts,id|nullable",
             "count" => "required|integer",
             "price" => "required|numeric",
         ];

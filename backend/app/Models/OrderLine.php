@@ -11,6 +11,10 @@ class OrderLine extends Model
 
     protected $fillable = ['number', 'name', 'price', 'weight', 'print_duration', 'part_id', 'count'];
 
+    protected $casts = [
+        'price' => 'float'
+    ];
+
     protected static function booted(): void
     {
         static::creating(function (OrderLine $model) {
@@ -38,6 +42,15 @@ class OrderLine extends Model
     public function part()
     {
         return $this->belongsTo(Part::class);
+    }
+
+    public function setPrintDurationAttribute($value)
+    {
+        if (is_null($value)) {
+            $this->attributes['print_duration'] = 0;
+        } else {
+            $this->attributes['print_duration'] = $value;
+        }
     }
 
     public function setProperties()

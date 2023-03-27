@@ -177,6 +177,11 @@
             getData();
             getItems();
           }"
+          @updated="i=>{
+            onUpdated(i);
+            getData();
+            getItems();
+          }"
           :show-user="true"
           v-model="editItem"
       />
