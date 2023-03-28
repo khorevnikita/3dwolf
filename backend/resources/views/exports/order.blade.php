@@ -151,16 +151,16 @@
 </table>
 <table>
     <tbody>
-    <tr class="text-center bordered" style="background: gray;font-weight: bold;">
-        <td class="title" >#</td>
-        <td class="title" >Наименование</td>
-        <td class="title" >Вес детали (гр./мл.)</td>
-        <td class="title" >Время печати</td>
-        <td class="title" >Материал</td>
-        <td class="title" >Цвет / Артикул</td>
-        <td class="title" >Кол-во</td>
-        <td class="title" >Цена единицы, ₽</td>
-        <td class="title" style="min-width: 65px" >ИТОГО ,₽</td>
+    <tr class="text-center bordered" style="background: #d7d7d7;font-weight: bold;">
+        <td class="title">#</td>
+        <td class="title">Наименование</td>
+        <td class="title">Вес детали (гр./мл.)</td>
+        <td class="title">Время печати</td>
+        <td class="title">Материал</td>
+        <td class="title">Цвет / Артикул</td>
+        <td class="title">Кол-во</td>
+        <td class="title">Цена единицы, ₽</td>
+        <td class="title" style="min-width: 65px">ИТОГО ,₽</td>
     </tr>
 
     @foreach($order->lines as $k=>$line)
@@ -170,7 +170,7 @@
             <td class="text-center">{{$line->weight}}</td>
             <td class="text-center">{{secondsToTime($line->print_duration)}}</td>
             <td class="text-center">{{$line->part->material->name}}</td>
-            <td>{{$line->part->color}}</td>
+            <td>{{$line->part->color}} ({{$line->part->prod_number}})</td>
             <td class="text-center" colspan="1">{{$line->count}}</td>
             <td class="text-center">{{number_format($line->price, 2, ',', ' ')}}</td>
             <td class="text-center">{{number_format($line->total_amount, 2, ',', ' ')}}</td>
