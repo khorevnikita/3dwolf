@@ -152,14 +152,14 @@ export default {
       users: [],
       accounts: [],
       menu: false,
-      showOrder: false,
+      showOrder: !!this.value.order_id,
       searchOrder: "",
       isLoadingOrders: false,
       orders: []
     }
   },
   created() {
-    this.model.order_id = this.order_id;
+    this.model.order_id = this.model.order_id ? this.model.order_id : this.order_id;
     if (this.autoDescription) this.model.description = `Оплата по наряд-заказу №${this.model.order_id}`;
     if (this.incomeOnly) this.model.type = 'income';
 
