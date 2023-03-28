@@ -76,7 +76,7 @@
           v-if="editDialog"
           @close="editDialog=false"
           v-model="editItem"
-          @created="onCreated"
+          @created="getItems"
           @updated="onUpdated"
           :modal="true"
       />
