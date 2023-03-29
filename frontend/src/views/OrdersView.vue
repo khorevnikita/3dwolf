@@ -110,7 +110,7 @@ export default {
       statusMap: {
         new: "Новый",
         printing: "В печати",
-        shipping: "К откгрузке",
+        shipping: "К отгрузке",
         completed: "Отгружено",
         not_paid: "Не оплачено",
         part_paid: "Частично оплачено",
