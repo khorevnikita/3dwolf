@@ -15,7 +15,16 @@ class Order extends Model
 
     protected static function booted(): void
     {
+        static::updating(function (Order $model) {
+            $amount = OrderLine::query()
+                ->where("order_id", $model->id)
+                ->sum('total_amount');
+            $model->amount = $amount;
+        });
+
         static::updated(function (Order $model) {
+
+
             if ($model->getOriginal('status') !== $model->status) {
                 $customer = $model->customer;
                 if ($model->status === "completed") {
