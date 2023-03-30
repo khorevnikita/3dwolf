@@ -21,6 +21,11 @@ class ContractController extends Controller
             $search = $request->get('search');
             $models = $models->where("number", "like", "%$search%");
         }
+
+        if ($customerId = $request->get("customer_id")) {
+            $models = $models->where("customer_id", $customerId);
+        }
+
         $totalCount = $models->count();
 
         if ($take >= 0) {
@@ -90,7 +95,7 @@ class ContractController extends Controller
      * @param Contract $contract
      * @return JsonResponse
      */
-    public function destroy(Contract $contract):JsonResponse
+    public function destroy(Contract $contract): JsonResponse
     {
         $contract->delete();
         return $this->emptySuccessResponse();

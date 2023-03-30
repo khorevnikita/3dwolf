@@ -17,6 +17,13 @@
                   label="Поиск"
                   hide-details
                   v-model="query.search"
+                  dense
+              />
+            </v-col>
+            <v-col cols="12" md="4">
+              <CustomerPicker
+                  v-model="query.customer_id"
+                  :dense="true"
               />
             </v-col>
           </v-row>
@@ -75,10 +82,11 @@
 
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import ContractEditor from "@/components/Contract/ContractEditor";
+import CustomerPicker from "@/components/Forms/CustomerPicker";
 
 export default {
   name: "ContractsView",
-  components: {ContractEditor},
+  components: {CustomerPicker, ContractEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {
