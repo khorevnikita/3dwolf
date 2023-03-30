@@ -39,6 +39,13 @@ class OrderController extends Controller
             $models = $models->skip($skip)->take($take);
         }
 
+        if ($request->has("status_sort")) {
+            $statuses = implode(",", array_map(function ($statusKey) {
+                return "'$statusKey'";
+            }, Order::STATUSES));
+            $models = $models->orderByRaw("FIELD(status,$statuses) ASC");
+        }
+
         list($sort, $sortDir) = Paginator::getSorting($request);
         $models = $models->orderBy($sort, $sortDir);
 

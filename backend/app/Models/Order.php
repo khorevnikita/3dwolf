@@ -11,6 +11,8 @@ class Order extends Model
 
     protected $fillable = ['date', 'customer_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address'];
 
+    const STATUSES = ['new', 'printing', 'shipping', 'completed'];
+
     protected static function booted(): void
     {
         static::updated(function (Order $model) {

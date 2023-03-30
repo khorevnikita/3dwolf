@@ -93,18 +93,19 @@ export default {
   data() {
     return {
       headers: [
-        {text: "ID", value: "id", sortable: true},
-        {text: "Дата", value: "date", sortable: true},
+        {text: "ID", value: "id", sortable: false},
+        {text: "Дата", value: "date", sortable: false},
         {text: "Клиент", value: "customer_id", sortable: false},
         {text: "Телефон", value: "phone", sortable: false},
-        {text: "Сумма", value: "amount", sortable: true},
-        {text: "Дедлайн", value: "deadline", sortable: true},
-        {text: "Статус", value: "status", sortable: true},
-        {text: "Платёж", value: "payment_status", sortable: true},
+        {text: "Сумма", value: "amount", sortable: false},
+        {text: "Дедлайн", value: "deadline", sortable: false},
+        {text: "Статус", value: "status", sortable: false},
+        {text: "Платёж", value: "payment_status", sortable: false},
         {text: "Адрес доставки", value: "delivery_address", sortable: false},
         {text: "", value: "actions", sortable: false},
       ],
       resourceKey: "orders",
+      resourceApiParams: "status_sort=1",
       resourceApiRoute: `orders`,
       deleteSwalTitle: `Безвозвратно удалить заказ?`,
       statusMap: {
