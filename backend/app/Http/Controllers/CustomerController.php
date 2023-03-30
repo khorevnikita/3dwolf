@@ -23,6 +23,16 @@ class CustomerController extends Controller
             $search = $request->get('search');
             $models = $models->search($search);
         }
+
+        if ($type = $request->get('type')) {
+            $models = $models->whereType($type);
+        }
+
+        if ($entityType = $request->get('entity_type')) {
+            $models = $models->whereEntityType($entityType);
+        }
+
+
         $totalCount = $models->count();
 
         if ($take >= 0) {

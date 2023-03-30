@@ -17,8 +17,40 @@
                   label="Поиск"
                   hide-details
                   v-model="query.search"
+                  dense
               />
             </v-col>
+            <v-col cols="12" md="4">
+              <v-select
+                  label="Тип"
+                  hide-details
+                  v-model="query.type"
+                  :items="[
+                      {value:'',text:'Все'},
+                      {value:'individual',text:'Физ. лицо'},
+                      {value:'entity',text:'Юр. лицо'},
+                  ]"
+                  item-text="text"
+                  item-value="value"
+                  dense
+              />
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-select
+                  label="Тип ЮЛ"
+                  hide-details
+                  v-model="query.entity_type"
+                  :items="[
+                      {value:'',text:'Все'},
+                      {value:'self_employed',text:'ИП'},
+                      {value:'company',text:'ООО'},
+                  ]"
+                  item-text="text"
+                  item-value="value"
+                  dense
+              />
+            </v-col>
+
           </v-row>
         </v-card-text>
         <v-card-actions>
