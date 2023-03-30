@@ -30,9 +30,19 @@ class OrderController extends Controller
                 $q->search($search);
             });
         }
+
         if ($customerId = $request->get("customer_id")) {
             $models = $models->where("customer_id", $customerId);
         }
+
+        if ($status = $request->get("status")) {
+            $models = $models->whereStatus($status);
+        }
+
+        if ($paymentStatus = $request->get("payment_status")) {
+            $models = $models->wherePaymentStatus($paymentStatus);
+        }
+
         $totalCount = $models->count();
 
         if ($take >= 0) {

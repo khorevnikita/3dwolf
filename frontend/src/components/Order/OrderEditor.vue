@@ -45,24 +45,12 @@
           </v-btn>
         </v-date-picker>
       </v-menu>
-      <v-autocomplete
-          label="Клиент"
+      <CustomerPicker
           v-model="model.customer_id"
-          :items="customers"
-          :loading="isLoadingCustomers"
-          :search-input.sync="searchCustomer"
-          item-value="id"
-          item-text="title"
-          :error-messages="errors.customer_id"
-          :error-count="1"
-          :error="!!errors.customer_id"
-          clearable
-          :filter="()=>true"
-      >
-        <template #item="{item}">
-          {{item.title}}, {{item.phone}}, {{item.email}}
-        </template>
-      </v-autocomplete>
+          :error="errors.customer_id"
+          @selected="onCustomerSelected"
+          :dense="false"
+      />
       <v-text-field
           label="Телефон"
           v-model="model.phone"
@@ -71,13 +59,6 @@
           :error="!!errors.phone"
           v-mask="'+7 (###) ###-##-##'"
       />
-      <!--<v-text-field
-          label="Сумма"
-          v-model="model.amount"
-          :error-messages="errors.amount"
-          :error-count="1"
-          :error="!!errors.amount"
-      />-->
       <v-menu
           ref="menu2"
           v-model="menu2"
@@ -168,9 +149,11 @@
 
 <script>
 import axios from "@/plugins/axios";
+import CustomerPicker from "@/components/Forms/CustomerPicker";
 
 export default {
   name: "OrderEditor",
+  components: {CustomerPicker},
   props: ['value', 'modal'],
   data() {
     return {
@@ -179,34 +162,11 @@ export default {
       errors: {},
       menu: false,
       menu2: false,
-      customers: [],
-      isLoadingCustomers: false,
-      searchCustomer: ''
     }
-  },
-  watch: {
-    searchCustomer(oldV, newV) {
-      if (!newV) return;
-      this.getCustomers()
-    },
-    "model.customer_id": function (customerId) {
-      const customer = this.customers.find(c => c.id === customerId);
-      if (customer) {
-        this.model.phone = customer.phone;
-      }
-    }
-  },
-  created() {
-    this.getCustomers();
   },
   methods: {
-    getCustomers() {
-      if (this.isLoadingCustomers) return;
-      this.isLoadingCustomers = true;
-      axios.get(`customers?search=${this.searchCustomer ? this.searchCustomer : ''}&field=${this.model.customer_id ? this.model.customer_id : ''}`).then(body => {
-        this.customers = body.customers;
-        this.isLoadingCustomers = false;
-      })
+    onCustomerSelected(customer) {
+      this.model.phone = customer.phone;
     },
     save() {
       this.errors = {};

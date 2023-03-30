@@ -12,11 +12,46 @@
         <v-card-title>Фильтр</v-card-title>
         <v-card-text>
           <v-row>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="3">
               <v-text-field
                   label="Поиск"
                   hide-details
                   v-model="query.search"
+                  dense
+              />
+            </v-col>
+            <v-col cols="12" md="3">
+              <CustomerPicker
+                  v-model="query.customer_id"
+                  :dense="true"
+              />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-select
+                  label="Статус"
+                  v-model="query.status"
+                  dense
+                  hide-details
+                  :items="[
+                      {value:'',text:'Все'},
+                      ...orderStatusesFilter
+                      ]"
+                  item-value="value"
+                  item-text="text"
+              />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-select
+                  label="Платёж"
+                  v-model="query.payment_status"
+                  dense
+                  hide-details
+                  :items="[
+                      {value:'',text:'Все'},
+                      ...paymentStatusesFilter
+                      ]"
+                  item-value="value"
+                  item-text="text"
               />
             </v-col>
           </v-row>
@@ -45,10 +80,10 @@
           {{ item.deadline ? moment(item.deadline).format("DD.MM.YYYY") : "-" }}
         </template>
         <template v-slot:[`item.status`]="{item}">
-          {{ statusMap[item.status] }}
+          {{ statuses[item.status] }}
         </template>
         <template v-slot:[`item.payment_status`]="{item}">
-          {{ statusMap[item.payment_status] }}
+          {{ paymentStatuses[item.payment_status] }}
         </template>
         <template v-slot:[`item.amount`]="{item}">
           {{ formatPrice(item.amount) }}
@@ -85,10 +120,11 @@
 
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import OrderEditor from "@/components/Order/OrderEditor";
+import CustomerPicker from "@/components/Forms/CustomerPicker";
 
 export default {
   name: "OrdersView",
-  components: {OrderEditor},
+  components: {CustomerPicker, OrderEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {
@@ -108,17 +144,32 @@ export default {
       resourceApiParams: "status_sort=1",
       resourceApiRoute: `orders`,
       deleteSwalTitle: `Безвозвратно удалить заказ?`,
-      statusMap: {
+      statuses: {
         new: "Новый",
         printing: "В печати",
         shipping: "К отгрузке",
         completed: "Отгружено",
+      },
+      paymentStatuses: {
         not_paid: "Не оплачено",
         part_paid: "Частично оплачено",
         full_paid: "Полносью оплачено",
       }
     }
   },
+  computed: {
+    orderStatusesFilter() {
+      return Object.keys(this.statuses).map(key => {
+        return {value: key, text: this.statuses[key]};
+      })
+    },
+    paymentStatusesFilter() {
+      return Object.keys(this.paymentStatuses).map(key => {
+        return {value: key, text: this.paymentStatuses[key]};
+      })
+    },
+
+  }
 }
 </script>
 
