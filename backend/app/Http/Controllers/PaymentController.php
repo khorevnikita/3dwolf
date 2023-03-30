@@ -29,6 +29,21 @@ class PaymentController extends Controller
             });
         }
 
+        if ($type = $request->get('type')) {
+            $models = $models->whereType($type);
+        }
+
+        if ($search = $request->get('search')) {
+            $models = $models->where("description", "like", "%$search%");
+        }
+        if ($userId = $request->get('user_id')) {
+            $models = $models->whereUserId($userId);
+        }
+        if ($accountId = $request->get('account_id')) {
+            $models = $models->whereAccountId($accountId);
+        }
+
+
         $totalCount = $models->count();
 
         $models = $models->orderByRaw("CASE WHEN paid_at is null THEN 1 ELSE 0 END DESC")

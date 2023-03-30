@@ -69,6 +69,58 @@
       </v-col>
     </v-row>
     <h5 class="text-h5 mt-4 mb-3">Все платежи</h5>
+    <v-card>
+      <v-card-title>Фильтр</v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12" md="3">
+            <v-text-field
+                label="Поиск"
+                hide-details
+                v-model="query.search"
+                dense
+            />
+          </v-col>
+          <v-col cols="12" md="3">
+            <v-select
+                label="Тип"
+                v-model="query.type"
+                dense
+                hide-details
+                :items="[
+                      {value:'',text:'Все'},
+                      {value:'income',text:'Приход'},
+                      {value:'expense',text:'Расход'},
+
+                      ]"
+                item-value="value"
+                item-text="text"
+            />
+          </v-col>
+          <v-col cols="12" md="3">
+            <UserPicker
+                :dense="true"
+                v-model="query.user_id"
+            />
+          </v-col>
+          <v-col cols="12" md="3">
+            <v-select
+                label="Счёт"
+                v-model="query.account_id"
+                :items="accountsFilterList"
+                item-value="id"
+                item-text="name"
+                dense
+                hide-details
+            />
+          </v-col>
+
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="replaceRoute">Найти</v-btn>
+      </v-card-actions>
+    </v-card>
     <v-data-table
         :headers="headers"
         :items="items"
@@ -140,10 +192,11 @@ import {formatPrice} from "@/plugins/formats";
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import MonthMoneyTable from "@/components/MonthMoneyTable";
 import MoneyAccountTable from "@/components/MoneyAccountTable";
+import UserPicker from "@/components/Forms/UserPicker";
 
 export default {
   name: "MoneyView",
-  components: {MoneyAccountTable, MonthMoneyTable, PaymentEditor},
+  components: {UserPicker, MoneyAccountTable, MonthMoneyTable, PaymentEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {
@@ -166,17 +219,35 @@ export default {
         {text: "Описание", value: "description", sortable: false},
         {text: "", value: "actions", sortable: false},
       ],
+      accounts: []
     }
   },
   created() {
     this.getData();
+    this.getAccounts();
   },
   watch: {
     year() {
       this.getData();
     }
   },
+  computed:{
+    accountsFilterList() {
+      return [
+        {id: '', name: 'Все'},
+        ...this.accounts.map(a => {
+          return {
+            id: String(a.id),
+            name: a.name,
+          }
+        })
+      ]
+    },
+  },
   methods: {
+    getAccounts() {
+      axios.get(`accounts`).then(body => this.accounts = body.accounts)
+    },
     getData() {
       axios.get(`money/statistics?year=${this.year}`).then(body => {
         this.data = body.data;
