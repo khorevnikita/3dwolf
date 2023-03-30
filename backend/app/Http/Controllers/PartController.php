@@ -27,6 +27,19 @@ class PartController extends Controller
                     ->orWhere("color", "like", "%$search%");
             });
         }
+
+        if ($manufacturerId = $request->get("manufacturer_id")) {
+            $models = $models->whereManufacturerId($manufacturerId);
+        }
+
+        if ($materialId = $request->get("material_id")) {
+            $models = $models->whereMaterialId($materialId);
+        }
+
+        if ($status = $request->get("status")) {
+            $models = $models->whereStatus($status);
+        }
+
         $totalCount = $models->count();
 
         if ($take >= 0) {
