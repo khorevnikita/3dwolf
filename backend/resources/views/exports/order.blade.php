@@ -168,10 +168,14 @@
         <tr class="bordered">
             <td class="text-center">{{$k+1}}</td>
             <td>{{$line->name}}</td>
-            <td class="text-center">{{$line->weight}}</td>
+            <td class="text-center">{{$line->weight?:""}}</td>
             <td class="text-center">{{secondsToTime($line->print_duration)}}</td>
             <td class="text-center">{{$line->part?->material?->name}}</td>
-            <td>{{$line->part?->color}} ({{$line->part?->prod_number}})</td>
+            <td>
+                @if($line->part)
+                    {{$line->part->color}} ({{$line->part->prod_number}})
+                @endif
+            </td>
             <td class="text-center" colspan="1">{{$line->count}}</td>
             <td class="text-center">{{number_format($line->price, 2, ',', ' ')}}</td>
             <td class="text-center">{{number_format($line->total_amount, 2, ',', ' ')}}</td>
