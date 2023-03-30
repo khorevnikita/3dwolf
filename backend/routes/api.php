@@ -54,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('money')->group(function () {
         Route::get('statistics', [MoneyController::class, 'getTotalStatistics']);
+        Route::get('dashboard', [MoneyController::class, 'getDashboardData']);
     });
 });
 

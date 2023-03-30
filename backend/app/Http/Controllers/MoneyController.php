@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Money\TotalStatistics;
 use App\Models\Account;
+use App\Models\Customer;
+use App\Models\Order;
 use App\Models\Payment;
 use App\Models\User;
 use Carbon\Carbon;
@@ -29,10 +31,56 @@ class MoneyController extends Controller
         $totalExpense = $expensePayments->sum("amount");
         //$totalAccountSum = Account::query()->sum('balance');
 
-        $balance = $totalAccountSum = Account::query()->sum('balance');
+        $balance = Account::query()->sum('balance');
 
         $fromDate = Carbon::create($year);
         $endDate = Carbon::create($year)->endOfYear();
+        $monthData = $this->getMonthMoney($fromDate, $endDate, $incomePayments, $expensePayments);
+
+        $accounts = Account::query()->get();
+
+        $users = User::query()->get();
+
+        return $this->resourceItemResponse('data', [
+            'income' => $totalIncome,
+            'expense' => $totalExpense,
+            'balance' => $balance,
+            'months' => $monthData,
+            'accounts' => $accounts,
+            'users' => $users
+        ]);
+    }
+
+    public function getDashboardData(): JsonResponse
+    {
+        $fromDate = Carbon::now()->startOfYear();
+        $endDate = Carbon::now()->endOfYear();
+        $incomePayments = Payment::query()
+            ->income()
+            ->forYear(Carbon::now()->year)
+            ->get();
+        $expensePayments = Payment::query()
+            ->expense()
+            ->forYear(Carbon::now()->year)
+            ->get();
+        $monthData = $this->getMonthMoney($fromDate, $endDate, $incomePayments, $expensePayments);
+        $accounts = Account::query()->get();
+
+        $orders = Order::query()->selectRaw("status, count(id) as count")
+            ->groupBy("status")->pluck('count','status');
+        return $this->resourceItemResponse('data', [
+            'months' => $monthData,
+            'accounts' => $accounts,
+            'orders' => $orders,
+            'customers' => [
+                'total' => Customer::query()->count(),
+                'new' => Customer::query()->where("created_at", ">", Carbon::now()->subMonth())->count()
+            ]
+        ]);
+    }
+
+    protected function getMonthMoney($fromDate, $endDate, $incomePayments, $expensePayments): array
+    {
         $pointer = Carbon::parse($fromDate);
         $monthData = [];
 
@@ -57,18 +105,6 @@ class MoneyController extends Controller
             ];
             $pointer->addMonth();
         }
-
-        $accounts = Account::query()->get();
-
-        $users = User::query()->get();
-
-        return $this->resourceItemResponse('data', [
-            'income' => $totalIncome,
-            'expense' => $totalExpense,
-            'balance' => $balance,
-            'months' => $monthData,
-            'accounts' => $accounts,
-            'users' => $users
-        ]);
+        return $monthData;
     }
 }

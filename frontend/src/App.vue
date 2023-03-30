@@ -102,3 +102,16 @@ export default Vue.extend({
   }
 });
 </script>
+<style>
+.income {
+  background: #dfffae;
+}
+
+.expense {
+  background: #ffaed0;
+}
+
+.expecting {
+  background: #ebebeb;
+}
+</style>

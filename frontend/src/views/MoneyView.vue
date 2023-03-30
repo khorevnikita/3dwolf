@@ -35,66 +35,10 @@
       </v-col>
 
       <v-col cols="12" md="6">
-        <v-card>
-          <v-card-text>
-            <v-simple-table>
-              <template v-slot:default>
-                <thead>
-                <tr>
-                  <th class="text-left">
-                    Месяц
-                  </th>
-                  <th class="text-left">
-                    Доход
-                  </th>
-                  <th class="text-left">
-                    Расход
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(monthData,index) in data.months" :key="index">
-                  <td>{{ months[monthData.month - 1] }}</td>
-                  <td class="income">{{ formatPrice(monthData.income) }}</td>
-                  <td class="expense">{{ formatPrice(monthData.expense) }}</td>
-                </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-card-text>
-        </v-card>
+        <MonthMoneyTable :months="data.months"/>
       </v-col>
       <v-col cols="12" md="6">
-        <v-card>
-          <v-card-text>
-            <v-simple-table>
-              <template v-slot:default>
-                <thead>
-                <tr>
-                  <th class="text-left">
-                    Счёт
-                  </th>
-                  <th class="text-left">
-                    Факт
-                  </th>
-                  <th class="text-left">
-                    Ожидание
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="account in data.accounts" :key="account.id">
-                  <td>{{ account.name }}</td>
-                  <td v-bind:class="{'income':account.balance>0,'expense':account.balance<0}">
-                    {{ formatPrice(account.balance) }}
-                  </td>
-                  <td class="expecting">{{ formatPrice(account.expected_income) }}</td>
-                </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-card-text>
-        </v-card>
+        <MoneyAccountTable :accounts="data.accounts"/>
 
         <v-card class="mt-4">
           <v-card-text>
@@ -194,28 +138,17 @@ import axios from "@/plugins/axios";
 import PaymentEditor from "@/components/Payment/PaymentEditor";
 import {formatPrice} from "@/plugins/formats";
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
+import MonthMoneyTable from "@/components/MonthMoneyTable";
+import MoneyAccountTable from "@/components/MoneyAccountTable";
 
 export default {
   name: "MoneyView",
-  components: {PaymentEditor},
+  components: {MoneyAccountTable, MonthMoneyTable, PaymentEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {
       year: 2023,
-      months: [
-        'Январь',
-        'Февраль',
-        'Март',
-        'Апрель',
-        'Май',
-        'Июнь',
-        'Июль',
-        'Август',
-        'Сентябрь',
-        'Октябрь',
-        'Ноябрь',
-        'Декабрь',
-      ],
+
       data: {},
       addPaymentDialog: false,
       formatPrice: formatPrice,
@@ -254,15 +187,5 @@ export default {
 </script>
 
 <style scoped>
-.income {
-  background: #dfffae;
-}
 
-.expense {
-  background: #ffaed0;
-}
-
-.expecting {
-  background: #ebebeb;
-}
 </style>
