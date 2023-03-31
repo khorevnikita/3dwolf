@@ -46,6 +46,10 @@ class PartController extends Controller
             $models = $models->skip($skip)->take($take);
         }
 
+        if ($field = $request->get("field")) {
+            $models = $models->orderByRaw("FIELD(id,$field) DESC");
+        }
+
         list($sort, $sortDir) = Paginator::getSorting($request);
         $models = $models->orderBy($sort, $sortDir);
 

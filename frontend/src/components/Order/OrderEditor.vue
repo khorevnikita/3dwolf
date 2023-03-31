@@ -113,6 +113,7 @@
               {value:'printing',text:'В печати'},
               {value:'shipping',text:'К отгрузке'},
               {value:'completed',text:'Отгружен'},
+              {value:'canceled',text:'Отказ'},
           ]"
           item-value="value"
           item-text="text"
@@ -138,6 +139,14 @@
           :error-count="1"
           :error="!!errors.delivery_address"
       />
+       <v-textarea
+          label="Комментарий к заказу"
+          v-model="model.comment"
+          :error-messages="errors.comment"
+          :error-count="1"
+          :error="!!errors.comment"
+      />
+
     </v-card-text>
     <v-card-actions>
       <v-btn v-if="modal" text @click="$emit('close')">Закрыть</v-btn>
@@ -150,6 +159,7 @@
 <script>
 import axios from "@/plugins/axios";
 import CustomerPicker from "@/components/Forms/CustomerPicker";
+import Swal from "sweetalert2-khonik";
 
 export default {
   name: "OrderEditor",
@@ -180,6 +190,9 @@ export default {
       axios.post(`${this.modelName}s`, this.model).then(body => {
         this.$emit("created", body[this.modelName]);
         this.$emit("close");
+        if(!this.modal){
+          Swal.fire('Данные сохранены');
+        }
       }).catch(err => {
         this.errors = err.body.errors;
       })
@@ -188,6 +201,9 @@ export default {
       axios.put(`${this.modelName}s/${this.model.id}`, this.model).then(body => {
         this.$emit("updated", body[this.modelName]);
         this.$emit("close");
+        if(!this.modal){
+          Swal.fire('Данные сохранены');
+        }
       }).catch(err => {
         this.errors = err.body.errors;
       })

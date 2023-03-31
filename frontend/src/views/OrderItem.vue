@@ -66,7 +66,8 @@
           <div class="text-h6 mt-4 mb-5">
             Итого: {{ totalAmount }} руб.
             <br/>
-            Вес: {{ totalWeight }}
+            Вес: {{ totalWeight }} <br/>
+            Время печати: {{formatDuration(totalTime)}}
           </div>
         </v-col>
       </v-row>
@@ -135,7 +136,12 @@ export default {
     totalWeight() {
       const weight = this.items.reduce((acc, item) => acc += item.total_weight, 0);
       return Math.round(weight * 100) / 100;
-    }
+    },
+    totalTime() {
+      const time = this.items.reduce((acc, item) => acc += item.print_duration, 0);
+      return Math.round(time * 100) / 100;
+    },
+
   },
   methods: {
     getOrder() {

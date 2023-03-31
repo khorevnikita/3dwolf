@@ -9,9 +9,9 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date', 'customer_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address'];
+    protected $fillable = ['date', 'customer_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address','comment'];
 
-    const STATUSES = ['new', 'printing', 'shipping', 'completed'];
+    const STATUSES = ['new', 'printing', 'shipping', 'completed', 'canceled'];
 
     protected static function booted(): void
     {
@@ -23,8 +23,6 @@ class Order extends Model
         });
 
         static::updated(function (Order $model) {
-
-
             if ($model->getOriginal('status') !== $model->status) {
                 $customer = $model->customer;
                 if ($model->status === "completed") {
