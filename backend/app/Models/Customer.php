@@ -9,7 +9,7 @@ class Customer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'surname', 'father_name', 'phone', 'email', 'telegram', 'type', 'entity_type', 'title', 'inn', 'kpp', 'ogrn', 'okpo', 'okved', 'address', 'ceo', 'rs', 'ks', 'bik', 'bank', 'source', 'balance'];
+    protected $fillable = ['name', 'surname', 'father_name', 'phone', 'email', 'telegram', 'type', 'entity_type', 'title', 'inn', 'kpp', 'ogrn', 'okpo', 'okved', 'address', 'ceo', 'rs', 'ks', 'bik', 'bank', 'source', 'balance','full_name','director_title','director_for_contract','legal_statement'];
 
     public function contracts()
     {

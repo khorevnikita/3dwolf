@@ -64,3 +64,8 @@ Route::prefix('orders')->group(function () {
     Route::get('{order}/export/xlsx', [OrderController::class, 'exportXlsx']);
     Route::get('{order}/export/test', [OrderController::class, 'testExport']);
 });
+Route::prefix('contracts')->group(function () {
+    Route::get('{contract}/export-auth', [ContractController::class, 'exportAuth'])->middleware('auth:sanctum');
+    Route::get('{contract}/export/pdf', [ContractController::class, 'exportPDF']);
+    Route::get('{contract}/export/test', [ContractController::class, 'testExport']);
+});

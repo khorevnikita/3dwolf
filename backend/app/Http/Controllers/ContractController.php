@@ -5,8 +5,13 @@ namespace App\Http\Controllers;
 use App\Helpers\Paginator;
 use App\Http\Requests\Contract\ContractRequest;
 use App\Models\Contract;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class ContractController extends Controller
 {
@@ -99,5 +104,39 @@ class ContractController extends Controller
     {
         $contract->delete();
         return $this->emptySuccessResponse();
+    }
+
+    public function exportAuth(Contract $contract, Request $request): JsonResponse
+    {
+        auth('web')->login(auth('sanctum')->user());
+        $hash = Hash::make("wolf-export-contract-$contract->id");
+        $type = $request->get('type');
+        return $this->resourceItemResponse('download_link', url("api/contracts/$contract->id/export/$type?hash=$hash"));
+    }
+
+    public function exportPDF(Contract $contract, Request $request): Response
+    {
+        if (!Hash::check("wolf-export-contract-$contract->id", $request->get('hash'))) abort(403);
+        $time = Carbon::now()->format("Y-m-d_H:i:s");
+        $filename = "contract_$contract->id" . "_by_$time.pdf";
+
+        $pdf = Pdf::loadView('exports.contract', [
+            'contract' => $contract,
+            'date'=>$contract->getDate(),
+            "template" => Contract::TEMPLATE_BLOCKS,
+            'customer'=>$contract->customer,
+        ])
+            ->setPaper('a4', 'portrait');
+        return $pdf->download($filename);
+    }
+
+    public function testExport(Contract $contract): View
+    {
+        return view('exports.contract', [
+            'contract' => $contract,
+            'date' => $contract->getDate(),
+            "template" => Contract::TEMPLATE_BLOCKS,
+            'customer'=>$contract->customer,
+        ]);
     }
 }

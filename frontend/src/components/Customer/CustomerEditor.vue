@@ -134,7 +134,7 @@
               :error="!!errors.okved"
           />
         </v-col>
-        <v-col cols="12" v-if="model.entity_type==='self_employed'">
+        <v-col cols="12">
           <v-textarea
               label="Адрес"
               v-model="model.address"
@@ -220,6 +220,37 @@
           :error-messages="errors.balance"
           :error-count="1"
           :error="!!errors.balance"
+      />
+      <div class="text-h6">
+        Данные для договоров
+      </div>
+      <v-text-field
+          label="Полное название"
+          v-model="model.full_name"
+          :error-messages="errors.full_name"
+          :error-count="1"
+          :error="!!errors.full_name"
+      />
+      <v-text-field
+          label="Должность директора"
+          v-model="model.director_title"
+          :error-messages="errors.director_title"
+          :error-count="1"
+          :error="!!errors.director_title"
+      />
+      <v-text-field
+          label="Директор (род. пад)"
+          v-model="model.director_for_contract"
+          :error-messages="errors.director_for_contract"
+          :error-count="1"
+          :error="!!errors.director_for_contract"
+      />
+      <v-text-field
+          label="Основание договора"
+          v-model="model.legal_statement"
+          :error-messages="errors.legal_statement"
+          :error-count="1"
+          :error="!!errors.legal_statement"
       />
     </v-card-text>
     <v-card-actions>

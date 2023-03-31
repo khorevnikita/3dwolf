@@ -43,7 +43,7 @@
           class="elevation-1 mt-3"
       >
         <template v-slot:[`item.status`]="{item}">
-          {{ item.status==='new'?'Новый':item.status==='process'?'В работе':'Завершен' }}
+          {{ item.status === 'new' ? 'Новый' : item.status === 'process' ? 'В работе' : 'Завершен' }}
         </template>
         <template v-slot:[`item.date`]="{item}">
           {{ item.date ? moment(item.date).format("DD.MM.YYYY") : '-' }}
@@ -55,6 +55,9 @@
           {{ formatPrice(item.amount) }}
         </template>
         <template v-slot:[`item.actions`]="{item}">
+          <v-btn color="info" icon @click="download(item)">
+            <v-icon>mdi-file-pdf-box</v-icon>
+          </v-btn>
           <v-btn color="warning" icon @click="edit(item)">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
@@ -83,6 +86,7 @@
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import ContractEditor from "@/components/Contract/ContractEditor";
 import CustomerPicker from "@/components/Forms/CustomerPicker";
+import axios from "@/plugins/axios";
 
 export default {
   name: "ContractsView",
@@ -104,6 +108,13 @@ export default {
       deleteSwalTitle: `Безвозвратно удалить договор?`,
     }
   },
+  methods: {
+    download(item) {
+      axios.get(`contracts/${item.id}/export-auth?type=pdf`).then(body => {
+        window.open(body.download_link, '_blank')
+      })
+    }
+  }
 }
 </script>
 
