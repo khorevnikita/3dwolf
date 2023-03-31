@@ -149,6 +149,7 @@ export default {
         printing: "В печати",
         shipping: "К отгрузке",
         completed: "Отгружено",
+        canceled: "Отказ",
       },
       paymentStatuses: {
         not_paid: "Не оплачено",
