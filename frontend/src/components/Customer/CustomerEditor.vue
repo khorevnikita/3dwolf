@@ -263,6 +263,7 @@
 
 <script>
 import axios from "@/plugins/axios";
+import Swal from "sweetalert2-khonik";
 
 export default {
   name: "CustomerEditor",
@@ -287,6 +288,9 @@ export default {
       axios.post(`${this.modelName}s`, this.model).then(body => {
         this.$emit("created", body[this.modelName]);
         this.$emit("close");
+        if(!this.modal){
+          Swal.fire('Данные сохранены');
+        }
       }).catch(err => {
         this.errors = err.body.errors;
       })
@@ -295,6 +299,9 @@ export default {
       axios.put(`${this.modelName}s/${this.model.id}`, this.model).then(body => {
         this.$emit("updated", body[this.modelName]);
         this.$emit("close");
+        if(!this.modal){
+          Swal.fire('Данные сохранены');
+        }
       }).catch(err => {
         this.errors = err.body.errors;
       })

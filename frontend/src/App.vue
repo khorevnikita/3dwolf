@@ -75,8 +75,8 @@ import {mapGetters} from "vuex";
 export default Vue.extend({
   name: 'App',
 
-  data(){
-    return{
+  data() {
+    return {
       items: [
         {title: 'Главная', icon: 'mdi-view-dashboard', to: '/'},
         {title: 'Сотрудники', icon: 'mdi-account-multiple', to: '/users'},
@@ -113,5 +113,13 @@ export default Vue.extend({
 
 .expecting {
   background: #ebebeb;
+}
+
+.swal2-styled.swal2-confirm {
+  background-color: #0D6B78 !important;
+}
+
+.swal2-styled.swal2-confirm:focus{
+  box-shadow: none !important;
 }
 </style>

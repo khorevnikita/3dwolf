@@ -13,9 +13,25 @@
     </v-col>
     <v-col cols="6">
       <v-card>
-        <v-card-subtitle>Новыйх клиентов</v-card-subtitle>
+        <v-card-subtitle>Новых клиентов</v-card-subtitle>
         <v-card-title>
           <div class="text-h3">{{ data.customers.new }}</div>
+        </v-card-title>
+      </v-card>
+    </v-col>
+    <v-col cols="6">
+      <v-card>
+        <v-card-subtitle>Авито</v-card-subtitle>
+        <v-card-title>
+          <div class="text-h3">{{ data.sources.avito }}</div>
+        </v-card-title>
+      </v-card>
+    </v-col>
+    <v-col cols="6">
+      <v-card>
+        <v-card-subtitle>Сайт</v-card-subtitle>
+        <v-card-title>
+          <div class="text-h3">{{ data.sources.site }}</div>
         </v-card-title>
       </v-card>
     </v-col>

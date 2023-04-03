@@ -67,15 +67,19 @@ class MoneyController extends Controller
         $accounts = Account::query()->get();
 
         $orders = Order::query()->selectRaw("status, count(id) as count")
-            ->groupBy("status")->pluck('count','status');
+            ->groupBy("status")->pluck('count', 'status');
+        $sources = Customer::query()->selectRaw("source, count(id) as count")
+            ->groupBy("source")->pluck('count', 'source');
+
         return $this->resourceItemResponse('data', [
             'months' => $monthData,
             'accounts' => $accounts,
             'orders' => $orders,
             'customers' => [
                 'total' => Customer::query()->count(),
-                'new' => Customer::query()->where("created_at", ">", Carbon::now()->subMonth())->count()
-            ]
+                'new' => Customer::query()->where("created_at", ">", Carbon::now()->startOfMonth())->count()
+            ],
+            'sources'=>$sources,
         ]);
     }
 
