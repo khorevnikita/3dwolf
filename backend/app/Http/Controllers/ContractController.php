@@ -7,10 +7,12 @@ use App\Http\Requests\Contract\ContractRequest;
 use App\Models\Contract;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use iio\libmergepdf\Merger;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ContractController extends Controller
@@ -118,25 +120,68 @@ class ContractController extends Controller
     {
         if (!Hash::check("wolf-export-contract-$contract->id", $request->get('hash'))) abort(403);
         $time = Carbon::now()->format("Y-m-d_H:i:s");
-        $filename = "contract_$contract->id" . "_by_$time.pdf";
+        $mainName = "contract_$contract->id" . "_text_by_$time.pdf";
 
-        $pdf = Pdf::loadView('exports.contract', [
-            'contract' => $contract,
-            'date'=>$contract->getDate(),
-            "template" => Contract::TEMPLATE_BLOCKS,
-            'customer'=>$contract->customer,
-        ])
-            ->setPaper('a4', 'portrait');
-        return $pdf->download($filename);
-    }
-
-    public function testExport(Contract $contract): View
-    {
-        return view('exports.contract', [
+        $mainPart = Pdf::loadView('exports.contract', [
             'contract' => $contract,
             'date' => $contract->getDate(),
             "template" => Contract::TEMPLATE_BLOCKS,
-            'customer'=>$contract->customer,
+            'customer' => $contract->customer,
+        ])
+            ->setPaper('a4', 'portrait')->output();
+
+        Storage::disk('public')->put($mainName, $mainPart);
+
+        $additionName = "contract_$contract->id" . "_addition_by_$time.pdf";
+        $addition = Pdf::loadView('exports.contract_addition', [
+            'contract' => $contract,
+            'date' => $contract->getDate(),
+            'customer' => $contract->customer,
+        ])
+            ->setPaper('a4', 'landscape')->output();
+
+
+        Storage::disk('public')->put($additionName, $addition);
+
+        $merger = new Merger();
+        $merger->addFile("storage/$mainName");
+        $merger->addFile("storage/$additionName");
+
+        $finalName = "contract_$contract->id" . "_by_$time.pdf";
+        $createdPdf = $merger->merge();
+
+        Storage::disk('public')->put($finalName, $createdPdf);
+
+        Storage::disk('public')->delete($mainName);
+        Storage::disk('public')->delete($additionName);
+        return new Response(Storage::disk('public')->get($finalName), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $finalName . '"',
+        ]);
+    }
+
+    public function exportAdditionPDF(Contract $contract, Request $request): Response
+    {
+        if (!Hash::check("wolf-export-contract-$contract->id", $request->get('hash'))) abort(403);
+        $time = Carbon::now()->format("Y-m-d_H:i:s");
+        $filename = "contract_$contract->id" . "_by_$time.pdf";
+
+        $pdf = Pdf::loadView('exports.contract_addition', [
+            'contract' => $contract,
+            'date' => $contract->getDate(),
+            'customer' => $contract->customer,
+        ])
+            ->setPaper('a4', 'landscape');
+        return $pdf->download($filename);
+    }
+
+
+    public function testExport(Contract $contract): View
+    {
+        return view('exports.contract_addition', [
+            'contract' => $contract,
+            'date' => $contract->getDate(),
+            'customer' => $contract->customer,
         ]);
     }
 }
