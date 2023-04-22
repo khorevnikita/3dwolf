@@ -1,0 +1,3 @@
+<div>
+    {{$newsletter->text}}
+</div>

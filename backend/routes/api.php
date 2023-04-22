@@ -16,6 +16,7 @@ use App\Http\Controllers\OrderLineController;
 use App\Http\Controllers\MoneyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\NewsletterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,11 +51,22 @@ Route::middleware('auth:sanctum')->group(function () {
         'contracts' => ContractController::class,
         'users' => UserController::class,
         'payments' => PaymentController::class,
+        'newsletters' => NewsletterController::class,
     ]);
 
     Route::prefix('money')->group(function () {
         Route::get('statistics', [MoneyController::class, 'getTotalStatistics']);
         Route::get('dashboard', [MoneyController::class, 'getDashboardData']);
+    });
+
+    Route::prefix('newsletters/{newsletter}')->group(function () {
+        Route::get('available-receivers', [NewsletterController::class, 'availableReceivers']);
+        Route::post('attach-all', [NewsletterController::class, 'attachAll']);
+        Route::post('attach/{customer}', [NewsletterController::class, 'attachCustomer']);
+        Route::get('attached-receivers', [NewsletterController::class, 'attachedReceivers']);
+        Route::post('detach-all', [NewsletterController::class, 'detachAll']);
+        Route::post('detach/{customer}', [NewsletterController::class, 'detachCustomer']);
+        Route::post('send', [NewsletterController::class, 'send']);
     });
 });
 

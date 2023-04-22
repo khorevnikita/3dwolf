@@ -89,6 +89,7 @@ export default Vue.extend({
         {title: 'Договора', icon: 'mdi-file-sign', to: '/contracts'},
         {title: 'Деньги', icon: 'mdi-cash', to: '/money'},
         {title: 'Сметы', icon: 'mdi-clipboard-list', to: '/estimates'},
+        {title: 'Рассылки', icon: 'mdi-email-arrow-right-outline', to: '/newsletters'},
       ],
       bottom: null,
       drawer: !this.$vuetify.breakpoint.mobile,

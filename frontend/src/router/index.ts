@@ -86,6 +86,16 @@ const routes: Array<RouteConfig> = [
         component: () => import('../views/MoneyView.vue'),
     },
     {
+        path: '/newsletters',
+        name: 'newsletters',
+        component: () => import('../views/NewslettersView.vue')
+    },
+    {
+        path: '/newsletters/:id',
+        name: 'newsletter',
+        component: () => import('../views/NewsletterItem.vue')
+    },
+    {
         path: '/404',
         name: '404',
         component: () => import('../views/404.vue'),
