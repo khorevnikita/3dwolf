@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Part;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PartRequest extends FormRequest
 {
@@ -21,9 +22,10 @@ class PartRequest extends FormRequest
      */
     public function rules(): array
     {
+        $modelId = request()->route('part')?->id ?? 0;
         return [
             'bought_at' => 'required|date',
-            'inv_number' => 'required',
+            'inv_number' => ['required',Rule::unique('parts','inv_number')->ignore($modelId)],
             'prod_number' => 'sometimes',
             'manufacturer_id' => 'required|integer|exists:manufacturers,id',
             'material_id' => 'required|integer|exists:materials,id',

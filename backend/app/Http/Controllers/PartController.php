@@ -74,6 +74,8 @@ class PartController extends Controller
     {
         $part = new Part($request->all());
         $part->save();
+
+        $part->load(['manufacturer', 'material']);
         return $this->resourceItemResponse('part', $part);
     }
 
@@ -100,6 +102,8 @@ class PartController extends Controller
     {
         $part->fill($request->all());
         $part->save();
+
+        $part->load(['manufacturer', 'material']);
         return $this->resourceItemResponse('part', $part);
     }
 

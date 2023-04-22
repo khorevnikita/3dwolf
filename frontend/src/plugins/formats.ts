@@ -1,5 +1,5 @@
 export const formatPrice = (price: number = 0) => {
-    return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ') + ' ₽';
+    return Number(price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ') + ' ₽';
 }
 
 export const formatDuration = (seconds: number) => {
