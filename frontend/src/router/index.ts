@@ -91,10 +91,21 @@ const routes: Array<RouteConfig> = [
         component: () => import('../views/NewslettersView.vue')
     },
     {
+        path: '/newsletters/create',
+        name: 'newsletterCreate',
+        component: () => import('../views/NewsletterEditor.vue')
+    },
+    {
         path: '/newsletters/:id',
         name: 'newsletter',
         component: () => import('../views/NewsletterItem.vue')
     },
+    {
+        path: '/newsletters/:id/edit',
+        name: 'newsletterEdit',
+        component: () => import('../views/NewsletterEditor.vue')
+    },
+
     {
         path: '/404',
         name: '404',

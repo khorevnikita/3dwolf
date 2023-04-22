@@ -7,7 +7,7 @@
       <v-card>
         <v-card-subtitle>Всего клиентов</v-card-subtitle>
         <v-card-title>
-          <div class="text-h3">{{ data.customers.total }}</div>
+          <div class="text-h3" v-if="data.customers">{{ data.customers?.total }}</div>
         </v-card-title>
       </v-card>
     </v-col>
@@ -15,7 +15,7 @@
       <v-card>
         <v-card-subtitle>Новых клиентов</v-card-subtitle>
         <v-card-title>
-          <div class="text-h3">{{ data.customers.new }}</div>
+          <div class="text-h3" v-if="data.customers">{{ data.customers?.new }}</div>
         </v-card-title>
       </v-card>
     </v-col>
@@ -23,7 +23,7 @@
       <v-card>
         <v-card-subtitle>Авито</v-card-subtitle>
         <v-card-title>
-          <div class="text-h3">{{ data.sources.avito }}</div>
+          <div class="text-h3">{{ data.sources?.avito }}</div>
         </v-card-title>
       </v-card>
     </v-col>
@@ -31,7 +31,7 @@
       <v-card>
         <v-card-subtitle>Сайт</v-card-subtitle>
         <v-card-title>
-          <div class="text-h3">{{ data.sources.site }}</div>
+          <div class="text-h3">{{ data.sources?.site }}</div>
         </v-card-title>
       </v-card>
     </v-col>

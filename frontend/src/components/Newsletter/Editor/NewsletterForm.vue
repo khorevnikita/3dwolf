@@ -8,13 +8,14 @@
           :error-count="1"
           :error="!!errors.subject"
       />
-      <v-textarea
+      <!--<v-textarea
           label="Текст"
           v-model="newsletter.text"
           :error-messages="errors.text"
           :error-count="1"
           :error="!!errors.text"
-      />
+      />-->
+      <ckeditor style="min-height: 400px" :editor="editor" v-model="newsletter.text" :config="editorConfig"></ckeditor>
     </v-card-text>
     <v-card-actions>
       <v-spacer/>
@@ -25,14 +26,36 @@
 
 <script>
 import axios from "@/plugins/axios";
+import CKEditor from '@ckeditor/ckeditor5-vue2';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import uploader from "@/plugins/uploader";
+//import {UploadAdapter} from "@/plugins/uploadAdapter";
+//import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter';
+
 
 export default {
   name: "NewsletterForm",
   props: ['value'],
+  components: {
+    ckeditor: CKEditor.component
+  },
   data() {
     return {
       newsletter: this.value,
       errors: {},
+
+      editor: ClassicEditor,
+      editorConfig: {
+        // The configuration of the editor.
+        extraPlugins: [ uploader, ],
+      }
+    }
+  },
+  watch: {
+    value: {
+      handler() {
+        this.newsletter = this.value;
+      }, deep: true
     }
   },
   methods: {
@@ -45,7 +68,7 @@ export default {
       }
     },
     store() {
-      axios.post(`newsletters`, this.newsletter).then(body=> {
+      axios.post(`newsletters`, this.newsletter).then(body => {
         this.$emit("input", body.newsletter);
         this.$emit("created", body.newsletter);
       }).catch(err => {
@@ -64,6 +87,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.ck-editor__editable {
+  min-height: 400px;
+}
 </style>

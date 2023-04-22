@@ -4,7 +4,7 @@
       <div class="d-flex align-items-center">
         <div class="text-h6">Email рассылки</div>
         <v-spacer/>
-        <v-btn small @click="create()" color="primary">Создать</v-btn>
+        <v-btn small to="/newsletters/create" color="primary">Создать</v-btn>
       </div>
     </v-col>
     <v-col cols="12">
@@ -34,7 +34,7 @@
           <v-btn icon color="success" @click="send(item)" :disabled="!item.editable">
             <v-icon>mdi-play</v-icon>
           </v-btn>
-          <v-btn icon color="warning" @click="edit(item)" :disabled="!item.editable">
+          <v-btn :to="`/newsletters/${item.id}/edit`" icon color="warning" :disabled="!item.editable">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-btn icon color="error" class="ml-2" @click="destroy(item)" :disabled="!item.editable">
@@ -44,7 +44,7 @@
       </v-data-table>
     </v-col>
 
-    <v-dialog v-model="editDialog"
+    <!--<v-dialog v-model="editDialog"
               fullscreen
               hide-overlay
               persistent
@@ -57,19 +57,19 @@
           @updated="onUpdated"
           @customers_updated="onCustomersUpdated"
       />
-    </v-dialog>
+    </v-dialog>-->
   </v-row>
 </template>
 
 <script>
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import Swal from "sweetalert2-khonik";
-import NewsletterEditDialog from "@/components/Newsletter/NewsletterEditDialog";
+//import NewsletterEditDialog from "@/components/Newsletter/NewsletterEditDialog";
 import axios from "@/plugins/axios";
 
 export default {
   name: "NewslettersView",
-  components: {NewsletterEditDialog},
+  //components: {NewsletterEditDialog},
   mixins: [ResourceComponentHelper],
   data() {
     return {
@@ -93,9 +93,9 @@ export default {
         ...this.items,
       ])
     },
-    onCustomersUpdated() {
+    /*onCustomersUpdated() {
       this.getItems()
-    },
+    },*/
     send(item) {
       Swal.fire({
         title: "Подтверждаете отправку рассылки?",

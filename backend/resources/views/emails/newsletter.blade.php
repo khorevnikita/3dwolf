@@ -1,3 +1,3 @@
 <div>
-    {{$newsletter->text}}
+    {!! $newsletter->text !!}
 </div>

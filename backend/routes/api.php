@@ -17,6 +17,7 @@ use App\Http\Controllers\MoneyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\UploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +69,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('detach/{customer}', [NewsletterController::class, 'detachCustomer']);
         Route::post('send', [NewsletterController::class, 'send']);
     });
+
+    Route::post('upload', [UploadController::class, 'upload']);
 });
 
 Route::prefix('orders')->group(function () {

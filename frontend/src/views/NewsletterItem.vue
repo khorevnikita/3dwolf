@@ -4,19 +4,29 @@
     <div v-else>
       <v-breadcrumbs :items="breadcrumps" divider="-"/>
       <h4 class="text-h4 mb-3">{{ newsletter.subject }}</h4>
-      <v-chip class="mr-3">
-        {{ newsletter.status }}
-      </v-chip>
-      <v-chip class="mr-3">
-        <v-icon>mdi-account</v-icon>
-        {{ newsletter.customers_count }}
-      </v-chip>
-      <v-btn icon outlined color="success" @click="send()" :disabled="newsletter.status!=='draft'">
-        <v-icon>mdi-play</v-icon>
-      </v-btn>
+      <div class="d-flex">
+        <v-chip class="mr-3">
+          {{ newsletter.status }}
+        </v-chip>
+        <v-chip class="mr-3">
+          <v-icon>mdi-account</v-icon>
+          {{ newsletter.customers_count }}
+        </v-chip>
+        <v-btn icon outlined color="success" @click="send()" :disabled="newsletter.status!=='draft'">
+          <v-icon>mdi-play</v-icon>
+        </v-btn>
+        <v-spacer/>
+        <v-btn :to="`/newsletters/${newsletter.id}/edit`" icon outlined color="warning" :disabled="!newsletter.editable">
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+        <v-btn icon outlined color="error" class="ml-2" @click="destroy(item)" :disabled="!newsletter.editable">
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+
+      </div>
       <v-row>
         <v-col cols="12" sm="8" md="6">
-          <p class="mt-3">{{ newsletter.text }}</p>
+          <div class="mt-3" v-html="newsletter.text"></div>
         </v-col>
         <v-col cols="12">
           <v-simple-table>
@@ -129,6 +139,25 @@ export default {
         }
       });
     },
+    destroy(item, onDeleted = undefined) {
+      Swal.fire({
+        title: this.deleteSwalTitle,
+        showDenyButton: true,
+        denyButtonText: `Удалить`,
+        showCancelButton: true,
+        cancelButtonText: 'Отменить',
+        showCloseButton: false,
+        showConfirmButton: false,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isDenied) {
+          axios.delete(`${this.resourceApiRoute}/${item.id}`).then(() => {
+            this.items.splice(this.items.indexOf(item), 1);
+            if (onDeleted) onDeleted();
+          })
+        }
+      })
+    }
   }
 }
 </script>
