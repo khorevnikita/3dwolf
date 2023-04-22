@@ -49,6 +49,10 @@ class OrderController extends Controller
             $models = $models->skip($skip)->take($take);
         }
 
+        if ($orderId = $request->get("sort_order_id")) {
+            $models = $models->orderByRaw("FIELD(id,$orderId) DESC");
+        }
+
         if ($request->has("status_sort")) {
             $statuses = implode(",", array_map(function ($statusKey) {
                 return "'$statusKey'";
