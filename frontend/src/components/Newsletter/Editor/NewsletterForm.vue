@@ -16,6 +16,11 @@
           :error="!!errors.text"
       />-->
       <ckeditor style="min-height: 400px" :editor="editor" v-model="newsletter.text" :config="editorConfig"></ckeditor>
+
+      <div class="text-h6">Вложения</div>
+      <FileUploader label="Выберите файл" @uploaded="onUploaded"/>
+
+      {{ files }}
     </v-card-text>
     <v-card-actions>
       <v-spacer/>
@@ -29,14 +34,14 @@ import axios from "@/plugins/axios";
 import CKEditor from '@ckeditor/ckeditor5-vue2';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import uploader from "@/plugins/uploader";
-//import {UploadAdapter} from "@/plugins/uploadAdapter";
-//import SimpleUploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter';
+import FileUploader from "@/components/Forms/FileUploader";
 
 
 export default {
   name: "NewsletterForm",
   props: ['value'],
   components: {
+    FileUploader,
     ckeditor: CKEditor.component
   },
   data() {
@@ -47,8 +52,9 @@ export default {
       editor: ClassicEditor,
       editorConfig: {
         // The configuration of the editor.
-        extraPlugins: [ uploader, ],
-      }
+        extraPlugins: [uploader,],
+      },
+      files: []
     }
   },
   watch: {
@@ -59,6 +65,9 @@ export default {
     }
   },
   methods: {
+    onUploaded(file) {
+      this.files.push(file)
+    },
     save() {
       this.errors = {};
       if (this.newsletter.id) {
@@ -89,6 +98,7 @@ export default {
 
 <style>
 .ck-editor__editable {
-  min-height: 400px;
+  height: 400px;
+  overflow-x: scroll;
 }
 </style>
