@@ -33,7 +33,7 @@
           :error-count="1"
           :error="!!errors.password"
       />
-       <v-text-field
+      <v-text-field
           v-if="!model.id"
           type="password"
           label="Подтвердите пароль"
@@ -50,6 +50,19 @@
           :error-count="1"
           :error="!!errors.balance"
       />
+
+      <v-list-item-group v-model="model.permission" multiple>
+        <v-list-item :value="permType.type" v-for="permType in permissionTypes" :key="permType.type">
+          <template v-slot:default="{ active }">
+            <v-list-item-action>
+              <v-checkbox :input-value="active"/>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>{{ permType['title'] }}</v-list-item-title>
+            </v-list-item-content>
+          </template>
+        </v-list-item>
+      </v-list-item-group>
     </v-card-text>
     <v-card-actions>
       <v-btn text @click="$emit('close')">Закрыть</v-btn>
@@ -69,7 +82,36 @@ export default {
     return {
       model: this.value,
       modelName: 'user',
-      errors: {}
+      errors: {},
+
+      permissionTypes: [
+        {title: 'Сотрудники', type: 'users'},
+        {title: 'Клиенты', type: 'customers'},
+        {title: 'Материалы', type: 'materials'},
+        {title: 'Производители', type: 'manufacturers'},
+        {title: 'Склад', type: 'parts'},
+        {title: 'Счета', type: 'accounts'},
+        {title: 'Наряд-заказы', type: 'orders'},
+        {title: 'Договора', type: 'contracts'},
+        {title: 'Деньги', type: 'payments'},
+        {title: 'Сметы', type: 'estimates'},
+        {title: 'Рассылки', type: 'newsletters'},
+      ],
+    }
+  },
+  created() {
+    /*if (!this.model.permission) {
+      this.$set(this.model, 'permission', []);
+      this.permissionTypes.forEach(perm => {
+        this.$set(this.model.permission, perm.type, false);
+      })
+    }*/
+  },
+  watch: {
+    model: {
+      handler() {
+        console.log(this.model);
+      }, deep: true
     }
   },
   methods: {

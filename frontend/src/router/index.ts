@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter, {RouteConfig} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import store from "@/store";
+import axios from "@/plugins/axios";
 
 Vue.use(VueRouter)
 
@@ -130,12 +131,31 @@ router.beforeEach(async (to, from, next) => {
 
     const apiToken = !!store.getters.jwt;
     const guestRoute = to.matched.some(record => record.meta.guest);
+
     if (guestRoute && apiToken) {
         next({path: "/"})
     } else if (!guestRoute && !apiToken) {
         next({path: "/login"})
     } else {
-        next()
+        let user = store.getters.user;
+        if (!user) {
+            const body = <any>await axios.get(`auth/me`);
+            user = body.user;
+            store.commit('setUser', user)
+        }
+
+        const route = store.getters.routes.find((r: any) => r.to === to.path);
+
+        if (!route.permission) {
+            next()
+        } else {
+
+            if (user.permission.includes(route.permission)) {
+                next()
+            } else {
+                next({path: "/"});
+            }
+        }
     }
 });
 

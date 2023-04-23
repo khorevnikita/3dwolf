@@ -16,7 +16,7 @@
 
       <v-list dense nav>
         <v-list-item
-            v-for="item in items"
+            v-for="item in visibleRoutes"
             :key="item.title"
             link
             :to="item.to"
@@ -37,11 +37,11 @@
       </v-container>
     </v-main>
     <v-bottom-navigation app shift v-if="isMobile">
-      <v-btn to="/money" icon>
+      <v-btn to="/money" icon v-if="show('payments')">
         <span>Деньги</span>
         <v-icon>mdi-cash</v-icon>
       </v-btn>
-      <v-btn to="/orders" icon>
+      <v-btn to="/orders" icon v-if="show('orders')">
         <span>Заказы</span>
 
         <v-icon>mdi-cart-outline</v-icon>
@@ -53,7 +53,7 @@
         <v-icon>mdi-view-dashboard</v-icon>
       </v-btn>
 
-      <v-btn to="/customers" icon>
+      <v-btn to="/customers" icon v-if="show('customers')">
         <span>Клиенты</span>
 
         <v-icon>mdi-toolbox</v-icon>
@@ -68,7 +68,7 @@
   </v-app>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
 import {mapGetters} from "vuex";
 
@@ -77,28 +77,19 @@ export default Vue.extend({
 
   data() {
     return {
-      items: [
-        {title: 'Главная', icon: 'mdi-view-dashboard', to: '/'},
-        {title: 'Сотрудники', icon: 'mdi-account-multiple', to: '/users'},
-        {title: 'Клиенты', icon: 'mdi-toolbox', to: '/customers'},
-        {title: 'Материалы', icon: 'mdi-box-cutter', to: '/materials'},
-        {title: 'Производители', icon: 'mdi-office-building-cog', to: '/manufacturers'},
-        {title: 'Склад', icon: 'mdi-store', to: '/stock'},
-        {title: 'Счета', icon: 'mdi-wallet-plus', to: '/accounts'},
-        {title: 'Наряд-заказы', icon: 'mdi-cart-outline', to: '/orders'},
-        {title: 'Договора', icon: 'mdi-file-sign', to: '/contracts'},
-        {title: 'Деньги', icon: 'mdi-cash', to: '/money'},
-        {title: 'Сметы', icon: 'mdi-clipboard-list', to: '/estimates'},
-        {title: 'Рассылки', icon: 'mdi-email-arrow-right-outline', to: '/newsletters'},
-      ],
       bottom: null,
       drawer: !this.$vuetify.breakpoint.mobile,
     }
   },
   computed: {
-    ...mapGetters(['jwt']),
+    ...mapGetters(['jwt', 'routes', 'user','visibleRoutes']),
     isMobile() {
       return this.$vuetify.breakpoint.mobile;
+    },
+  },
+  methods: {
+    show(key) {
+      return this.user && this.user.permission?.includes(key);
     }
   }
 });
@@ -120,7 +111,7 @@ export default Vue.extend({
   background-color: #0D6B78 !important;
 }
 
-.swal2-styled.swal2-confirm:focus{
+.swal2-styled.swal2-confirm:focus {
   box-shadow: none !important;
 }
 </style>

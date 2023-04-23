@@ -42,7 +42,7 @@
       <v-card>
         <v-card-subtitle>{{ statuses[statusKey] }}</v-card-subtitle>
         <v-card-title>
-          <div class="text-h3">{{ data.orders[statusKey] ? data.orders[statusKey] : 0 }}</div>
+          <div class="text-h3" v-if="data.orders">{{ data.orders[statusKey] ? data.orders[statusKey] : 0 }}</div>
         </v-card-title>
       </v-card>
     </v-col>

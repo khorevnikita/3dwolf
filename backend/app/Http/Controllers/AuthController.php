@@ -22,8 +22,8 @@ class AuthController extends Controller
                 'errors' => [
                     'password' => ['Wrong password. Try again.']
                 ],
-                'a'=>$request->get('password'),
-                'b'=>$user->password
+                'a' => $request->get('password'),
+                'b' => $user->password
             ], 422);
         }
 
@@ -33,5 +33,17 @@ class AuthController extends Controller
             'status' => 'success',
             'access_token' => $token->plainTextToken,
         ]);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function me(): JsonResponse
+    {
+        $user = User::query()
+            //->with("permission")
+            ->find(auth("sanctum")->id());
+
+        return $this->resourceItemResponse('user', $user);
     }
 }

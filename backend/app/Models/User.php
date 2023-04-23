@@ -45,9 +45,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['permission'];
+
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function permission()
+    {
+        return $this->hasOne(UserPermission::class);
     }
 
     public function scopeSearch($q, $search)
@@ -67,5 +74,34 @@ class User extends Authenticatable
     {
         $this->balance = $this->balance - $expense + $income;
         $this->save();
+    }
+
+    public function setPermission(array $permission)
+    {
+        if (!UserPermission::query()->where("user_id", $this->id)->exists()) {
+            UserPermission::query()->insert(['user_id' => $this->id]);
+        }
+        UserPermission::query()->where("user_id", $this->id)->update([
+            'users' => in_array('users', $permission),
+            'customers' => in_array('customers', $permission),
+            'materials' => in_array('materials', $permission),
+            'manufacturers' => in_array('manufacturers', $permission),
+            'parts' => in_array('parts', $permission),
+            'accounts' => in_array('accounts', $permission),
+            'orders' => in_array('orders', $permission),
+            'contracts' => in_array('contracts', $permission),
+            'payments' => in_array('payments', $permission),
+            'estimates' => in_array('estimates', $permission),
+            'newsletters' => in_array('newsletters', $permission),
+        ]);
+    }
+
+    public function getPermissionAttribute()
+    {
+        $permission = $this->permission()->first();
+        if (!$permission) return [];;
+        return array_keys(array_filter($permission->toArray(), function ($p,$k) {
+            return $p && !in_array($k, ['id', 'user_id','updated_at']);
+        }, 1));
     }
 }

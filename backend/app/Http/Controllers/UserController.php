@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Paginator;
 use App\Http\Requests\User\UserRequest;
 use App\Models\User;
+use App\Models\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -50,6 +51,10 @@ class UserController extends Controller
         $user = new User($request->all());
         $user->save();
 
+        if ($permission = $request->get("permission")) {
+            $user->setPermission($permission);
+        }
+
         return $this->resourceItemResponse('user', $user);
     }
 
@@ -78,6 +83,10 @@ class UserController extends Controller
     {
         $user->fill($request->all());
         $user->save();
+
+        if ($permission = $request->get("permission")) {
+            $user->setPermission($permission);
+        }
 
         return $this->resourceItemResponse('user', $user);
     }
