@@ -3,8 +3,10 @@
 namespace App\Mail;
 
 use App\Models\Newsletter;
+use App\Models\NewsletterFile;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -51,6 +53,8 @@ class NewsletterEmail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return $this->newsletter->files()->get()->map(function (NewsletterFile $file) {
+            return Attachment::fromStorageDisk('public', $file->path)->as($file->name);
+        })->toArray();
     }
 }

@@ -30,6 +30,11 @@ class Newsletter extends Model
         return $this->customers()->orderBy('customer_newsletter.id')->wherePivotNotNull('sent_at');
     }
 
+    public function files()
+    {
+        return $this->hasMany(NewsletterFile::class);
+    }
+
     public function getEditableAttribute()
     {
         return $this->status === self::STATUSES[0];
@@ -38,5 +43,10 @@ class Newsletter extends Model
     public function scopeSending($query)
     {
         return $query->where("status", self::STATUSES[1]);
+    }
+
+    public function getFilesAttribute()
+    {
+        return $this->files()->pluck("newsletter_files.url");
     }
 }

@@ -6,6 +6,7 @@ use App\Helpers\Paginator;
 use App\Http\Requests\Newsletter\NewsletterRequest;
 use App\Models\Customer;
 use App\Models\Newsletter;
+use App\Models\NewsletterFile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -66,12 +67,24 @@ class NewsletterController extends Controller
      */
     public function store(NewsletterRequest $request): JsonResponse
     {
-        $push = new Newsletter($request->all('subject', 'text'));
-        $push->status = Newsletter::STATUSES[0];
-        $push->save();
+        $newsletter = new Newsletter($request->all('subject', 'text'));
+        $newsletter->status = Newsletter::STATUSES[0];
+        $newsletter->save();
 
-        $push->loadCount(['customers']);
-        return $this->resourceItemResponse('newsletter', $push);
+        if ($files = $request->get("files")) {
+            $files = array_map(function ($file) use ($newsletter) {
+                return [
+                    "url" => $file['url'],
+                    'path' => $file['path'],
+                    'name' => $file['name'],
+                    'newsletter_id' => $newsletter->id,
+                ];
+            }, $files);
+            NewsletterFile::query()->insert($files);
+        }
+
+        $newsletter->loadCount(['customers']);
+        return $this->resourceItemResponse('newsletter', $newsletter);
     }
 
     /**
@@ -84,7 +97,9 @@ class NewsletterController extends Controller
         $newsletter->loadCount(['customers']);
         $newsletter->load(['customers' => function ($q) use ($skip, $take) {
             $q->orderBy("sent_at")->orderBy("customers.id")->skip($skip)->take($take);
-        }]);
+        }, 'files']);
+
+        #$newsletter->append('files');
 
         $pagesCount = Paginator::pagesCount($take, $newsletter->customers_count);
 
@@ -108,9 +123,39 @@ class NewsletterController extends Controller
         $newsletter->fill($request->all('subject', 'text'));
         $newsletter->save();
 
+        if ($files = $request->get("files")) {
+            $urls = array_column($files, 'url');
+            NewsletterFile::query()
+                ->where("newsletter_id", $newsletter->id)
+                ->whereNotIn("url", $urls)
+                ->delete();
+
+            $exists = NewsletterFile::query()->where("newsletter_id", $newsletter->id)
+                ->pluck("url")->toArray();
+
+            $newFiles = array_filter($files, function ($file) use ($exists) {
+                #var_dump($file, $exists, !in_array($file, $exists));
+                return !in_array($file['url'], $exists);
+            });
+
+            $insert = array_map(function ($file) use ($newsletter) {
+                return [
+                    "url" => $file['url'],
+                    "path" => $file['path'],
+                    "name" => $file['name'],
+                    'newsletter_id' => $newsletter->id,
+                ];
+            }, $newFiles);
+
+            NewsletterFile::query()->insert($insert);
+        }
+
         $newsletter->loadCount(['customers']);
 
-        return $this->resourceItemResponse('newsletter', $newsletter);
+        return $this->resourceItemResponse('newsletter', $newsletter, [
+            'upsert' => $files ?? null,
+            'toDelete' => $toDelete ?? null
+        ]);
     }
 
     /**

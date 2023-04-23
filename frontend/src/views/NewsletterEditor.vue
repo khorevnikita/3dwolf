@@ -30,7 +30,6 @@
           </v-tab-item>
         </v-tabs-items>
       </v-card-text>
-
     </v-card>
   </div>
 </template>
@@ -51,6 +50,7 @@ export default {
       newsletter: {
         subject: "",
         text: "",
+        files:[]
       },
       newsletterId: Number(this.$route.params.id),
     }
@@ -88,8 +88,8 @@ export default {
           id: body.newsletter.id,
           subject: body.newsletter.subject,
           text: body.newsletter.text,
+          files: body.newsletter.files,
         };
-        console.log(this.newsletter);
       })
     },
     onSaved() {

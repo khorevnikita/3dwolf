@@ -3,13 +3,14 @@
       ref="input"
       :label="label"
       :prepend-icon="icon?'mdi-paperclip':''"
-      v-model="file"
+      v-model="files"
       @change="fileSelected()"
       :hide-input="icon"
       :error-count="1"
       :error-messages="error"
       :error="!!error"
       :loading="loading"
+      multiple
   >
     <template #prepend-inner>
       <slot name="prepend-inner"/>
@@ -25,7 +26,7 @@ export default {
   props: ['label', 'error', 'icon'],
   data() {
     return {
-      file: null,
+      files: [],
       loading: false,
     }
   },
@@ -48,21 +49,30 @@ export default {
       }
     },
     async fileSelected() {
-      if (!this.file) {
+      if (this.files.length === 0) {
         return;
       }
 
-      await this.regularUpload();
+      this.loading = true;
+      for (let file of this.files) {
+        await this.regularUpload(file);
+      }
+      this.loading = false;
     },
 
-    regularUpload() {
+    async regularUpload(file) {
       const fd = new FormData;
-      fd.append('file', this.file);
-      this.loading = true;
-      axios.post(`upload`, fd).then(body => {
-        this.$emit('uploaded', body.url)
-        this.loading = false;
-      })
+      fd.append('file', file);
+      try {
+        const {url, path, name} = await axios.post(`upload`, fd);
+        this.$emit('uploaded', {
+          url: url,
+          path: path,
+          name: name,
+        })
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 }

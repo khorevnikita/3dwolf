@@ -43,21 +43,6 @@
         </template>
       </v-data-table>
     </v-col>
-
-    <!--<v-dialog v-model="editDialog"
-              fullscreen
-              hide-overlay
-              persistent
-              transition="dialog-bottom-transition">
-      <NewsletterEditDialog
-          v-if="editDialog"
-          @close="editDialog=false"
-          v-model="editItem"
-          @created="onCreated"
-          @updated="onUpdated"
-          @customers_updated="onCustomersUpdated"
-      />
-    </v-dialog>-->
   </v-row>
 </template>
 

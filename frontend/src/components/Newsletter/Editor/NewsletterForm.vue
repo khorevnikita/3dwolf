@@ -20,7 +20,14 @@
       <div class="text-h6">Вложения</div>
       <FileUploader label="Выберите файл" @uploaded="onUploaded"/>
 
-      {{ files }}
+      <v-chip-group column v-if="newsletter.files && newsletter.files.length>0">
+        <v-chip v-for="(file,l) in newsletter.files" :key="l">
+          {{ file.name }}
+          <v-btn x-small icon @click="remove(file)">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </v-chip>
+      </v-chip-group>
     </v-card-text>
     <v-card-actions>
       <v-spacer/>
@@ -54,7 +61,6 @@ export default {
         // The configuration of the editor.
         extraPlugins: [uploader,],
       },
-      files: []
     }
   },
   watch: {
@@ -66,7 +72,7 @@ export default {
   },
   methods: {
     onUploaded(file) {
-      this.files.push(file)
+      this.newsletter.files.push(file)
     },
     save() {
       this.errors = {};
@@ -91,6 +97,9 @@ export default {
       }).catch(err => {
         this.errors = err.body.errors;
       })
+    },
+    remove(file) {
+      this.newsletter.files.splice(this.newsletter.files.indexOf(file), 1);
     }
   }
 }

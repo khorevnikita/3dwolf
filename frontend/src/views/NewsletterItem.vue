@@ -16,7 +16,8 @@
           <v-icon>mdi-play</v-icon>
         </v-btn>
         <v-spacer/>
-        <v-btn :to="`/newsletters/${newsletter.id}/edit`" icon outlined color="warning" :disabled="!newsletter.editable">
+        <v-btn :to="`/newsletters/${newsletter.id}/edit`" icon outlined color="warning"
+               :disabled="!newsletter.editable">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
         <v-btn icon outlined color="error" class="ml-2" @click="destroy(item)" :disabled="!newsletter.editable">
@@ -27,6 +28,11 @@
       <v-row>
         <v-col cols="12" sm="8" md="6">
           <div class="mt-3" v-html="newsletter.text"></div>
+          <v-chip-group column v-if="newsletter.files && newsletter.files.length>0">
+            <v-chip :href="file.url" target="_blank" v-for="(file,l) in newsletter.files" :key="l">
+              {{ file.name }}
+            </v-chip>
+          </v-chip-group>
         </v-col>
         <v-col cols="12">
           <v-simple-table>
@@ -61,7 +67,9 @@
                   {{ customer.title }}
                 </td>
                 <td>
-                  {{ customer.pivot.sent_at ? moment(customer.pivot.sent_at).format("HH:mm DD.MM.YYYY") : 'Не отправлено' }}
+                  {{
+                    customer.pivot.sent_at ? moment(customer.pivot.sent_at).format("HH:mm DD.MM.YYYY") : 'Не отправлено'
+                  }}
                 </td>
               </tr>
               </tbody>

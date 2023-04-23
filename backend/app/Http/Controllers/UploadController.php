@@ -13,11 +13,13 @@ class UploadController extends Controller
     {
         $file = $request->file('file');
         $now = Carbon::now()->getTimestamp();
-        $fileName = "$now." . $file->getClientOriginalExtension();
+        $originalFileName = str_replace(' ', '-', $file->getClientOriginalName());
+        $fileName = $originalFileName . "_" . "$now." . $file->getClientOriginalExtension();
         $path = "files/$fileName";
         Storage::disk('public')->put($path, $file->getContent());
         return $this->resourceItemResponse('url', Storage::disk('public')->url($path), [
             'path' => $path,
+            'name'=>$file->getClientOriginalName(),
         ]);
     }
 }
