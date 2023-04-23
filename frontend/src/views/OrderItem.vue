@@ -49,6 +49,9 @@
             <template v-slot:[`item.total_amount`]="{item}">
               {{ formatPrice(item.total_amount) }}
             </template>
+            <template v-slot:[`item.total_weight`]="{item}">
+              {{ Math.round(item.total_weight * 100) / 100 }}
+            </template>
             <template v-slot:[`item.print_duration`]="{item}">
               {{ formatDuration(item.print_duration) }}
             </template>
@@ -67,7 +70,7 @@
             Итого: {{ totalAmount }} руб.
             <br/>
             Вес: {{ totalWeight }} <br/>
-            Время печати: {{formatDuration(totalTime)}}
+            Время печати: {{ formatDuration(totalTime) }}
           </div>
         </v-col>
       </v-row>
@@ -138,7 +141,7 @@ export default {
       return Math.round(weight * 100) / 100;
     },
     totalTime() {
-      const time = this.items.reduce((acc, item) => acc += (item.print_duration*item.count), 0);
+      const time = this.items.reduce((acc, item) => acc += (item.print_duration * item.count), 0);
       return Math.round(time * 100) / 100;
     },
 

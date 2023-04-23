@@ -12,7 +12,8 @@ class OrderLine extends Model
     protected $fillable = ['number', 'name', 'price', 'weight', 'print_duration', 'part_id', 'count'];
 
     protected $casts = [
-        'price' => 'float'
+        'price' => 'float',
+        'total_weight' => 'float',
     ];
 
     protected static function booted(): void
@@ -59,8 +60,8 @@ class OrderLine extends Model
 
     public function setProperties()
     {
-        $this->total_amount = $this->price * $this->count;
-        $this->total_weight = $this->weight * $this->count;
+        $this->total_amount = round($this->price * $this->count, 2);
+        $this->total_weight = round($this->weight * $this->count, 2);
     }
 
     public function calcOrderAmount()

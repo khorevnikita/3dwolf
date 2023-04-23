@@ -25,7 +25,7 @@ export default {
             const desc = [query.sort_desc ? !!parseInt(query.sort_desc) : true];//.filter(x => x);
             return {
                 page: parseInt(query.page),
-                itemsPerPage: parseInt(query.take) ? parseInt(query.take) : 5,
+                itemsPerPage: parseInt(query.take) ? parseInt(query.take) : 15,
                 sortBy: sort.length ? sort : [],
                 sortDesc: desc,
             };

@@ -17,8 +17,9 @@ class OrderLineController extends Controller
     {
         $lines = OrderLine::query()
             ->where("order_id", $order->id)
-            ->with(['part.material','part.manufacturer'])
+            ->with(['part.material', 'part.manufacturer'])
             ->get();
+
         return $this->resourceListResponse('orderLines', $lines, $lines->count(), 1);
     }
 
@@ -44,9 +45,9 @@ class OrderLineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(OrderLine $orderLine)
+    public function show(OrderLine $orderLine): JsonResponse
     {
-        //
+        return $this->resourceItemResponse('orderLine', $orderLine);
     }
 
     /**
@@ -60,7 +61,7 @@ class OrderLineController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(OrderLineRequest $request,Order $order, OrderLine $orderLine): JsonResponse
+    public function update(OrderLineRequest $request, Order $order, OrderLine $orderLine): JsonResponse
     {
         $orderLine->fill($request->all());
         $orderLine->save();
