@@ -181,7 +181,7 @@ export default {
     getOrders() {
       if (this.isLoadingOrders) return;
       this.isLoadingOrders = true;
-      axios.get(`orders?search=${this.searchOrder ? this.searchOrder : ''}&sort_order_id=${this.model.order_id}`).then(body => {
+      axios.get(`orders?search=${this.searchOrder ? this.searchOrder : ''}&sort_order_id=${this.model.order_id?this.model.order_id:''}`).then(body => {
         this.orders = body.orders;
         this.isLoadingOrders = false;
       })

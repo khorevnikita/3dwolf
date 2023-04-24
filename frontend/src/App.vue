@@ -29,6 +29,15 @@
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item @click="logout()">
+          <v-list-item-icon>
+            <v-icon>mdi-logout</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Выйти</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -82,7 +91,7 @@ export default Vue.extend({
     }
   },
   computed: {
-    ...mapGetters(['jwt', 'routes', 'user','visibleRoutes']),
+    ...mapGetters(['jwt', 'routes', 'user', 'visibleRoutes']),
     isMobile() {
       return this.$vuetify.breakpoint.mobile;
     },
@@ -90,6 +99,10 @@ export default Vue.extend({
   methods: {
     show(key) {
       return this.user && this.user.permission?.includes(key);
+    },
+    logout() {
+      this.$store.dispatch("LOGOUT");
+      this.$router.push('/login')
     }
   }
 });

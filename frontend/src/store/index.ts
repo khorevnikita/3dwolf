@@ -49,6 +49,10 @@ export default new Vuex.Store({
             state.jwt = token;
             localStorage.setItem('access_token', token)
         },
+        logout(state) {
+            state.jwt = null;
+            localStorage.removeItem('access_token')
+        },
         setUser(state, user) {
             state.user = user;
         },
@@ -59,6 +63,10 @@ export default new Vuex.Store({
             state.detachedCustomer = user;
         },
     },
-    actions: {},
+    actions: {
+        LOGOUT({state, commit}) {
+            commit('logout')
+        }
+    },
     modules: {},
 })
