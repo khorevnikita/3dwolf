@@ -148,10 +148,9 @@ router.beforeEach(async (to, from, next) => {
         const route = store.getters.routes.find((r: any) => r.to.split('/')[1] === to.path.split('/')[1]);
         console.log(to, route);
 
-        if (!route.permission) {
+        if (!route?.permission) {
             next()
         } else {
-
             if (user.permission.includes(route.permission)) {
                 next()
             } else {
