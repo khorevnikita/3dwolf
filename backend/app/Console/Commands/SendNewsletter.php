@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Mockery\Exception;
 
 class SendNewsletter extends Command
 {
@@ -47,8 +48,11 @@ class SendNewsletter extends Command
             return;
         }
         foreach ($users as $user) {
-            Mail::to($user)->send(new NewsletterEmail($newsletter));
+            try {
+                Mail::to($user)->send(new NewsletterEmail($newsletter));
+            } catch (Exception $exception) {
 
+            }
             DB::table('customer_newsletter')
                 ->where('newsletter_id', $newsletter->id)
                 ->where("customer_id", $user->id)
