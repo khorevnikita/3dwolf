@@ -156,7 +156,7 @@ export default {
     getParts() {
       if (this.isLoadingParts) return;
       this.isLoadingParts = true;
-      axios.get(`parts?search=${this.searchPart ? this.searchPart : ''}&field=${this.model.part_id ? this.model.part_id : ''}`)
+      axios.get(`parts?not_ended=1&search=${this.searchPart ? this.searchPart : ''}&field=${this.model.part_id ? this.model.part_id : ''}`)
           .then(body => {
             this.parts = body.parts;
             this.isLoadingParts = false;

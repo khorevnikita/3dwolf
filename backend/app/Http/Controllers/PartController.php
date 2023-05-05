@@ -40,6 +40,10 @@ class PartController extends Controller
             $models = $models->whereStatus($status);
         }
 
+        if ($request->get("not_ended")) {
+            $models = $models->where("status", "!=", "ended");
+        }
+
         $totalCount = $models->count();
 
         if ($take >= 0) {

@@ -6,13 +6,15 @@
         <v-list-item>
           <v-list-item-content>
             <v-list-item-subtitle>Название</v-list-item-subtitle>
-            <v-list-item-title>{{customer.title}}</v-list-item-title>
+            <v-list-item-title>{{ customer.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item>
           <v-list-item-content>
             <v-list-item-subtitle>Имя</v-list-item-subtitle>
-            <v-list-item-title>{{ customer.name }} {{ customer.surname }}</v-list-item-title>
+            <v-list-item-title>
+              {{ [customer.surname, customer.name, customer.father_name].join(" ") }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item>
@@ -33,7 +35,7 @@
 <script>
 export default {
   name: "CustomerCard",
-  props:['customer']
+  props: ['customer']
 }
 </script>
 

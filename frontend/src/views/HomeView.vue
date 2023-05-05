@@ -46,23 +46,24 @@
         </v-card-title>
       </v-card>
     </v-col>
-    <v-col cols="12">
+    <v-col cols="12" v-if="showMoney">
       <div class="text-h4">Деньги</div>
     </v-col>
-    <v-col cols="12" md="6">
+    <v-col cols="12" md="6" v-if="showMoney">
       <MonthMoneyTable :months="data.months"/>
     </v-col>
-    <v-col cols="12" md="6">
+    <v-col cols="12" md="6" v-if="showMoney">
       <MoneyAccountTable :accounts="data.accounts"/>
     </v-col>
   </v-row>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import MonthMoneyTable from "@/components/MonthMoneyTable.vue";
 import MoneyAccountTable from "@/components/MoneyAccountTable.vue";
 import axios from "@/plugins/axios";
+import {mapGetters} from "vuex";
 
 export default Vue.extend({
   name: 'Home',
@@ -80,6 +81,12 @@ export default Vue.extend({
   },
   created() {
     this.getDashboardData();
+  },
+  computed: {
+    ...mapGetters(['user']),
+    showMoney() {
+      return this.user && this.user.permission?.includes('payments');
+    },
   },
   methods: {
     getDashboardData() {
