@@ -51,7 +51,7 @@ class SendNewsletter extends Command
         foreach ($users as $user) {
             try {
                 Mail::to($user)->send(new NewsletterEmail($newsletter));
-            } catch (Exception $exception) {
+            } catch (\Exception $exception) {
                 Log::info("FAILED TO SENT EMAIL", ["ERROR" => $exception->getMessage()]);
             }
             DB::table('customer_newsletter')
