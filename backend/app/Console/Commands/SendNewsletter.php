@@ -7,6 +7,7 @@ use App\Models\Newsletter;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Mockery\Exception;
 
@@ -51,7 +52,7 @@ class SendNewsletter extends Command
             try {
                 Mail::to($user)->send(new NewsletterEmail($newsletter));
             } catch (Exception $exception) {
-
+                Log::info("FAILED TO SENT EMAIL", ["ERROR" => $exception->getMessage()]);
             }
             DB::table('customer_newsletter')
                 ->where('newsletter_id', $newsletter->id)
