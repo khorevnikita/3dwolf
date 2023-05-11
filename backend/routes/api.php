@@ -81,6 +81,8 @@ Route::prefix('orders')->group(function () {
     Route::get('{order}/export/pdf', [OrderController::class, 'exportPDF']);
     Route::get('{order}/export/xlsx', [OrderController::class, 'exportXlsx']);
     Route::get('{order}/export/test', [OrderController::class, 'testExport']);
+    Route::post('{order}/copy', [OrderController::class, 'copy']);
+    Route::post('{order}/order-lines/{orderLine}/copy', [OrderLineController::class, 'copy']);
 });
 Route::prefix('contracts')->group(function () {
     Route::get('{contract}/export-auth', [ContractController::class, 'exportAuth'])->middleware('auth:sanctum');

@@ -60,7 +60,11 @@
             </template>
 
             <template v-slot:[`item.actions`]="{item}">
-              <v-btn color="warning" icon @click="edit(item)">
+              <v-btn color="primary" icon @click="copy(item)" class="mr-2">
+                <v-icon>mdi-content-copy</v-icon>
+              </v-btn>
+
+              <v-btn color="warning" icon @click="edit(item)" class="mr-2">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
 
@@ -150,6 +154,11 @@ export default {
 
   },
   methods: {
+    copy(item) {
+      axios.post(`orders/${this.order_id}/order-lines/${item.id}/copy`).then(({orderLine}) => {
+        this.onCreated(orderLine);
+      })
+    },
     getOrder() {
       axios.get(`orders/${this.order_id}`).then(body => {
         this.order = body.order;

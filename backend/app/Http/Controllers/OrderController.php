@@ -6,6 +6,7 @@ use App\Exports\OrderExport;
 use App\Helpers\Paginator;
 use App\Http\Requests\Order\OrderRequest;
 use App\Models\Order;
+use App\Models\OrderLine;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -119,6 +120,18 @@ class OrderController extends Controller
 
         $order->load('customer');
         return $this->resourceItemResponse('order', $order);
+    }
+
+    /**
+     * Copy existing order
+     * @param Order $order
+     * @return JsonResponse
+     */
+    public function copy(Order $order): JsonResponse
+    {
+        $newOrder = $order->copy();
+        $newOrder->load('customer');
+        return $this->resourceItemResponse('order', $newOrder);
     }
 
     /**

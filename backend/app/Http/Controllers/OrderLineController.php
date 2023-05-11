@@ -69,6 +69,20 @@ class OrderLineController extends Controller
     }
 
     /**
+     * Copy order line
+     * @param Order $order
+     * @param OrderLine $orderLine
+     * @return JsonResponse
+     */
+    public function copy(Order $order, OrderLine $orderLine): JsonResponse
+    {
+        $newLine = $orderLine->copy();
+        $newLine->load(['part', 'part.material', 'part.manufacturer']);
+
+        return $this->resourceItemResponse('orderLine', $newLine);
+    }
+
+    /**
      * @param Order $order
      * @param OrderLine $orderLine
      * @return JsonResponse

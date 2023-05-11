@@ -89,10 +89,16 @@
           {{ formatPrice(item.amount) }}
         </template>
         <template v-slot:[`item.actions`]="{item}">
-          <v-btn color="primary" icon :to="`/orders/${item.id}`">
+
+          <v-btn color="primary" icon :to="`/orders/${item.id}`" class="mr-2">
             <v-icon>mdi-eye</v-icon>
           </v-btn>
-          <v-btn color="warning" icon @click="edit(item)">
+
+          <v-btn color="primary" icon @click="copy(item)" class="mr-2">
+            <v-icon>mdi-content-copy</v-icon>
+          </v-btn>
+
+          <v-btn color="warning" icon @click="edit(item)" class="mr-2">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
 
@@ -121,6 +127,7 @@
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import OrderEditor from "@/components/Order/OrderEditor";
 import CustomerPicker from "@/components/Forms/CustomerPicker";
+import axios from "@/plugins/axios";
 
 export default {
   name: "OrdersView",
@@ -169,7 +176,13 @@ export default {
         return {value: key, text: this.paymentStatuses[key]};
       })
     },
-
+  },
+  methods: {
+    copy(item) {
+      axios.post(`orders/${item.id}/copy`).then(({order}) => {
+        this.onCreated(order);
+      })
+    },
   }
 }
 </script>

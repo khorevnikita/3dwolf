@@ -71,4 +71,13 @@ class OrderLine extends Model
         $order->amount = $amount;
         $order->save();
     }
+
+    public function copy(): OrderLine
+    {
+        $newLine = new OrderLine($this->toArray());
+        $newLine->order_id = $this->order_id;
+        $newLine->save();
+
+        return $newLine;
+    }
 }

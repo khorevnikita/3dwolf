@@ -9,7 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date', 'customer_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address','comment'];
+    protected $fillable = ['date', 'customer_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address', 'comment'];
 
     const STATUSES = ['new', 'printing', 'shipping', 'completed', 'canceled'];
 
@@ -47,5 +47,18 @@ class Order extends Model
     public function lines()
     {
         return $this->hasMany(OrderLine::class);
+    }
+
+    public function copy(): Order
+    {
+        $newOrder = new Order($this->toArray());
+        $newOrder->save();
+
+        foreach ($this->lines()->get() as $line) {
+            $line->copy();
+            $line->order_id = $newOrder->id;
+            $line->save();
+        }
+        return $newOrder;
     }
 }
