@@ -39,6 +39,9 @@ class PartController extends Controller
         if ($status = $request->get("status")) {
             $models = $models->whereStatus($status);
         }
+        if ($prodNumber = $request->get("prod_number")) {
+            $models = $models->where("prod_number", $prodNumber);
+        }
 
         if ($request->get("not_ended")) {
             $models = $models->where("status", "!=", "ended");

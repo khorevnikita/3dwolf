@@ -2,6 +2,69 @@
   <v-card>
     <v-card-title>Редактирование позиции</v-card-title>
     <v-card-text>
+      <v-text-field
+          label="Произв. номер"
+          v-model="model.prod_number"
+          :error-messages="errors.prod_number"
+          :error-count="1"
+          :error="!!errors.prod_number"
+          @change="tryToAutocomplete"
+      />
+      <v-select
+          label="Производитель"
+          v-model="model.manufacturer_id"
+          :error-messages="errors.manufacturer_id"
+          :error-count="1"
+          :error="!!errors.manufacturer_id"
+          :items="manufacturers"
+          item-value="id"
+          item-text="name"
+      />
+
+      <v-select
+          label="Материал"
+          v-model="model.material_id"
+          :error-messages="errors.material_id"
+          :error-count="1"
+          :error="!!errors.material_id"
+          :items="materials"
+          item-value="id"
+          item-text="name"
+      />
+
+      <v-text-field
+          label="Цвет"
+          v-model="model.color"
+          :error-messages="errors.color"
+          :error-count="1"
+          :error="!!errors.color"
+      />
+
+      <v-text-field
+          label="Вес"
+          v-model="model.weight"
+          :error-messages="errors.weight"
+          :error-count="1"
+          :error="!!errors.weight"
+      />
+
+      <v-text-field
+          label="Цена"
+          v-model="model.price"
+          :error-messages="errors.price"
+          :error-count="1"
+          :error="!!errors.price"
+      />
+
+      <v-text-field
+          label="Внутр. номер"
+          v-model="model.inv_number"
+          :error-messages="errors.inv_number"
+          :error-count="1"
+          :error="!!errors.inv_number"
+      />
+
+
       <v-menu
           ref="menu"
           v-model="menu"
@@ -46,67 +109,6 @@
         </v-date-picker>
       </v-menu>
 
-      <v-text-field
-          label="Внутр. номер"
-          v-model="model.inv_number"
-          :error-messages="errors.inv_number"
-          :error-count="1"
-          :error="!!errors.inv_number"
-      />
-      <v-text-field
-          label="Произв. номер"
-          v-model="model.prod_number"
-          :error-messages="errors.prod_number"
-          :error-count="1"
-          :error="!!errors.prod_number"
-      />
-      <v-select
-          label="Производитель"
-          v-model="model.manufacturer_id"
-          :error-messages="errors.manufacturer_id"
-          :error-count="1"
-          :error="!!errors.manufacturer_id"
-          :items="manufacturers"
-          item-value="id"
-          item-text="name"
-      />
-      <v-select
-          label="Материал"
-          v-model="model.material_id"
-          :error-messages="errors.material_id"
-          :error-count="1"
-          :error="!!errors.material_id"
-          :items="materials"
-          item-value="id"
-          item-text="name"
-      />
-
-      <!-- -->
-
-      <v-text-field
-          label="Цвет"
-          v-model="model.color"
-          :error-messages="errors.color"
-          :error-count="1"
-          :error="!!errors.color"
-      />
-
-      <v-text-field
-          label="Вес"
-          v-model="model.weight"
-          :error-messages="errors.weight"
-          :error-count="1"
-          :error="!!errors.weight"
-      />
-
-      <v-text-field
-          label="Цена"
-          v-model="model.price"
-          :error-messages="errors.price"
-          :error-count="1"
-          :error="!!errors.price"
-      />
-
       <v-select
           label="Статус"
           v-model="model.status"
@@ -121,8 +123,6 @@
           item-value="value"
           item-text="text"
       />
-
-
     </v-card-text>
     <v-card-actions>
       <v-btn text @click="$emit('close')">Закрыть</v-btn>
@@ -149,17 +149,37 @@ export default {
     }
   },
   created() {
+    if (!this.model.status) {
+      this.model.status = "new";
+    }
     this.getManufacturers();
     this.getMaterials();
   },
   methods: {
-    getManufacturers(){
-      axios.get('manufacturers').then(body=>{
+    tryToAutocomplete() {
+      if (this.model.id) return;
+      axios.get(`parts?prod_number=${this.model.prod_number}&take=1`).then(({parts}) => {
+        if (parts.length > 0) {
+          const part = parts[0];
+          this.model = {
+            prod_number: part.prod_number,
+            manufacturer_id: part.manufacturer_id,
+            material_id: part.material_id,
+            color: part.color,
+            weight: part.weight,
+            price: part.price,
+            status: "new"
+          }
+        }
+      })
+    },
+    getManufacturers() {
+      axios.get('manufacturers').then(body => {
         this.manufacturers = body.manufacturers;
       })
     },
-    getMaterials(){
-      axios.get('materials').then(body=>{
+    getMaterials() {
+      axios.get('materials').then(body => {
         this.materials = body.materials;
       })
     },
