@@ -79,11 +79,36 @@ class PartController extends Controller
      */
     public function store(PartRequest $request): JsonResponse
     {
-        $part = new Part($request->all());
-        $part->save();
+        if ($count = (int)$request->get("count")) {
+            // create multiple
+            $parts = [];
 
-        $part->load(['manufacturer', 'material']);
-        return $this->resourceItemResponse('part', $part);
+            $mask = $request->get("inv_number");
+            $maskNeedle = str_replace("%", "", $mask);
+            $lastMaskItem = Part::query()->where("inv_number", "like", "%$maskNeedle%")->orderBy("id", "desc")->first();
+            if (!$lastMaskItem) {
+                $index = 1;
+            } else {
+                $index = (int)str_replace($maskNeedle, "", $lastMaskItem->inv_number) + 1;
+            }
+            for ($i = 0; $i < $count; $i++) {
+                $part = new Part($request->all());
+                $part->inv_number = str_replace("%", $index, $mask);
+                $part->save();
+                $part->load(['manufacturer', 'material']);
+                $index++;
+
+                $parts[] = $part;
+            }
+
+            return $this->resourceListResponse('parts', $parts, count($parts), 1);
+        } else {
+            $part = new Part($request->all());
+            $part->save();
+
+            $part->load(['manufacturer', 'material']);
+            return $this->resourceItemResponse('part', $part);
+        }
     }
 
     /**

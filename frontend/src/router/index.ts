@@ -52,6 +52,11 @@ const routes: Array<RouteConfig> = [
         component: () => import('../views/StockView.vue'),
     },
     {
+        path: '/masks',
+        name: 'masks',
+        component: () => import('../views/ProdNumberMasks.vue'),
+    },
+    {
         path: '/accounts',
         name: 'accounts',
         component: () => import('../views/AccountsView.vue'),

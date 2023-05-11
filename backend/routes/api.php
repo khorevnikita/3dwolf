@@ -18,6 +18,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\ProdNumberMaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'users' => UserController::class,
         'payments' => PaymentController::class,
         'newsletters' => NewsletterController::class,
+        'prod-number-masks' => ProdNumberMaskController::class,
     ]);
 
     Route::prefix('money')->group(function () {

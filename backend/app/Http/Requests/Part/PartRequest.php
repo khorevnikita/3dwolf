@@ -23,16 +23,20 @@ class PartRequest extends FormRequest
     public function rules(): array
     {
         $modelId = request()->route('part')?->id ?? 0;
+        $inv_num = request()->input("inv_number");
+        $isMask = str_contains("%", $inv_num);
+        $count = request()->input('count');
         return [
             'bought_at' => 'required|date',
-            'inv_number' => ['required',Rule::unique('parts','inv_number')->ignore($modelId)],
+            'inv_number' => ['required', $isMask && $count ? '' : Rule::unique('parts', 'inv_number')->ignore($modelId)],
+            'count' => ['sometimes', 'integer', 'min:1'],
             'prod_number' => 'sometimes',
             'manufacturer_id' => 'required|integer|exists:manufacturers,id',
             'material_id' => 'required|integer|exists:materials,id',
-            'color'=>'sometimes',
-            'weight'=>'numeric',
-            'price'=>'numeric',
-            'status'=>'required|in:new,opened,ended'
+            'color' => 'sometimes',
+            'weight' => 'numeric',
+            'price' => 'numeric',
+            'status' => 'required|in:new,opened,ended'
         ];
     }
 }

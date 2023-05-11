@@ -4,6 +4,7 @@
       <div class="d-flex align-items-center">
         <div class="text-h6">Склад</div>
         <v-spacer/>
+        <v-btn small to="/masks" color="secondary" class="mr-3">Маски внутренних номеров</v-btn>
         <v-btn small @click="create()" color="primary">Добавить позицию</v-btn>
       </div>
     </v-col>
@@ -105,6 +106,7 @@
           @close="editDialog=false"
           v-model="editItem"
           @created="onCreated"
+          @multiple_created="onMultipleCreated"
           @updated="onUpdated"
       />
     </v-dialog>
@@ -163,6 +165,9 @@ export default {
         this.materials = body.materials;
       })
     },
+    onMultipleCreated(parts) {
+      this.items = [...parts, ...this.items];
+    }
   },
   computed: {
     manufacturersFilterList() {
