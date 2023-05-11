@@ -19,6 +19,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\ProdNumberMaskController;
+use App\Http\Controllers\OrderFileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'parts' => PartController::class,
         'orders' => OrderController::class,
         'orders.order-lines' => OrderLineController::class,
+        'orders.order-files' => OrderFileController::class,
         'contracts' => ContractController::class,
         'users' => UserController::class,
         'payments' => PaymentController::class,

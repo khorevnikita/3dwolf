@@ -49,6 +49,11 @@ class Order extends Model
         return $this->hasMany(OrderLine::class);
     }
 
+    public function files()
+    {
+        return $this->hasMany(OrderFile::class);
+    }
+
     public function copy(): Order
     {
         $newOrder = new Order($this->toArray());
@@ -59,6 +64,13 @@ class Order extends Model
             $line->order_id = $newOrder->id;
             $line->save();
         }
+
+        foreach ($this->files()->get() as $file) {
+            $file->copy();
+            $file->order_id = $newOrder->id;
+            $file->save();
+        }
+
         return $newOrder;
     }
 }

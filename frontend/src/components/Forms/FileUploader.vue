@@ -57,6 +57,7 @@ export default {
       for (let file of this.files) {
         await this.regularUpload(file);
       }
+      this.files = [];
       this.loading = false;
     },
 
@@ -64,11 +65,14 @@ export default {
       const fd = new FormData;
       fd.append('file', file);
       try {
-        const {url, path, name} = await axios.post(`upload`, fd);
+        const {url, path, name, mime_type, size} = await axios.post(`upload`, fd);
+        console.log(file, file.mime_type)
         this.$emit('uploaded', {
           url: url,
           path: path,
           name: name,
+          size: size,
+          mime_type: mime_type,
         })
       } catch (e) {
         console.log(e);

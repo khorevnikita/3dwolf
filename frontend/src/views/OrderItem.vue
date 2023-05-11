@@ -18,6 +18,7 @@
       <v-row>
         <v-col cols="12" md="6" order-md="2">
           <CustomerCard :customer="order.customer" class="mb-4"/>
+          <FilesCard :order-id="order.id" class="mb-4"/>
           <PaymentCard :order-id="order.id"/>
         </v-col>
         <v-col cols="12" md="6" order-md="1">
@@ -103,10 +104,11 @@ import CustomerCard from "@/components/Order/CustomerCard";
 import PaymentCard from "@/components/Order/PaymentCard";
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import OrderLineEditor from "@/components/Order/OrderLineEditor";
+import FilesCard from "@/components/Order/FIlesCard";
 
 export default {
   name: "OrderItem",
-  components: {OrderLineEditor, PaymentCard, CustomerCard, OrderEditor},
+  components: {FilesCard, OrderLineEditor, PaymentCard, CustomerCard, OrderEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {

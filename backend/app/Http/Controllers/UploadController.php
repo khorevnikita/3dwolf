@@ -19,7 +19,9 @@ class UploadController extends Controller
         Storage::disk('public')->put($path, $file->getContent());
         return $this->resourceItemResponse('url', Storage::disk('public')->url($path), [
             'path' => $path,
-            'name'=>$file->getClientOriginalName(),
+            'name' => $file->getClientOriginalName(),
+            'mime_type' => $file->getClientMimeType(),
+            'size' => $file->getSize(),
         ]);
     }
 }
