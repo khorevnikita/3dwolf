@@ -24,7 +24,7 @@ class ProdNumberMaskRequest extends FormRequest
     {
         $modelId = request()->route('prod_number_mask')?->id ?? 0;
         return [
-            'prod_number' => 'required',
+            'prod_number' => ['required',Rule::unique("prod_number_masks",'prod_number')->ignore($modelId)],
             'mask' => ['required',Rule::unique("prod_number_masks",'mask')->ignore($modelId), function (string $attribute, mixed $value, $fail) {
                 if (!str_ends_with($value, "%")) {
                     $fail("The {$attribute} should end with %.");
