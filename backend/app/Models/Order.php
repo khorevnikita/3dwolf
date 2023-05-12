@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -57,6 +58,10 @@ class Order extends Model
     public function copy(): Order
     {
         $newOrder = new Order($this->toArray());
+        $newOrder->status = Order::STATUSES[0];
+        $newOrder->payment_status = "not_paid";
+        $newOrder->date = Carbon::now();
+        $newOrder->deadline = Carbon::now();
         $newOrder->save();
 
         foreach ($this->lines()->get() as $line) {

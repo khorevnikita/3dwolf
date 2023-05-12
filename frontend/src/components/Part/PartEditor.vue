@@ -167,48 +167,46 @@ export default {
     this.getMaterials();
   },
   methods: {
-    onProdNumberChanged() {
-      this.tryToAutocomplete();
-      this.checkMask();
+    async onProdNumberChanged() {
+      await this.tryToAutocomplete()
+      await this.checkMask();
     },
-    checkMask() {
-      axios.get(`prod-number-masks?prod_number=${this.model.prod_number}`).then(({prodNumberMasks}) => {
-        this.fillByMask = prodNumberMasks.length > 0;
-        if (this.fillByMask) {
-          const mask = prodNumberMasks[0];
-          this.model.inv_number = mask.mask;
-        }
-      })
+    async checkMask() {
+      const {prodNumberMasks} = await axios.get(`prod-number-masks?prod_number=${this.model.prod_number}`)
+      this.fillByMask = prodNumberMasks.length > 0;
+      if (this.fillByMask) {
+        const mask = prodNumberMasks[0];
+        this.model.inv_number = mask.mask;
+      }
     },
-    tryToAutocomplete() {
+    async tryToAutocomplete() {
       if (this.model.id) return;
-      axios.get(`parts?prod_number=${this.model.prod_number}&take=1`).then(({parts}) => {
-        if (parts.length > 0) {
-          const part = parts[0];
-          this.model = {
-            ...this.model,
-            prod_number: part.prod_number,
-            manufacturer_id: part.manufacturer_id,
-            material_id: part.material_id,
-            color: part.color,
-            weight: part.weight,
-            price: part.price,
-            inv_number: undefined,
-            count: undefined
-          }
-        } else {
-          this.model = {
-            ...this.model,
-            manufacturer_id: undefined,
-            material_id: undefined,
-            color: undefined,
-            weight: undefined,
-            price: undefined,
-            inv_number: undefined,
-            count: undefined
-          }
+      const {parts} = await axios.get(`parts?prod_number=${this.model.prod_number}&take=1`)
+      if (parts.length > 0) {
+        const part = parts[0];
+        this.model = {
+          ...this.model,
+          prod_number: part.prod_number,
+          manufacturer_id: part.manufacturer_id,
+          material_id: part.material_id,
+          color: part.color,
+          weight: part.weight,
+          price: part.price,
+          inv_number: undefined,
+          count: undefined
         }
-      })
+      } else {
+        this.model = {
+          ...this.model,
+          manufacturer_id: undefined,
+          material_id: undefined,
+          color: undefined,
+          weight: undefined,
+          price: undefined,
+          inv_number: undefined,
+          count: undefined
+        }
+      }
     },
     getManufacturers() {
       axios.get('manufacturers').then(body => {
@@ -230,9 +228,9 @@ export default {
     },
     store() {
       axios.post(`${this.modelName}s`, this.model).then(body => {
-        if(body.part){
+        if (body.part) {
           this.$emit("created", body.part);
-        } else if(body.parts){
+        } else if (body.parts) {
           this.$emit("multiple_created", body.parts);
         }
 

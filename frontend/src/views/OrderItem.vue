@@ -170,6 +170,10 @@ export default {
       axios.get(`orders/${this.order_id}/export-auth?type=${type}`).then(body => {
         window.open(body.download_link, '_blank')
       })
+    },
+    onUpdated(orderLine) {
+      const idx = this.items.findIndex(i=>i.id === orderLine.id);
+      this.items.splice(idx,1,orderLine);
     }
   }
 }
