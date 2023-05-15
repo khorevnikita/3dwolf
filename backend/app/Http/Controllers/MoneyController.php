@@ -11,6 +11,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MoneyController extends Controller
 {
@@ -47,7 +48,7 @@ class MoneyController extends Controller
             'balance' => $balance,
             'months' => $monthData,
             'accounts' => $accounts,
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
@@ -71,6 +72,7 @@ class MoneyController extends Controller
         $sources = Customer::query()->selectRaw("source, count(id) as count")
             ->groupBy("source")->pluck('count', 'source');
 
+        $stockData = $this->getStockData();
         return $this->resourceItemResponse('data', [
             'months' => $monthData,
             'accounts' => $accounts,
@@ -79,7 +81,8 @@ class MoneyController extends Controller
                 'total' => Customer::query()->count(),
                 'new' => Customer::query()->where("created_at", ">", Carbon::now()->startOfMonth())->count()
             ],
-            'sources'=>$sources,
+            'sources' => $sources,
+            'stock' => $stockData
         ]);
     }
 
@@ -110,5 +113,40 @@ class MoneyController extends Controller
             $pointer->addMonth();
         }
         return $monthData;
+    }
+
+    protected function getStockData()
+    {
+        /*$remained = DB::table("parts")
+            ->groupBy("prod_number", "manufacturer_id", "material_id", "color")
+            ->selectRaw("prod_number, manufacturer_id, material_id, color, COUNT(id) as count,'remain' as type")
+            ->where("status", "!=", "ended")
+            ->get();
+
+        $finished = DB::table("parts")
+            ->groupBy("prod_number", "manufacturer_id", "material_id", "color")
+            ->selectRaw("prod_number, manufacturer_id, material_id, color, COUNT(id) as count,'finished' as type")
+            ->where("status", "=", "ended")
+            ->whereNotIn("prod_number", $remained->pluck("prod_number"))
+            ->get();
+        return $finished->merge($remained);*/
+
+        $sql = "select m.name as 'manufacturer',
+       p1.prod_number,
+       m2.name as 'material',
+       p1.color,
+       (select count(*)
+        from parts p2
+        where p2.manufacturer_id = p1.manufacturer_id
+          and p2.prod_number = p1.prod_number
+          and p2.material_id = p1.material_id
+          and p2.color = p1.color
+          and p2.status in ('new', 'opened')) count
+from parts p1
+         join manufacturers m on m.id = p1.manufacturer_id
+         join materials m2 on m2.id = p1.material_id
+group by p1.manufacturer_id, p1.prod_number, p1.material_id, p1.color
+order by count;";
+        return DB::select($sql);
     }
 }

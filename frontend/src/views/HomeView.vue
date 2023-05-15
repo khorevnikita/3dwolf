@@ -55,19 +55,26 @@
     <v-col cols="12" md="6" v-if="showMoney">
       <MoneyAccountTable :accounts="data.accounts"/>
     </v-col>
+    <v-col cols="12" v-if="showStock">
+      <div class="text-h4">Склад</div>
+    </v-col>
+    <v-col cols="12" v-if="showStock">
+      <StockStats :stock="data.stock"/>
+    </v-col>
   </v-row>
 </template>
 
 <script>
 import Vue from 'vue'
-import MonthMoneyTable from "@/components/MonthMoneyTable.vue";
-import MoneyAccountTable from "@/components/MoneyAccountTable.vue";
+import MonthMoneyTable from "@/components/Dashboard/MonthMoneyTable.vue";
+import MoneyAccountTable from "@/components/Dashboard/MoneyAccountTable.vue";
+import StockStats from "@/components/Dashboard/StockStats.vue";
 import axios from "@/plugins/axios";
 import {mapGetters} from "vuex";
 
 export default Vue.extend({
   name: 'Home',
-  components: {MoneyAccountTable, MonthMoneyTable},
+  components: {MoneyAccountTable, MonthMoneyTable,StockStats},
   data() {
     return {
       statuses: {
@@ -86,6 +93,9 @@ export default Vue.extend({
     ...mapGetters(['user']),
     showMoney() {
       return this.user && this.user.permission?.includes('payments');
+    },
+    showStock() {
+      return this.user && this.user.permission?.includes('parts');
     },
   },
   methods: {

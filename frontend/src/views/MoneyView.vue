@@ -190,8 +190,8 @@ import axios from "@/plugins/axios";
 import PaymentEditor from "@/components/Payment/PaymentEditor";
 import {formatPrice} from "@/plugins/formats";
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
-import MonthMoneyTable from "@/components/MonthMoneyTable";
-import MoneyAccountTable from "@/components/MoneyAccountTable";
+import MonthMoneyTable from "@/components/Dashboard/MonthMoneyTable";
+import MoneyAccountTable from "@/components/Dashboard/MoneyAccountTable";
 import UserPicker from "@/components/Forms/UserPicker";
 
 export default {
