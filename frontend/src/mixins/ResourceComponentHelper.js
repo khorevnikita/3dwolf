@@ -27,11 +27,13 @@ export default {
         }
     },
     watch: {
-        options(v) {
-            this.query = this.copyObject({...this.query, ...this.optionsToQuery(v)});
-            this.$nextTick(() => {
-                this.replaceRoute();
-            });
+        options:{
+            handler(v){
+                this.query = this.copyObject({...this.query, ...this.optionsToQuery(v)});
+                this.$nextTick(() => {
+                    this.replaceRoute();
+                });
+            },deep:true
         },
         "$route": {
             handler() {

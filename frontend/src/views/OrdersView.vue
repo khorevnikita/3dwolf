@@ -62,51 +62,67 @@
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-data-table
-          :headers="headers"
-          :items="items"
-          :options.sync="options"
-          :server-items-length="totalItems"
-          :loading="loading"
-          class="elevation-1 mt-3"
-      >
-        <template v-slot:[`item.date`]="{item}">
-          {{ item.date ? moment(item.date).format("DD.MM.YYYY") : "-" }}
-        </template>
-        <template v-slot:[`item.customer_id`]="{item}">
-          {{ item.customer ? item.customer.title : '-' }}
-        </template>
-        <template v-slot:[`item.deadline`]="{item}">
-          {{ item.deadline ? moment(item.deadline).format("DD.MM.YYYY") : "-" }}
-        </template>
-        <template v-slot:[`item.status`]="{item}">
-          {{ statuses[item.status] }}
-        </template>
-        <template v-slot:[`item.payment_status`]="{item}">
-          {{ paymentStatuses[item.payment_status] }}
-        </template>
-        <template v-slot:[`item.amount`]="{item}">
-          {{ formatPrice(item.amount) }}
-        </template>
-        <template v-slot:[`item.actions`]="{item}">
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+          <tr>
+            <th class="text-left" v-for="(header,i) in headers" :key="i">
+              {{ header.text }}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr
+              v-for="(item,i) in items"
+              :key="i"
+              v-bind:class="{'info':item.status==='new','success':item.status==='printing','warning':item.status==='shipping'}"
+          >
+            <td>{{ item.id }}</td>
+            <td>{{ item.date ? moment(item.date).format("DD.MM.YYYY") : "-" }}</td>
+            <td>{{ item.customer ? item.customer.title : '-' }}</td>
+            <td>{{ item.phone }}</td>
+            <td>{{ formatPrice(item.amount) }}</td>
+            <td>{{ item.deadline ? moment(item.deadline).format("DD.MM.YYYY") : "-" }}</td>
+            <td>{{ statuses[item.status] }}</td>
+            <td
+                v-bind:class="{'error': ['printing','shipping'].includes(item.status) &&item.payment_status!=='paid'}"
+            >
+              {{ paymentStatuses[item.payment_status] }}
+            </td>
+            <td>{{ item.delivery_address }}</td>
+            <td>
+              <v-btn color="primary" icon :to="`/orders/${item.id}`" class="mr-2">
+                <v-icon>mdi-eye</v-icon>
+              </v-btn>
 
-          <v-btn color="primary" icon :to="`/orders/${item.id}`" class="mr-2">
-            <v-icon>mdi-eye</v-icon>
-          </v-btn>
+              <v-btn color="primary" icon @click="copy(item)" class="mr-2">
+                <v-icon>mdi-content-copy</v-icon>
+              </v-btn>
 
-          <v-btn color="primary" icon @click="copy(item)" class="mr-2">
-            <v-icon>mdi-content-copy</v-icon>
-          </v-btn>
+              <v-btn color="warning" icon @click="edit(item)" class="mr-2">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
 
-          <v-btn color="warning" icon @click="edit(item)" class="mr-2">
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-
-          <v-btn color="error" icon @click="destroy(item)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
+              <v-btn color="error" icon @click="destroy(item)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+          </tbody>
         </template>
-      </v-data-table>
+      </v-simple-table>
+      <div class="d-flex mt-4">
+        <v-pagination v-model="options.page" :length="pagesCount" class="ml-auto mr-2"/>
+        <v-select
+            :items="[10,15,30,50, 100,]"
+            v-model="options.itemsPerPage"
+            outlined
+            dense
+            hide-details
+            label="Показывать на странице"
+            style="max-width: 200px;"
+        />
+      </div>
     </v-col>
 
     <v-dialog v-model="editDialog" max-width="700">
@@ -187,6 +203,27 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+tr {
+  &.info {
+    background-color: #99d2ff !important;
+    border-color: #99d2ff !important;
+  }
 
+  &.success {
+    background-color: #c3ffc5 !important;
+    border-color: #c3ffc5 !important;
+  }
+
+  &.warning {
+    background-color: #ffe5c4 !important;
+    border-color: #ffe5c4 !important;
+  }
+
+  td.error {
+    background-color: #ffb2b2 !important;
+    border-color: #f79797 !important;
+  }
+
+}
 </style>
