@@ -49,6 +49,7 @@
                   v-model="query.status"
                   dense
                   hide-details
+                  multiple
                   :items="[
               {value:'',text:'Все'},
               {value:'new',text:'Новая'},
@@ -58,6 +59,9 @@
                   item-value="value"
                   item-text="text"
               />
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-switch label="Скрыть закончившиеся" v-model="showNotEnded"/>
             </v-col>
           </v-row>
         </v-card-text>
@@ -147,7 +151,8 @@ export default {
         ended: "Закончилась"
       },
       manufacturers: [],
-      materials: []
+      materials: [],
+      showNotEnded: false,
     }
   },
   created() {
@@ -167,6 +172,15 @@ export default {
     },
     onMultipleCreated(parts) {
       this.items = [...parts, ...this.items];
+    }
+  },
+  watch: {
+    showNotEnded() {
+      if (this.showNotEnded) {
+        this.query.status = ["new", "opened"];
+      } else {
+        this.query.status = [];
+      }
     }
   },
   computed: {
@@ -192,7 +206,6 @@ export default {
         })
       ]
     },
-
   }
 }
 </script>

@@ -36,8 +36,8 @@ class PartController extends Controller
             $models = $models->whereMaterialId($materialId);
         }
 
-        if ($status = $request->get("status")) {
-            $models = $models->whereStatus($status);
+        if ($statuses = array_filter(explode(',', $request->get("status")))) {
+            $models = $models->whereIn("status", $statuses);
         }
         if ($prodNumber = $request->get("prod_number")) {
             $models = $models->where("prod_number", $prodNumber);

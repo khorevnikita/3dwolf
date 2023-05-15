@@ -27,13 +27,13 @@ export default {
         }
     },
     watch: {
-        options:{
-            handler(v){
+        options: {
+            handler(v) {
                 this.query = this.copyObject({...this.query, ...this.optionsToQuery(v)});
                 this.$nextTick(() => {
                     this.replaceRoute();
                 });
-            },deep:true
+            }, deep: true
         },
         "$route": {
             handler() {
@@ -54,6 +54,11 @@ export default {
         },
         readRoute() {
             this.query = this.$route.query;
+            Object.keys(this.query).forEach(key => {
+                if (this.query[key].includes(',')) {
+                    this.query[key] = this.query[key].split(",")
+                }
+            })
             this.options = this.copyObject({...this.options, ...this.queryToOptions(this.query)});
             this.$nextTick(() => {
                 this.getItems();
