@@ -114,6 +114,51 @@
                 hide-details
             />
           </v-col>
+          <v-col cols="12" md="3">
+            <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="query.date"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="query.date"
+                    label="Дата платежа"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    clearable
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                  v-model="query.date"
+                  no-title
+                  scrollable
+                  range
+              >
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="menu = false"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.menu.save(query.date)"
+                >
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
+          </v-col>
 
         </v-row>
       </v-card-text>
@@ -219,7 +264,8 @@ export default {
         {text: "Описание", value: "description", sortable: false},
         {text: "", value: "actions", sortable: false},
       ],
-      accounts: []
+      accounts: [],
+      menu: false,
     }
   },
   created() {
@@ -231,7 +277,7 @@ export default {
       this.getData();
     }
   },
-  computed:{
+  computed: {
     accountsFilterList() {
       return [
         {id: '', name: 'Все'},

@@ -43,6 +43,11 @@ class PaymentController extends Controller
             $models = $models->whereAccountId($accountId);
         }
 
+        if ($dates = array_filter(explode(",", $request->get("date")))) {
+            $models = $models->where("paid_at", ">=", $dates[0])
+                ->where("paid_at", "<=", $dates[1]);
+        }
+
 
         $totalCount = $models->count();
 
