@@ -85,7 +85,7 @@
             <td>{{ item.deadline ? moment(item.deadline).format("DD.MM.YYYY") : "-" }}</td>
             <td>{{ statuses[item.status] }}</td>
             <td
-                v-bind:class="{'error': ['printing','shipping'].includes(item.status) &&item.payment_status!=='paid'}"
+                v-bind:class="{'error': ['printing','shipping'].includes(item.status) &&item.payment_status!=='full_paid'}"
             >
               {{ paymentStatuses[item.payment_status] }}
             </td>
