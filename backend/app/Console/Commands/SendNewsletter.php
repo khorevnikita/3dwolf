@@ -39,7 +39,7 @@ class SendNewsletter extends Command
             return;
         }
 
-        $users = $newsletter->queuedUsers()->limit(10)->get();
+        $users = $newsletter->queuedUsers()->where("email", "!=", "1@1.ru")->limit(10)->get();
 
         if ($users->count() === 0) {
             $newsletter->status = Newsletter::STATUSES[2];
