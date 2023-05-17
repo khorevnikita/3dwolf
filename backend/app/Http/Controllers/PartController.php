@@ -24,7 +24,8 @@ class PartController extends Controller
             $search = $request->get('search');
             $models = $models->where(function ($q) use ($search) {
                 $q->where("inv_number", "like", "%$search%")
-                    ->orWhere("color", "like", "%$search%");
+                    ->orWhere("color", "like", "%$search%")
+                    ->orWhere("prod_number", "like", "%$search%");
             });
         }
 
