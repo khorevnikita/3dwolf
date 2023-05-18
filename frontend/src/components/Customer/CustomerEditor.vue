@@ -2,64 +2,6 @@
   <v-card>
     <v-card-title>Редактирование клиента</v-card-title>
     <v-card-text>
-      <v-row>
-        <v-col cols="12" md="4">
-          <v-text-field
-              label="Фамилия"
-              v-model="model.surname"
-              :error-messages="errors.surname"
-              :error-count="1"
-              :error="!!errors.surname"
-          />
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-              label="Имя"
-              v-model="model.name"
-              :error-messages="errors.name"
-              :error-count="1"
-              :error="!!errors.name"
-          />
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-              label="Отчество"
-              v-model="model.father_name"
-              :error-messages="errors.father_name"
-              :error-count="1"
-              :error="!!errors.father_name"
-          />
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-              label="Телефон"
-              v-model="model.phone"
-              :error-messages="errors.phone"
-              :error-count="1"
-              :error="!!errors.phone"
-              v-mask="'+7 (###) ###-##-##'"
-          />
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-              label="E-mail"
-              v-model="model.email"
-              :error-messages="errors.email"
-              :error-count="1"
-              :error="!!errors.email"
-          />
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-              label="Telegram"
-              v-model="model.telegram"
-              :error-messages="errors.telegram"
-              :error-count="1"
-              :error="!!errors.telegram"
-          />
-        </v-col>
-      </v-row>
-
       <v-select
           label="Тип"
           v-model="model.type"
@@ -88,23 +30,29 @@
           :error="!!errors.entity_type"
       />
 
+
       <v-row v-if="model.type==='entity'">
         <v-col cols="12">
-          <v-text-field
-              label="Название"
-              v-model="model.title"
-              :error-messages="errors.title"
-              :error-count="1"
-              :error="!!errors.title"
-          />
-        </v-col>
-        <v-col cols="12" md="6">
           <v-text-field
               label="ИНН"
               v-model="model.inn"
               :error-messages="errors.inn"
               :error-count="1"
               :error="!!errors.inn"
+          >
+            <template #append-outer>
+              <v-btn text @click="fetchDataByINN()">Заполнить</v-btn>
+            </template>
+          </v-text-field>
+
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-text-field
+              label="Название"
+              v-model="model.title"
+              :error-messages="errors.title"
+              :error-count="1"
+              :error="!!errors.title"
           />
         </v-col>
         <v-col cols="12" md="6">
@@ -159,6 +107,64 @@
               :error-messages="errors.ceo"
               :error-count="1"
               :error="!!errors.ceo"
+          />
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12" md="4">
+          <v-text-field
+              label="Фамилия"
+              v-model="model.surname"
+              :error-messages="errors.surname"
+              :error-count="1"
+              :error="!!errors.surname"
+          />
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-text-field
+              label="Имя"
+              v-model="model.name"
+              :error-messages="errors.name"
+              :error-count="1"
+              :error="!!errors.name"
+          />
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-text-field
+              label="Отчество"
+              v-model="model.father_name"
+              :error-messages="errors.father_name"
+              :error-count="1"
+              :error="!!errors.father_name"
+          />
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-text-field
+              label="Телефон"
+              v-model="model.phone"
+              :error-messages="errors.phone"
+              :error-count="1"
+              :error="!!errors.phone"
+              v-mask="'+7 (###) ###-##-##'"
+          />
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-text-field
+              label="E-mail"
+              v-model="model.email"
+              :error-messages="errors.email"
+              :error-count="1"
+              :error="!!errors.email"
+          />
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-text-field
+              label="Telegram"
+              v-model="model.telegram"
+              :error-messages="errors.telegram"
+              :error-count="1"
+              :error="!!errors.telegram"
           />
         </v-col>
       </v-row>
@@ -267,7 +273,7 @@ import Swal from "sweetalert2-khonik";
 
 export default {
   name: "CustomerEditor",
-  props: ['value','modal'],
+  props: ['value', 'modal'],
   data() {
     return {
       model: this.value,
@@ -276,6 +282,27 @@ export default {
     }
   },
   methods: {
+    fetchDataByINN() {
+      axios.get(`company-by-inn?inn=${this.model.inn}`).then(body => {
+        if (body.data.length > 0) {
+          const suggestion = body.data[0].data;
+          if (suggestion) {
+            const data = {
+              title: suggestion.name?.short_with_opf,
+              full_name: suggestion.name?.full_with_opf,
+              ogrn: suggestion.ogrn,
+              kpp: suggestion.kpp,
+              okpo: suggestion.okpo,
+              okved: suggestion.okved,
+              address: suggestion.address.value,
+              ceo: suggestion.management?.name,
+              director_title: suggestion.management?.post
+            }
+            this.$set(this, 'model', {...this.model, ...data})
+          }
+        }
+      })
+    },
     save() {
       this.errors = {};
       if (this.model.id) {
@@ -288,7 +315,7 @@ export default {
       axios.post(`${this.modelName}s`, this.model).then(body => {
         this.$emit("created", body[this.modelName]);
         this.$emit("close");
-        if(!this.modal){
+        if (!this.modal) {
           Swal.fire('Данные сохранены');
         }
       }).catch(err => {
@@ -299,7 +326,7 @@ export default {
       axios.put(`${this.modelName}s/${this.model.id}`, this.model).then(body => {
         this.$emit("updated", body[this.modelName]);
         this.$emit("close");
-        if(!this.modal){
+        if (!this.modal) {
           Swal.fire('Данные сохранены');
         }
       }).catch(err => {

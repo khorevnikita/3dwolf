@@ -77,6 +77,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::post('upload', [UploadController::class, 'upload']);
+
+    Route::get('company-by-inn', [CustomerController::class, 'finDataByINN']);
 });
 
 Route::prefix('orders')->group(function () {

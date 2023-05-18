@@ -30,8 +30,11 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-    'smsru'=>[
-        'key'=>env("SMSRU_KEY")
-    ]
-
+    'smsru' => [
+        'key' => env("SMSRU_KEY")
+    ],
+    'dadata' => [
+        'key' => env("DADATA_KEY"),
+        'secret' => env("DADATA_SECRET"),
+    ],
 ];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Paginator;
 use App\Http\Requests\Customer\CustomerRequest;
 use App\Models\Customer;
+use Dadata\DadataClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -106,5 +107,16 @@ class CustomerController extends Controller
     {
         $customer->delete();
         return $this->emptySuccessResponse();
+    }
+
+    public function finDataByINN(Request $request): JsonResponse
+    {
+        $request->validate([
+            'inn' => 'required'
+        ]);
+
+        $dadata = new DadataClient(config('services.dadata.key'), config('services.dadata.secret'));
+        $result = $dadata->findById("party", $request->inn, 1);
+        return $this->resourceItemResponse('data', $result);
     }
 }
