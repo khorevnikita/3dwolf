@@ -23,6 +23,12 @@ export default new Vuex.Store({
             {title: 'Деньги', icon: 'mdi-cash', to: '/money', permission: 'payments'},
             {title: 'Сметы', icon: 'mdi-clipboard-list', to: '/estimates', permission: 'estimates'},
             {title: 'Рассылки', icon: 'mdi-email-arrow-right-outline', to: '/newsletters', permission: 'newsletters'},
+            /*{
+                title: 'Шаблоны уведомлений',
+                icon: 'mdi-bell-cog-outline',
+                to: '/order-notification-temlpates',
+                permission: 'orders'
+            },*/
         ],
 
         jwt: localStorage.getItem('access_token'),

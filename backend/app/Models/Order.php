@@ -2,9 +2,14 @@
 
 namespace App\Models;
 
+use App\Jobs\NotifyOrderChanged;
+use App\Mail\OrderStatusChanged;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class Order extends Model
 {
@@ -77,5 +82,32 @@ class Order extends Model
         }
 
         return $newOrder;
+    }
+
+    /**
+     * Отправить отбивку об изменении статуса
+     *
+     * @param string $channel email/sms
+     * @return void
+     */
+    public function notify(string $channel, $attach = false): void
+    {
+        dispatch(new NotifyOrderChanged($this, $channel, $attach));
+    }
+
+    /**
+     * Сохраняет актуальный PDF на диск
+     * @return string
+     */
+    public function savePDF(): string
+    {
+        $fileName = "order_$this->id.pdf";
+        $pdf = Pdf::loadView('exports.order', [
+            'order' => $this,
+            'customer' => $this->customer,
+        ])
+            ->setPaper('a4', 'landscape');
+        $pdf->save($fileName, 'public');
+        return $fileName;
     }
 }

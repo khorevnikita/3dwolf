@@ -4,6 +4,7 @@
       <div class="d-flex align-items-center">
         <div class="text-h6">Наряд-заказы</div>
         <v-spacer/>
+        <v-btn small to="/order-notification-templates" color="secondary" class="mr-4">Шаблоны уведомлений</v-btn>
         <v-btn small @click="create()" color="primary">Создать</v-btn>
       </div>
     </v-col>
@@ -172,7 +173,7 @@ export default {
         printing: "В печати",
         shipping: "К отгрузке",
         completed: "Отгружено",
-        canceled: "Отказ",
+        canceled: "Отменён",
       },
       paymentStatuses: {
         not_paid: "Не оплачено",

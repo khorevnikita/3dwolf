@@ -20,7 +20,7 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\ProdNumberMaskController;
 use App\Http\Controllers\OrderFileController;
-
+use App\Http\Controllers\OrderNotificationTemplateController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'payments' => PaymentController::class,
         'newsletters' => NewsletterController::class,
         'prod-number-masks' => ProdNumberMaskController::class,
+        'order-notification-templates' => OrderNotificationTemplateController::class,
     ]);
 
     Route::prefix('money')->group(function () {

@@ -111,7 +111,11 @@ const routes: Array<RouteConfig> = [
         name: 'newsletterEdit',
         component: () => import('../views/NewsletterEditor.vue')
     },
-
+    {
+        path: '/order-notification-templates',
+        name: 'order-templates',
+        component: () => import('../views/OrderNotificationTemplates.vue')
+    },
     {
         path: '/404',
         name: '404',

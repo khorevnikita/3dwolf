@@ -119,6 +119,14 @@ class OrderController extends Controller
         $order->save();
 
         $order->load('customer');
+
+        if ($request->get("notifyEmail")) {
+            $order->notify("email", $request->get("attachPDF"));
+        }
+        if ($request->get("notifySMS")) {
+            $order->notify("sms");
+        }
+
         return $this->resourceItemResponse('order', $order);
     }
 

@@ -113,11 +113,27 @@
               {value:'printing',text:'В печати'},
               {value:'shipping',text:'К отгрузке'},
               {value:'completed',text:'Отгружен'},
-              {value:'canceled',text:'Отказ'},
+              {value:'canceled',text:'Отменён'},
           ]"
           item-value="value"
           item-text="text"
       />
+      <v-switch
+          v-if="model.status !== value.status"
+          label="Уведомить по e-mail"
+          v-model="notifyEmail"
+      />
+      <v-switch
+          v-if="notifyEmail"
+          label="Прикрепить PDF"
+          v-model="attachPDF"
+      />
+      <v-switch
+          v-if="model.status !== value.status"
+          label="Уведомить по СМС"
+          v-model="notifySMS"
+      />
+
       <v-select
           label="Статус оплаты"
           v-model="model.payment_status"
@@ -139,7 +155,7 @@
           :error-count="1"
           :error="!!errors.delivery_address"
       />
-       <v-textarea
+      <v-textarea
           label="Комментарий к заказу"
           v-model="model.comment"
           :error-messages="errors.comment"
@@ -167,11 +183,14 @@ export default {
   props: ['value', 'modal'],
   data() {
     return {
-      model: this.value,
+      model: {...this.value},
       modelName: 'order',
       errors: {},
       menu: false,
       menu2: false,
+      notifySMS: false,
+      notifyEmail: false,
+      attachPDF: false,
     }
   },
   methods: {
@@ -187,10 +206,14 @@ export default {
       }
     },
     store() {
-      axios.post(`${this.modelName}s`, this.model).then(body => {
+      axios.post(`${this.modelName}s`, {
+        ...this.model,
+        notifyEmail: this.notifyEmail,
+        notifySMS: this.notifySMS,
+      }).then(body => {
         this.$emit("created", body[this.modelName]);
         this.$emit("close");
-        if(!this.modal){
+        if (!this.modal) {
           Swal.fire('Данные сохранены');
         }
       }).catch(err => {
@@ -198,10 +221,15 @@ export default {
       })
     },
     update() {
-      axios.put(`${this.modelName}s/${this.model.id}`, this.model).then(body => {
+      axios.put(`${this.modelName}s/${this.model.id}`, {
+        ...this.model,
+        notifyEmail: this.notifyEmail,
+        notifySMS: this.notifySMS,
+        attachPDF: this.attachPDF,
+      }).then(body => {
         this.$emit("updated", body[this.modelName]);
         this.$emit("close");
-        if(!this.modal){
+        if (!this.modal) {
           Swal.fire('Данные сохранены');
         }
       }).catch(err => {
