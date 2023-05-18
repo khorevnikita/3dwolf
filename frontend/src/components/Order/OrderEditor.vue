@@ -125,7 +125,7 @@
       />
       <v-switch
           v-if="notifyEmail"
-          label="Прикрепить PDF"
+          label="Прикрепить наряд-заказ PDF"
           v-model="attachPDF"
       />
       <v-switch
