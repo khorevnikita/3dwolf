@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\OrderExport;
 use App\Helpers\Paginator;
 use App\Http\Requests\Order\OrderRequest;
+use App\Http\Requests\Order\SetDiscountRequest;
 use App\Models\Order;
 use App\Models\OrderLine;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -96,7 +97,10 @@ class OrderController extends Controller
      */
     public function show(Order $order): JsonResponse
     {
-        $order->load('customer');
+        $order->load(['customer' => function ($q) {
+            $q->withCount(['orders', 'recentOrders'])->withSum('payments', 'amount')->withSum('recentPayments', 'amount')
+                ->with("lastPaidPayment");
+        }]);
         return $this->resourceItemResponse('order', $order);
     }
 
@@ -127,6 +131,15 @@ class OrderController extends Controller
             $order->notify("sms");
         }
 
+        return $this->resourceItemResponse('order', $order);
+    }
+
+    public function setDiscount(SetDiscountRequest $request, Order $order): JsonResponse
+    {
+        $order->discount = $request->get("discount");
+        $order->save();
+
+        $order->load('customer');
         return $this->resourceItemResponse('order', $order);
     }
 

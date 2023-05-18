@@ -21,6 +21,7 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\ProdNumberMaskController;
 use App\Http\Controllers\OrderFileController;
 use App\Http\Controllers\OrderNotificationTemplateController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -79,6 +80,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('upload', [UploadController::class, 'upload']);
 
     Route::get('company-by-inn', [CustomerController::class, 'finDataByINN']);
+
+    Route::prefix('orders')->group(function () {
+        Route::post('{order}/copy', [OrderController::class, 'copy']);
+        Route::post('{order}/order-lines/{orderLine}/copy', [OrderLineController::class, 'copy']);
+        Route::post('{order}/set-discount', [OrderController::class, 'setDiscount']);
+    });
 });
 
 Route::prefix('orders')->group(function () {
@@ -86,8 +93,6 @@ Route::prefix('orders')->group(function () {
     Route::get('{order}/export/pdf', [OrderController::class, 'exportPDF']);
     Route::get('{order}/export/xlsx', [OrderController::class, 'exportXlsx']);
     Route::get('{order}/export/test', [OrderController::class, 'testExport']);
-    Route::post('{order}/copy', [OrderController::class, 'copy']);
-    Route::post('{order}/order-lines/{orderLine}/copy', [OrderLineController::class, 'copy']);
 });
 Route::prefix('contracts')->group(function () {
     Route::get('{contract}/export-auth', [ContractController::class, 'exportAuth'])->middleware('auth:sanctum');

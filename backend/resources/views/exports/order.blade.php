@@ -193,6 +193,18 @@
         <td><b>ИТОГО</b></td>
         <td><b>{{number_format($order->amount, 2, ',', ' ')}} ₽</b></td>
     </tr>
+    @if($order->discount)
+        <tr>
+            <td colspan="20"></td>
+            <td><b>Скидка</b></td>
+            <td><b>{{$order->discount}} %</b></td>
+        </tr>
+        <tr>
+            <td colspan="20"></td>
+            <td><b>ИТОГО с учётом скидки</b></td>
+            <td><b>{{number_format($order->amount_after_discount, 2, ',', ' ')}} ₽</b></td>
+        </tr>
+    @endif
     <tr>
         <td colspan="24">&nbsp;</td>
     </tr>

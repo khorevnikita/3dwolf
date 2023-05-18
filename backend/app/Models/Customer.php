@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,6 +38,33 @@ class Customer extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    public function recentOrders()
+    {
+        return $this->orders()
+            ->where("date", ">=", Carbon::now()->startOfMonth())
+            ->where("date", "<=", Carbon::now()->endOfMonth());
+    }
+
+    public function payments()
+    {
+        return $this->hasManyThrough(Payment::class, Order::class);
+    }
+
+    public function recentPayments()
+    {
+        return $this->payments()
+            ->where("paid_at", ">=", Carbon::now()->startOfMonth())
+            ->where("paid_at", "<=", Carbon::now()->endOfMonth());
+    }
+
+    public function lastPaidPayment()
+    {
+        return $this->hasOneThrough(Payment::class, Order::class)
+            ->whereNotNull("paid_at")
+            ->orderBy("paid_at", "desc");
+    }
+
 
     public function newsletters()
     {

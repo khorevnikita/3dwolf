@@ -74,8 +74,23 @@
               </v-btn>
             </template>
           </v-data-table>
+          <v-row class="mt-4">
+            <v-col cols="12" md="6" lg="4">
+              <v-text-field
+                  label="Скидка (%)"
+                  v-model="order.discount"
+                  dense
+              >
+                <template #append-outer>
+                  <v-btn text small @click="setDiscount()">Применить</v-btn>
+                </template>
+              </v-text-field>
+            </v-col>
+          </v-row>
           <div class="text-h6 mt-4 mb-5">
             Итого: {{ totalAmount }} руб.
+            <br/>
+            Итого с учетом скидки: {{ totalAmountAfterDiscount }} руб.
             <br/>
             Вес: {{ totalWeight }} <br/>
             Время печати: {{ formatDuration(totalTime) }}
@@ -105,6 +120,7 @@ import PaymentCard from "@/components/Order/PaymentCard";
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import OrderLineEditor from "@/components/Order/OrderLineEditor";
 import FilesCard from "@/components/Order/FIlesCard";
+import Swal from "sweetalert2-khonik";
 
 export default {
   name: "OrderItem",
@@ -142,7 +158,17 @@ export default {
       return this.order?.customer;
     },
     totalAmount() {
-      const amount = this.items.reduce((acc, item) => acc += item.total_amount, 0)
+      const amount = this.items.reduce((acc, item) => acc += item.total_amount, 0);
+
+      return Math.round(amount * 100) / 100;
+    },
+    totalAmountAfterDiscount() {
+      if (!this.order.discount) {
+        return this.totalAmount;
+      }
+      const discount = Number(this.order.discount);
+      let amount = this.totalAmount;
+      amount = amount * (1 - discount / 100);
       return Math.round(amount * 100) / 100;
     },
     totalWeight() {
@@ -153,7 +179,6 @@ export default {
       const time = this.items.reduce((acc, item) => acc += (item.print_duration * item.count), 0);
       return Math.round(time * 100) / 100;
     },
-
   },
   methods: {
     copy(item) {
@@ -172,8 +197,19 @@ export default {
       })
     },
     onUpdated(orderLine) {
-      const idx = this.items.findIndex(i=>i.id === orderLine.id);
-      this.items.splice(idx,1,orderLine);
+      const idx = this.items.findIndex(i => i.id === orderLine.id);
+      this.items.splice(idx, 1, orderLine);
+    },
+    setDiscount() {
+      this.errors = {};
+      axios.post(`orders/${this.order_id}/set-discount`, {
+        discount: this.order.discount
+      }).then((body) => {
+        this.order = body.order;
+        Swal.fire("Скидка применена")
+      }).catch(err => {
+        this.errors = err.body.errors;
+      })
     }
   }
 }

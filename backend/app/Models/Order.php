@@ -60,6 +60,14 @@ class Order extends Model
         return $this->hasMany(OrderFile::class);
     }
 
+    public function getAmountAfterDiscountAttribute()
+    {
+        if (!$this->discount) return $this->amount;
+        $amount = $this->amount;
+        $amount = $amount * (1 - $this->discount / 100);
+        return round($amount, 2);
+    }
+
     public function copy(): Order
     {
         $newOrder = new Order($this->toArray());
