@@ -111,29 +111,14 @@
           :items="[
               {value:'new',text:'Новый'},
               {value:'printing',text:'В печати'},
-              {value:'shipping',text:'К отгрузке'},
+              {value:'moving', text: 'Перемещение на ПВЗ'},
+              {value:'shipping',text:'Готов к отгрузке'},
               {value:'completed',text:'Отгружен'},
               {value:'canceled',text:'Отменён'},
           ]"
           item-value="value"
           item-text="text"
       />
-      <v-switch
-          v-if="model.status !== value.status"
-          label="Уведомить по e-mail"
-          v-model="notifyEmail"
-      />
-      <v-switch
-          v-if="notifyEmail"
-          label="Прикрепить наряд-заказ PDF"
-          v-model="attachPDF"
-      />
-      <v-switch
-          v-if="model.status !== value.status"
-          label="Уведомить по СМС"
-          v-model="notifySMS"
-      />
-
       <v-select
           label="Статус оплаты"
           v-model="model.payment_status"
@@ -188,9 +173,6 @@ export default {
       errors: {},
       menu: false,
       menu2: false,
-      notifySMS: false,
-      notifyEmail: false,
-      attachPDF: false,
     }
   },
   methods: {
@@ -206,11 +188,7 @@ export default {
       }
     },
     store() {
-      axios.post(`${this.modelName}s`, {
-        ...this.model,
-        notifyEmail: this.notifyEmail,
-        notifySMS: this.notifySMS,
-      }).then(body => {
+      axios.post(`${this.modelName}s`, this.model).then(body => {
         this.$emit("created", body[this.modelName]);
         this.$emit("close");
         if (!this.modal) {
@@ -221,12 +199,7 @@ export default {
       })
     },
     update() {
-      axios.put(`${this.modelName}s/${this.model.id}`, {
-        ...this.model,
-        notifyEmail: this.notifyEmail,
-        notifySMS: this.notifySMS,
-        attachPDF: this.attachPDF,
-      }).then(body => {
+      axios.put(`${this.modelName}s/${this.model.id}`, this.model).then(body => {
         this.$emit("updated", body[this.modelName]);
         this.$emit("close");
         if (!this.modal) {

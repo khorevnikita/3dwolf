@@ -76,7 +76,12 @@
           <tr
               v-for="(item,i) in items"
               :key="i"
-              v-bind:class="{'info':item.status==='new','success':item.status==='printing','warning':item.status==='shipping'}"
+              v-bind:class="{
+                'info':item.status==='new',
+                'success':item.status==='printing',
+                'warning':item.status==='shipping',
+                'moving':item.status==='moving'
+              }"
           >
             <td>{{ item.id }}</td>
             <td>{{ item.date ? moment(item.date).format("DD.MM.YYYY") : "-" }}</td>
@@ -171,7 +176,8 @@ export default {
       statuses: {
         new: "Новый",
         printing: "В печати",
-        shipping: "К отгрузке",
+        moving: "Перемещение на ПВЗ",
+        shipping: "Готов к отгрузке",
         completed: "Отгружено",
         canceled: "Отменён",
       },
@@ -219,6 +225,11 @@ tr {
   &.warning {
     background-color: #ffe5c4 !important;
     border-color: #ffe5c4 !important;
+  }
+
+  &.moving {
+    background-color: #fcd6ff !important;
+    border-color: #fcd6ff !important;
   }
 
   td.error {

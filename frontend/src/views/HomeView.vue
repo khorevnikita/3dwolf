@@ -80,7 +80,8 @@ export default Vue.extend({
       statuses: {
         new: "Новый",
         printing: "В печати",
-        shipping: "К отгрузке",
+        moving:"Перемещение на ПВЗ",
+        shipping: "Готов к отгрузке",
         completed: "Отгружено",
       },
       data: {}

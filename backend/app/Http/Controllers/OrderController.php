@@ -124,13 +124,6 @@ class OrderController extends Controller
 
         $order->load('customer');
 
-        if ($request->get("notifyEmail")) {
-            $order->notify("email", $request->get("attachPDF"));
-        }
-        if ($request->get("notifySMS")) {
-            $order->notify("sms");
-        }
-
         return $this->resourceItemResponse('order', $order);
     }
 
@@ -141,6 +134,17 @@ class OrderController extends Controller
 
         $order->load('customer');
         return $this->resourceItemResponse('order', $order);
+    }
+
+    public function notify(Order $order, Request $request): JsonResponse
+    {
+        $request->validate([
+            'channel' => 'required|in:email,sms'
+        ]);
+
+        $order->notify($request->get("channel"), (bool)$request->get("attach"));
+
+        return $this->emptySuccessResponse();
     }
 
     /**

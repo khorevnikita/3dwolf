@@ -40,7 +40,8 @@
         [phone] - Телефон<br/>
         [status] - Статус наряд-заказа<br/>
         [total] - Сумма заказа<br/>
-        [total50] - 50% от суммы заказа
+        [total50] - 50% от суммы заказа <br/>
+        [address] - Адрес доставки
       </p>
     </v-card-text>
     <v-card-actions>

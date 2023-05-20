@@ -111,10 +111,12 @@ class NotifyOrderChanged implements ShouldQueue
         //[status] - Статус наряд-заказа
         //[total] - Сумма заказа
         //[total50] - 50% от суммы заказа
+        //[address] - Адрес доставки
         $statusNames = [
             'new' => "новый",
             'printing' => "в печати",
-            'shipping' => "к отгрузке",
+            'moving' => "перемещение на ПВЗ",
+            'shipping' => "готов к отгрузке",
             'completed' => 'отгружен',
             'canceled' => 'отменён'
         ];
@@ -124,7 +126,8 @@ class NotifyOrderChanged implements ShouldQueue
             "[phone]" => $customer->phone,
             "[status]" => $statusNames[$this->order->status] ?? "",
             "[total]" => $this->order->amount,
-            "[total50]" => round($this->order->amount / 2)
+            "[total50]" => round($this->order->amount / 2),
+            "[address]" => $this->order->delivery_address,
         ];
         $text = $template;
         foreach ($tagMap as $tag => $value) {

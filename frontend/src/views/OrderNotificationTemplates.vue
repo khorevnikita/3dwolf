@@ -69,7 +69,8 @@ export default {
       statuses: [
         {value: 'new', text: 'Новый'},
         {value: 'printing', text: 'В печати'},
-        {value: 'shipping', text: 'К отгрузке'},
+        {value: 'moving', text: 'Перемещение на ПВЗ'},
+        {value: 'shipping', text: 'Готов к отгрузке'},
         {value: 'completed', text: 'Отгружен'},
         {value: 'canceled', text: 'Отменён'},
       ],

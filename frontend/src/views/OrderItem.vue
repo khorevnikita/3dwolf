@@ -23,6 +23,7 @@
         </v-col>
         <v-col cols="12" md="6" order-md="1">
           <OrderEditor v-model="order"/>
+          <OrderNotification :order="order" class="mt-4"/>
         </v-col>
         <v-col cols="12" order="3">
           <div class="d-flex align-items-center">
@@ -121,10 +122,11 @@ import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import OrderLineEditor from "@/components/Order/OrderLineEditor";
 import FilesCard from "@/components/Order/FIlesCard";
 import Swal from "sweetalert2-khonik";
+import OrderNotification from "@/components/Order/OrderNotification";
 
 export default {
   name: "OrderItem",
-  components: {FilesCard, OrderLineEditor, PaymentCard, CustomerCard, OrderEditor},
+  components: {OrderNotification, FilesCard, OrderLineEditor, PaymentCard, CustomerCard, OrderEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {

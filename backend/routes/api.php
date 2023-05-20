@@ -82,6 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('company-by-inn', [CustomerController::class, 'finDataByINN']);
 
     Route::prefix('orders')->group(function () {
+        Route::post('{order}/notify', [OrderController::class, 'notify']);
         Route::post('{order}/copy', [OrderController::class, 'copy']);
         Route::post('{order}/order-lines/{orderLine}/copy', [OrderLineController::class, 'copy']);
         Route::post('{order}/set-discount', [OrderController::class, 'setDiscount']);
