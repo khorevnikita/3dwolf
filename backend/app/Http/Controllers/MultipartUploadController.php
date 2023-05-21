@@ -199,7 +199,6 @@ class MultipartUploadController extends Controller
                 'Bucket' => Config::get('filesystems.disks.s3.bucket'),
                 'Key' => $request->get("Key"),
             ]);
-            Log::info("UPLOAD", ["head" => $head, "body" => $completeUpload]);
 
             $metaData = [
                 'url' => $completeUpload["Location"],
