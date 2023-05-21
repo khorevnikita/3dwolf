@@ -21,6 +21,7 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\ProdNumberMaskController;
 use App\Http\Controllers\OrderFileController;
 use App\Http\Controllers\OrderNotificationTemplateController;
+use App\Http\Controllers\MultipartUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,6 +82,14 @@ Route::middleware('moderator')->group(function () {
     });
 
     Route::post('upload', [UploadController::class, 'upload']);
+    Route::prefix('upload/multipart')->group(function () {
+        Route::post('/', [MultipartUploadController::class, 'createMultipartUpload']);
+        Route::post('{uploadId}', [MultipartUploadController::class, 'uploadPart']);
+        Route::get('{uploadId}', [MultipartUploadController::class, 'getUploadedParts']);
+        Route::get('{uploadId}/{partNumber}', [MultipartUploadController::class, 'signPartUpload']);
+        Route::post('{uploadId}/complete', [MultipartUploadController::class, 'completeMultipartUpload']);
+        Route::delete('{uploadId}', [MultipartUploadController::class, 'abortMultipartUpload']);
+    });
 
     Route::get('company-by-inn', [CustomerController::class, 'finDataByINN']);
 
