@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\ProfileRequest;
+use App\Http\Requests\Auth\SetPasswordRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,8 +24,6 @@ class AuthController extends Controller
                 'errors' => [
                     'password' => ['Wrong password. Try again.']
                 ],
-                'a' => $request->get('password'),
-                'b' => $user->password
             ], 422);
         }
 
@@ -45,5 +45,30 @@ class AuthController extends Controller
             ->find(auth("sanctum")->id());
 
         return $this->resourceItemResponse('user', $user);
+    }
+
+    public function profile(ProfileRequest $request): JsonResponse
+    {
+        $user = auth("sanctum")->user();
+        $user->fill($request->all());
+        $user->save();
+        return $this->resourceItemResponse('user', $user);
+    }
+
+    public function setPassword(SetPasswordRequest $request): JsonResponse
+    {
+        $user = auth("sanctum")->user();
+        if (!Hash::check($request->get('old_password'), $user->password)) {
+            return response()->json([
+                'message' => 'Validation error',
+                'errors' => [
+                    'old_password' => ['Неправильный пароль']
+                ],
+            ], 422);
+        }
+        $user->password = $request->get("password");
+        $user->save();
+
+        return $this->emptySuccessResponse();
     }
 }

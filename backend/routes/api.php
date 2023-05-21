@@ -40,6 +40,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::get('me', [AuthController::class, 'me']);
+    Route::post('profile', [AuthController::class, 'profile']);
+    Route::post('set-password', [AuthController::class, 'setPassword']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

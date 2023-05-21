@@ -2,45 +2,9 @@
   <v-card>
     <v-card-title>Редактирование пользователя</v-card-title>
     <v-card-text>
-      <v-text-field
-          label="Фамилия"
-          v-model="model.surname"
-          :error-messages="errors.surname"
-          :error-count="1"
-          :error="!!errors.surname"
-      />
-      <v-text-field
-          label="Имя"
-          v-model="model.name"
-          :error-messages="errors.name"
-          :error-count="1"
-          :error="!!errors.name"
-      />
-
-      <v-text-field
-          label="E-mail"
-          v-model="model.email"
-          :error-messages="errors.email"
-          :error-count="1"
-          :error="!!errors.email"
-      />
-      <v-text-field
-          v-if="!model.id"
-          type="password"
-          label="Пароль"
-          v-model="model.password"
-          :error-messages="errors.password"
-          :error-count="1"
-          :error="!!errors.password"
-      />
-      <v-text-field
-          v-if="!model.id"
-          type="password"
-          label="Подтвердите пароль"
-          v-model="model.password_confirmation"
-          :error-messages="errors.password_confirmation"
-          :error-count="1"
-          :error="!!errors.password_confirmation"
+      <BaseUserForm
+          v-model="model"
+          :errors="errors"
       />
 
       <v-text-field
@@ -74,9 +38,11 @@
 
 <script>
 import axios from "@/plugins/axios";
+import BaseUserForm from "@/components/User/BaseUserForm";
 
 export default {
   name: "UserEditor",
+  components: {BaseUserForm},
   props: ['value'],
   data() {
     return {

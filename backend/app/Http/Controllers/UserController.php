@@ -23,6 +23,13 @@ class UserController extends Controller
             $search = $request->get('search');
             $models = $models->search($search);
         }
+
+        if ($customerId = $request->get("customer_id")) {
+            $models = $models->customer($customerId);
+        } else {
+            $models = $models->moderator();
+        }
+
         $totalCount = $models->count();
 
         $models = $models->orderBy('name');

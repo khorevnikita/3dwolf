@@ -23,7 +23,8 @@ class User extends Authenticatable
         'surname',
         'email',
         'password',
-        'balance'
+        'balance',
+        'customer_id'
     ];
 
     /**
@@ -65,6 +66,18 @@ class User extends Authenticatable
         });
     }
 
+    public function scopeModerator($q)
+    {
+        return $q->whereNull("customer_id");
+    }
+
+    public function scopeCustomer($q, $customerId = null)
+    {
+        if (!$customerId) return $q->whereNotNull("customer_id");
+
+        return $q->where("customer_id", $customerId);
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
@@ -100,8 +113,13 @@ class User extends Authenticatable
     {
         $permission = $this->permission()->first();
         if (!$permission) return [];;
-        return array_keys(array_filter($permission->toArray(), function ($p,$k) {
-            return $p && !in_array($k, ['id', 'user_id','updated_at']);
+        return array_keys(array_filter($permission->toArray(), function ($p, $k) {
+            return $p && !in_array($k, ['id', 'user_id', 'updated_at']);
         }, 1));
+    }
+
+    public function isCustomer(): bool
+    {
+        return !!$this->customer_id;
     }
 }

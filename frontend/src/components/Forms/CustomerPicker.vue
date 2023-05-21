@@ -10,10 +10,11 @@
       :error-messages="error"
       :error-count="1"
       :error="!!error"
-      clearable
+      :clearable="!readonly"
       :filter="()=>true"
       :dense="dense"
       :hide-details="dense"
+      :readonly="readonly"
   >
     <template #item="{item}">
       {{ item.title }}, {{ item.phone }}, {{ item.email }}
@@ -26,7 +27,7 @@ import axios from "@/plugins/axios";
 
 export default {
   name: "CustomerPicker",
-  props: ['value', 'error', 'dense'],
+  props: ['value', 'error', 'dense','readonly'],
   data() {
     return {
       customer_id: this.value,

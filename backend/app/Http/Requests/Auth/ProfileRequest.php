@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UserRequest extends FormRequest
+class ProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +22,11 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $modelId = request()->route('user')?->id ?? 0;
+        $modelId = auth("sanctum")->id();
         return [
             'name' => 'required|max:255',
             'surname' => 'required|max:255',
             'email' => ['required', 'email', Rule::unique('users')->ignore($modelId)],
-            'balance' => ['required_without:customer_id', 'numeric'],
-            'password' => $modelId === 0 ? ['required', 'confirmed', 'min:6'] : [],
-
         ];
     }
 }

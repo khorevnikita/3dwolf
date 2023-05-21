@@ -121,6 +121,12 @@ const routes: Array<RouteConfig> = [
         name: '404',
         component: () => import('../views/404.vue'),
     },
+    {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('../views/ProfileView.vue'),
+    },
+
 ]
 
 const router = new VueRouter({

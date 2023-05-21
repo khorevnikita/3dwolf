@@ -3,8 +3,11 @@
     <v-col cols="12" md="9">
       <CustomerEditor v-if="model" v-model="model"/>
     </v-col>
-    <v-col cols="12" md="3">
-      <CustomerOrder :customer-id="model.id"/>
+    <v-col cols="12" md="3" v-if="model">
+      <CustomerUsers
+          :customer-id="model.id"
+      />
+      <CustomerOrder class="mt-5" :customer-id="model.id"/>
       <CustomerPayment class="mt-5" :customer="model"/>
     </v-col>
     <v-col cols="12">
@@ -19,14 +22,16 @@ import CustomerEditor from "@/components/Customer/CustomerEditor";
 import Swal from "sweetalert2-khonik";
 import CustomerOrder from "@/components/Customer/CustomerOrder";
 import CustomerPayment from "@/components/Customer/CustomerPayment";
+import CreateUserDialog from "@/components/Customer/CreateUserDialog";
+import CustomerUsers from "@/components/Customer/CustomerUsers";
 
 export default {
   name: "CustomerItem",
-  components: {CustomerPayment, CustomerOrder, CustomerEditor},
+  components: {CustomerUsers, CreateUserDialog, CustomerPayment, CustomerOrder, CustomerEditor},
   data() {
     return {
       id: this.$route.params.id,
-      model: undefined
+      model: undefined,
     }
   },
   created() {
@@ -38,7 +43,7 @@ export default {
         this.model = body.customer;
       });
     },
-    destroy(){
+    destroy() {
       Swal.fire({
         title: "Вы действительно хотите удалить клиента?",
         showDenyButton: true,

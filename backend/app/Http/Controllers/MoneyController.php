@@ -54,6 +54,7 @@ class MoneyController extends Controller
 
     public function getDashboardData(): JsonResponse
     {
+        $user = auth("sanctum")->user();
         $fromDate = Carbon::now()->startOfYear();
         $endDate = Carbon::now()->endOfYear();
         $incomePayments = Payment::query()
@@ -67,16 +68,19 @@ class MoneyController extends Controller
         $monthData = $this->getMonthMoney($fromDate, $endDate, $incomePayments, $expensePayments);
         $accounts = Account::query()->get();
 
-        $orders = Order::query()->selectRaw("status, count(id) as count")
+        $orders = Order::query()
+            ->visible()
+            ->selectRaw("status, count(id) as count")
             ->groupBy("status")->pluck('count', 'status');
         $sources = Customer::query()->selectRaw("source, count(id) as count")
             ->groupBy("source")->pluck('count', 'source');
 
         $stockData = $this->getStockData();
-        return $this->resourceItemResponse('data', [
+        $response = array_merge([
+            'orders' => $orders,
+        ], $user->isCustomer() ? [] : [
             'months' => $monthData,
             'accounts' => $accounts,
-            'orders' => $orders,
             'customers' => [
                 'total' => Customer::query()->count(),
                 'new' => Customer::query()->where("created_at", ">", Carbon::now()->startOfMonth())->count()
@@ -84,6 +88,7 @@ class MoneyController extends Controller
             'sources' => $sources,
             'stock' => $stockData
         ]);
+        return $this->resourceItemResponse('data', $response);
     }
 
     protected function getMonthMoney($fromDate, $endDate, $incomePayments, $expensePayments): array

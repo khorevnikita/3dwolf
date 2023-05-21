@@ -17,7 +17,7 @@ class Order extends Model
 
     protected $fillable = ['date', 'customer_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address', 'comment'];
 
-    const STATUSES = ['new', 'printing','moving', 'shipping', 'completed', 'canceled'];
+    const STATUSES = ['new', 'printing', 'moving', 'shipping', 'completed', 'canceled'];
 
     protected static function booted(): void
     {
@@ -58,6 +58,14 @@ class Order extends Model
     public function files()
     {
         return $this->hasMany(OrderFile::class);
+    }
+
+    public function scopeVisible($q)
+    {
+        $user = auth("sanctum")->user();
+        if (!$user) return $q->where("id", 0);
+        if ($user->isCustomer()) return $q->where("customer_id", $user->customer_id);
+        return $q;
     }
 
     public function getAmountAfterDiscountAttribute()

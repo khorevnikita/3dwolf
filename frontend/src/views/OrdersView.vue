@@ -4,8 +4,8 @@
       <div class="d-flex align-items-center">
         <div class="text-h6">Наряд-заказы</div>
         <v-spacer/>
-        <v-btn small to="/order-notification-templates" color="secondary" class="mr-4">Шаблоны уведомлений</v-btn>
-        <v-btn small @click="create()" color="primary">Создать</v-btn>
+        <v-btn v-if="isModerator" small to="/order-notification-templates" color="secondary" class="mr-4">Шаблоны уведомлений</v-btn>
+        <v-btn v-if="isModerator" small @click="create()" color="primary">Создать</v-btn>
       </div>
     </v-col>
     <v-col cols="12">
@@ -21,7 +21,7 @@
                   dense
               />
             </v-col>
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" v-if="isModerator">
               <CustomerPicker
                   v-model="query.customer_id"
                   :dense="true"
@@ -101,15 +101,15 @@
                 <v-icon>mdi-eye</v-icon>
               </v-btn>
 
-              <v-btn color="primary" icon @click="copy(item)" class="mr-2">
+              <v-btn v-if="isModerator" color="primary" icon @click="copy(item)" class="mr-2">
                 <v-icon>mdi-content-copy</v-icon>
               </v-btn>
 
-              <v-btn color="warning" icon @click="edit(item)" class="mr-2">
+              <v-btn v-if="isModerator" color="warning" icon @click="edit(item)" class="mr-2">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
 
-              <v-btn color="error" icon @click="destroy(item)">
+              <v-btn v-if="isModerator" color="error" icon @click="destroy(item)">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </td>
@@ -150,6 +150,7 @@ import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import OrderEditor from "@/components/Order/OrderEditor";
 import CustomerPicker from "@/components/Forms/CustomerPicker";
 import axios from "@/plugins/axios";
+import {mapGetters} from "vuex";
 
 export default {
   name: "OrdersView",
@@ -189,6 +190,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['isModerator']),
     orderStatusesFilter() {
       return Object.keys(this.statuses).map(key => {
         return {value: key, text: this.statuses[key]};

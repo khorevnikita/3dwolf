@@ -23,16 +23,11 @@ export default new Vuex.Store({
             {title: 'Деньги', icon: 'mdi-cash', to: '/money', permission: 'payments'},
             {title: 'Сметы', icon: 'mdi-clipboard-list', to: '/estimates', permission: 'estimates'},
             {title: 'Рассылки', icon: 'mdi-email-arrow-right-outline', to: '/newsletters', permission: 'newsletters'},
-            /*{
-                title: 'Шаблоны уведомлений',
-                icon: 'mdi-bell-cog-outline',
-                to: '/order-notification-temlpates',
-                permission: 'orders'
-            },*/
+            {title: 'Профиль', icon: 'mdi-account', to: '/profile'},
         ],
 
         jwt: localStorage.getItem('access_token'),
-        user: undefined,
+        user: undefined as any,
         attachedCustomer: undefined,
         detachedCustomer: undefined,
     },
@@ -48,6 +43,9 @@ export default new Vuex.Store({
                 if (!item.permission) return true;
                 return user.permission.includes(item.permission)
             })
+        },
+        isModerator:state=>{
+            return state.user && !state.user.customer_id
         }
     },
     mutations: {

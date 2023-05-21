@@ -10,7 +10,7 @@
             <v-list-item-subtitle>{{ file.mime_type }} - {{ formatWeight(file.size) }}</v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn icon color="error" @click.prevent="destroy(file)">
+            <v-btn icon color="error" @click.prevent="destroy(file)" v-if="isModerator">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </v-list-item-action>
@@ -20,6 +20,7 @@
     <v-card-actions>
       <v-spacer/>
       <FileUploader
+          v-if="isModerator"
           label="Выберите файл для загрузки"
           @uploaded="onUploaded"
       />
@@ -32,6 +33,7 @@ import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import FileUploader from "@/components/Forms/FileUploader";
 import axios from "@/plugins/axios";
 import {formatWeight} from '@/plugins/formats'
+import {mapGetters} from "vuex";
 
 export default {
   name: "FilesCard",
@@ -45,6 +47,9 @@ export default {
       deleteSwalTitle: `Безвозвратно удалить файл?`,
       formatWeight: formatWeight,
     }
+  },
+  computed:{
+    ...mapGetters(['isModerator'])
   },
   watch: {
     page() {

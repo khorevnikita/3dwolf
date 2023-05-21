@@ -1,9 +1,9 @@
 <template>
   <v-row class="mx-3 mt-5 dashboard">
-    <v-col cols="12">
+    <v-col cols="12" v-if="showCustomers">
       <div class="text-h4">Клиенты</div>
     </v-col>
-    <v-col cols="6">
+    <v-col cols="6" v-if="showCustomers">
       <v-card>
         <v-card-subtitle>Всего клиентов</v-card-subtitle>
         <v-card-title>
@@ -11,7 +11,7 @@
         </v-card-title>
       </v-card>
     </v-col>
-    <v-col cols="6">
+    <v-col cols="6" v-if="showCustomers">
       <v-card>
         <v-card-subtitle>Новых клиентов</v-card-subtitle>
         <v-card-title>
@@ -19,7 +19,7 @@
         </v-card-title>
       </v-card>
     </v-col>
-    <v-col cols="6">
+    <v-col cols="6" v-if="showCustomers">
       <v-card>
         <v-card-subtitle>Авито</v-card-subtitle>
         <v-card-title>
@@ -27,7 +27,7 @@
         </v-card-title>
       </v-card>
     </v-col>
-    <v-col cols="6">
+    <v-col cols="6" v-if="showCustomers">
       <v-card>
         <v-card-subtitle>Сайт</v-card-subtitle>
         <v-card-title>
@@ -38,7 +38,7 @@
     <v-col cols="12">
       <div class="text-h4">Заказы</div>
     </v-col>
-    <v-col cols="6" md="3" v-for="statusKey in Object.keys(statuses)">
+    <v-col cols="4" md="3" lg="2" :offset-lg="i===0?1:0" v-for="(statusKey,i) in Object.keys(statuses)">
       <v-card>
         <v-card-subtitle>{{ statuses[statusKey] }}</v-card-subtitle>
         <v-card-title>
@@ -74,13 +74,13 @@ import {mapGetters} from "vuex";
 
 export default Vue.extend({
   name: 'Home',
-  components: {MoneyAccountTable, MonthMoneyTable,StockStats},
+  components: {MoneyAccountTable, MonthMoneyTable, StockStats},
   data() {
     return {
       statuses: {
         new: "Новый",
         printing: "В печати",
-        moving:"Перемещение на ПВЗ",
+        moving: "Перемещение на ПВЗ",
         shipping: "Готов к отгрузке",
         completed: "Отгружено",
       },
@@ -94,6 +94,9 @@ export default Vue.extend({
     ...mapGetters(['user']),
     showMoney() {
       return this.user && this.user.permission?.includes('payments');
+    },
+    showCustomers() {
+      return this.user && this.user.permission?.includes('customers');
     },
     showStock() {
       return this.user && this.user.permission?.includes('parts');

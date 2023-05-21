@@ -25,7 +25,7 @@ class OrderController extends Controller
     public function index(Request $request): JsonResponse
     {
         list($page, $skip, $take) = Paginator::get($request);
-        $models = Order::query();
+        $models = Order::query()->visible();
         if ($request->has('search')) {
             $search = $request->get('search');
             $models = $models->whereHas("customer", function ($q) use ($search) {

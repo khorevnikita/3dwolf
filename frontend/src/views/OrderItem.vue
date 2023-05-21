@@ -9,27 +9,28 @@
             <v-icon>mdi-file-pdf-box</v-icon>&nbsp;
             Скачать
           </v-btn>
-          <v-btn color="success" @click="exportFile('xlsx')">
+          <!--<v-btn color="success" @click="exportFile('xlsx')">
             <v-icon>mdi-microsoft-excel</v-icon>&nbsp;
             Экспорт
-          </v-btn>
+          </v-btn>-->
         </div>
       </div>
       <v-row>
         <v-col cols="12" md="6" order-md="2">
-          <CustomerCard :customer="order.customer" class="mb-4"/>
+          <CustomerCard v-if="isModerator" :customer="order.customer" class="mb-4"/>
           <FilesCard :order-id="order.id" class="mb-4"/>
-          <PaymentCard :order-id="order.id"/>
+          <PaymentCard v-if="showMoney" :order-id="order.id"/>
         </v-col>
         <v-col cols="12" md="6" order-md="1">
-          <OrderEditor v-model="order"/>
-          <OrderNotification :order="order" class="mt-4"/>
+          <OrderEditor v-if="isModerator" v-model="order"/>
+          <OrderViewer v-else :order="order"/>
+          <OrderNotification v-if="isModerator" :order="order" class="mt-4"/>
         </v-col>
         <v-col cols="12" order="3">
           <div class="d-flex align-items-center">
             <div class="text-h6">Позиции заказов</div>
             <v-spacer/>
-            <v-btn small @click="create()" color="primary">Добавить</v-btn>
+            <v-btn v-if="isModerator" small @click="create()" color="primary">Добавить</v-btn>
           </div>
           <v-data-table
               :headers="headers"
@@ -62,20 +63,20 @@
             </template>
 
             <template v-slot:[`item.actions`]="{item}">
-              <v-btn color="primary" icon @click="copy(item)" class="mr-2">
+              <v-btn color="primary" icon @click="copy(item)" class="mr-2" v-if="isModerator">
                 <v-icon>mdi-content-copy</v-icon>
               </v-btn>
 
-              <v-btn color="warning" icon @click="edit(item)" class="mr-2">
+              <v-btn color="warning" icon @click="edit(item)" class="mr-2" v-if="isModerator">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
 
-              <v-btn color="error" icon @click="destroy(item)">
+              <v-btn color="error" icon @click="destroy(item)" v-if="isModerator">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </template>
           </v-data-table>
-          <v-row class="mt-4">
+          <v-row class="mt-4" v-if="isModerator">
             <v-col cols="12" md="6" lg="4">
               <v-text-field
                   label="Скидка (%)"
@@ -123,10 +124,12 @@ import OrderLineEditor from "@/components/Order/OrderLineEditor";
 import FilesCard from "@/components/Order/FIlesCard";
 import Swal from "sweetalert2-khonik";
 import OrderNotification from "@/components/Order/OrderNotification";
+import {mapGetters} from "vuex";
+import OrderViewer from "@/components/Order/OrderViewer";
 
 export default {
   name: "OrderItem",
-  components: {OrderNotification, FilesCard, OrderLineEditor, PaymentCard, CustomerCard, OrderEditor},
+  components: {OrderViewer, OrderNotification, FilesCard, OrderLineEditor, PaymentCard, CustomerCard, OrderEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {
@@ -156,6 +159,10 @@ export default {
     this.getOrder();
   },
   computed: {
+    ...mapGetters(['user', 'isModerator']),
+    showMoney() {
+      return this.user && this.user.permission?.includes('payments');
+    },
     customer() {
       return this.order?.customer;
     },
