@@ -39,12 +39,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
-    Route::get('me', [AuthController::class, 'me']);
-    Route::post('profile', [AuthController::class, 'profile']);
-    Route::post('set-password', [AuthController::class, 'setPassword']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('me', [AuthController::class, 'me']);
+        Route::post('profile', [AuthController::class, 'profile']);
+        Route::post('set-password', [AuthController::class, 'setPassword']);
+    });
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('moderator')->group(function () {
     Route::resources([
         'materials' => MaterialController::class,
         'manufacturers' => ManufacturerController::class,
@@ -66,7 +68,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('money')->group(function () {
         Route::get('statistics', [MoneyController::class, 'getTotalStatistics']);
-        Route::get('dashboard', [MoneyController::class, 'getDashboardData']);
     });
 
     Route::prefix('newsletters/{newsletter}')->group(function () {
@@ -90,6 +91,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('{order}/set-discount', [OrderController::class, 'setDiscount']);
     });
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('orders', [OrderController::class, 'index']);
+    Route::get('orders/{order}', [OrderController::class, 'show']);
+    Route::get('orders/{order}/order-lines', [OrderLineController::class, 'index']);
+    Route::get('orders/{order}/order-files', [OrderFileController::class, 'index']);
+    Route::prefix('money')->group(function () {
+        Route::get('dashboard', [MoneyController::class, 'getDashboardData']);
+    });
+});
+
 
 Route::prefix('orders')->group(function () {
     Route::get('{order}/export-auth', [OrderController::class, 'exportAuth'])->middleware('auth:sanctum');
