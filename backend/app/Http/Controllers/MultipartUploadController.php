@@ -33,7 +33,9 @@ class MultipartUploadController extends Controller
             $uploader = $client->createMultipartUpload([
                 'Bucket' => Config::get('filesystems.disks.s3.bucket'),
                 'Key' => $filename,
-                'Metadata' => $request->get('metadata') ?? [],
+                'Metadata' => $request->get('metadata') ?? [
+                        "client_origin_filename" => $originalFilename
+                    ],
                 'ACL' => 'public-read',
                 'Expires' => 3000,
                 'ContentType' => $request->get('file_type'),
@@ -202,7 +204,7 @@ class MultipartUploadController extends Controller
             $metaData = [
                 'url' => $completeUpload["Location"],
                 'path' => $completeUpload["Key"],
-                'name' => $completeUpload["Key"],
+                'name' => $head["Metadata"]["Client_origin_filename"],
                 'uploaded' => true,
                 'file_size' => $head['ContentLength'],
                 'mime_type' => $head['ContentType']
