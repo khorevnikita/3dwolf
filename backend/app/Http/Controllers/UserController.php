@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Paginator;
 use App\Http\Requests\User\UserRequest;
+use App\Mail\ResetCredentials;
 use App\Models\User;
 use App\Models\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -105,6 +108,16 @@ class UserController extends Controller
     public function destroy(User $user): JsonResponse
     {
         $user->delete();
+        return $this->emptySuccessResponse();
+    }
+
+    public function reset(User $user): JsonResponse
+    {
+        $password = Str::random();
+        $user->password = $password;
+        $user->save();
+
+        Mail::to($user)->queue(new ResetCredentials($user, $password));
         return $this->emptySuccessResponse();
     }
 }

@@ -71,6 +71,14 @@ Route::middleware('moderator')->group(function () {
         Route::get('statistics', [MoneyController::class, 'getTotalStatistics']);
     });
 
+    Route::prefix('customers/{customer}')->group(function () {
+        Route::post('user', [CustomerController::class, 'addUser']);
+    });
+
+    Route::prefix('users/{user}')->group(function () {
+        Route::post('reset', [UserController::class, 'reset']);
+    });
+
     Route::prefix('newsletters/{newsletter}')->group(function () {
         Route::get('available-receivers', [NewsletterController::class, 'availableReceivers']);
         Route::post('attach-all', [NewsletterController::class, 'attachAll']);

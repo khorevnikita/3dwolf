@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Пользователи</v-card-title>
+    <v-card-title>Пользователь</v-card-title>
     <v-card-text>
       <v-list>
         <v-list-item v-for="user in items">
@@ -11,6 +11,13 @@
           <v-list-item-action>
             <v-btn color="warning" icon @click="edit(user)">
               <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+            <v-btn
+                color="primary"
+                icon
+                @click="resetUser(user)"
+            >
+              <v-icon>mdi-refresh</v-icon>
             </v-btn>
             <v-btn color="error" icon @click="destroy(user)">
               <v-icon>mdi-delete</v-icon>
@@ -32,11 +39,19 @@
 
     </v-card-text>
     <v-card-actions>
-      <v-btn
+      <!--<v-btn
+          v-if="items.length"
           @click="create()"
           color="primary"
       >Выдать доступ
+      </v-btn>-->
+      <v-btn
+          v-if="items.length===0"
+          color="primary"
+          @click="createUser()"
+      >Выдать доступ
       </v-btn>
+
     </v-card-actions>
   </v-card>
 
@@ -45,6 +60,8 @@
 <script>
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import CreateUserDialog from "@/components/Customer/CreateUserDialog";
+import axios from "@/plugins/axios";
+import Swal from "sweetalert2-khonik";
 
 export default {
   name: "CustomerUsers",
@@ -67,6 +84,18 @@ export default {
       editDialog: false,
     }
   },
+  methods: {
+    createUser() {
+      axios.post(`customers/${this.customerId}/user`).then(({user}) => {
+        this.onCreated(user);
+      })
+    },
+    resetUser(user) {
+      axios.post(`users/${user.id}/reset`).then(() => {
+        Swal.fire("Пароль сброшен и отправлен на почту")
+      })
+    }
+  }
 }
 </script>
 

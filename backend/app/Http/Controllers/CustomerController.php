@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Paginator;
 use App\Http\Requests\Customer\CustomerRequest;
+use App\Mail\InvitationEmail;
 use App\Models\Customer;
+use App\Models\User;
 use Dadata\DadataClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
@@ -118,5 +122,24 @@ class CustomerController extends Controller
         $dadata = new DadataClient(config('services.dadata.key'), config('services.dadata.secret'));
         $result = $dadata->findById("party", $request->inn, 1);
         return $this->resourceItemResponse('data', $result);
+    }
+
+    public function addUser(Customer $customer): JsonResponse
+    {
+        $password = Str::random();
+        $user = new User([
+            'customer_id' => $customer->id,
+            'name' => $customer->name,
+            'surname' => $customer->surname,
+            'email' => $customer->email,
+            'password' => $password,
+        ]);
+        $user->save();
+
+        $user->setPermission(['orders']);
+
+        Mail::to($user)->queue(new InvitationEmail($user, $password));
+
+        return $this->resourceItemResponse('user', $user);
     }
 }
