@@ -42,6 +42,7 @@ class AuthController extends Controller
     {
         $user = User::query()
             //->with("permission")
+            ->with("customer")
             ->find(auth("sanctum")->id());
 
         return $this->resourceItemResponse('user', $user);

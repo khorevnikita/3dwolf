@@ -1,5 +1,13 @@
 <template>
   <v-row class="mx-3 mt-5 dashboard">
+    <v-col cols="12" v-if="!isModerator && customer">
+      <v-card>
+        <v-card-subtitle>Баланс</v-card-subtitle>
+        <v-card-title>
+          <div class="text-h3">{{ formatPrice(customer.balance) }}</div>
+        </v-card-title>
+      </v-card>
+    </v-col>
     <v-col cols="12" v-if="showCustomers">
       <div class="text-h4">Клиенты</div>
     </v-col>
@@ -71,6 +79,7 @@ import MoneyAccountTable from "@/components/Dashboard/MoneyAccountTable.vue";
 import StockStats from "@/components/Dashboard/StockStats.vue";
 import axios from "@/plugins/axios";
 import {mapGetters} from "vuex";
+import {formatPrice} from "@/plugins/formats";
 
 export default Vue.extend({
   name: 'Home',
@@ -84,14 +93,18 @@ export default Vue.extend({
         shipping: "Готов к отгрузке",
         completed: "Отгружено",
       },
-      data: {}
+      data: {},
+      formatPrice: formatPrice,
     }
   },
   created() {
     this.getDashboardData();
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapGetters(['user', 'isModerator']),
+    customer() {
+      return this.user?.customer;
+    },
     showMoney() {
       return this.user && this.user.permission?.includes('payments');
     },

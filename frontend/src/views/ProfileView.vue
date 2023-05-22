@@ -1,6 +1,6 @@
 <template>
   <v-row class="mx-3 mt-5">
-    <v-col cols="12">
+    <v-col cols="12" md="7" v-if="isModerator">
       <h6 class="text-h6">Изменить профиль</h6>
       <BaseUserForm
           v-if="profile"
@@ -8,7 +8,38 @@
           :errors="errors"
       />
       <v-btn color="primary" @click="setProfile()">Сохранить</v-btn>
+    </v-col>
+    <v-col v-else-if="customer" cols="12" md="7">
+      <v-list>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-subtitle>Имя</v-list-item-subtitle>
+            <v-list-item-title>{{ customer.surname }} {{ customer.name }} {{ customer.father_name }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-subtitle>E-mail</v-list-item-subtitle>
+            <v-list-item-title>{{ user.email }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-subtitle>Телефон</v-list-item-subtitle>
+            <v-list-item-title>{{ customer.phone }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-subtitle>Telegram</v-list-item-subtitle>
+            <v-list-item-title>{{ customer.telegram }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
+
+      </v-list>
+    </v-col>
+    <v-col cols="12" md="7">
       <h6 class="text-h6 mt-5">Изменить пароль</h6>
       <v-text-field
           type="password"
@@ -60,7 +91,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapGetters(['user', 'isModerator']),
+    customer() {
+      return this.user?.customer;
+    }
   },
   created() {
     this.profile = this.user;

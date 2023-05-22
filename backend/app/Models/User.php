@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->hasOne(UserPermission::class);
     }
 
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
     public function scopeSearch($q, $search)
     {
         return $q->where(function ($q) use ($search) {
