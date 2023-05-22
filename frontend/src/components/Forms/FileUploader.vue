@@ -117,7 +117,8 @@ export default {
           name: name,
           size: size,
           mime_type: mime_type,
-        })
+        });
+        this.file = undefined;
       } catch (e) {
         console.log(e);
       }
@@ -172,6 +173,7 @@ export default {
           mime_type: file.mime_type,
         })
         this.loading = false;
+        this.file = undefined;
       })
     },
   }
