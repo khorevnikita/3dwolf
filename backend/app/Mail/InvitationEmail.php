@@ -32,7 +32,7 @@ class InvitationEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Invitation Email',
+            subject: 'Кабинет 3д печать/моделирование',
         );
     }
 

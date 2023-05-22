@@ -4,4 +4,6 @@
     <p>Логин для входа: <b>{{$user->email}}</b></p>
     <p>Новый пароль: <b>{{$password}}</b></p>
     <a href="{{url("/")}}">Войти</a>
+    <br/>
+    @include("emails.footer")
 </div>

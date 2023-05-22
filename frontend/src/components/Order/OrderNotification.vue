@@ -17,6 +17,7 @@
 
 <script>
 import axios from "@/plugins/axios";
+import Swal from "sweetalert2-khonik";
 
 export default {
   name: "OrderNotification",
@@ -31,6 +32,10 @@ export default {
       axios.post(`orders/${this.order.id}/notify`, {
         attach: this.attach,
         channel: channel,
+      }).then(()=>{
+        Swal.fire("Отправлено")
+      }).catch(()=>{
+        Swal.fire("Ошибка при отправке")
       })
     }
   }

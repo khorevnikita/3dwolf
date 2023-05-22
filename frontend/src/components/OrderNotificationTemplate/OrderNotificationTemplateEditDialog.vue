@@ -41,7 +41,10 @@
         [status] - Статус наряд-заказа<br/>
         [total] - Сумма заказа<br/>
         [total50] - 50% от суммы заказа <br/>
-        [address] - Адрес доставки
+        [discount] - размер скидки (число)<br/>
+        [totalDiscount] - Сумма заказа с учётом скидки<br/>
+        [totalDiscount50] - 50% от суммы заказа с учетом скидки<br/>
+        [address] - Адрес доставки<br/>
       </p>
     </v-card-text>
     <v-card-actions>

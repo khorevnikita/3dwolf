@@ -111,6 +111,9 @@ class NotifyOrderChanged implements ShouldQueue
         //[status] - Статус наряд-заказа
         //[total] - Сумма заказа
         //[total50] - 50% от суммы заказа
+        //[discount] - размер скидки (число)<br/>
+        //[totalDiscount] - Сумма заказа с учётом скидки<br/>
+        //[totalDiscount50] - 50% от суммы заказа с учетом скидки<br/>
         //[address] - Адрес доставки
         $statusNames = [
             'new' => "новый",
@@ -127,6 +130,9 @@ class NotifyOrderChanged implements ShouldQueue
             "[status]" => $statusNames[$this->order->status] ?? "",
             "[total]" => $this->order->amount,
             "[total50]" => round($this->order->amount / 2),
+            "[discount]" => $this->order->discount,
+            "[totalDiscount]" => $this->order->amount_after_discount,
+            "[totalDiscount50]" => round($this->order->amount_after_discount / 2),
             "[address]" => $this->order->delivery_address,
         ];
         $text = $template;

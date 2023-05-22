@@ -32,7 +32,7 @@ class ResetCredentials extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Reset Credentials',
+            subject: 'Сброс пароля',
         );
     }
 
