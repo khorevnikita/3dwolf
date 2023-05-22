@@ -14,10 +14,10 @@ class UploadController extends Controller
         $file = $request->file('file');
         $now = Carbon::now()->getTimestamp();
         $originalFileName = str_replace(' ', '-', $file->getClientOriginalName());
-        $fileName = $originalFileName . "_" . "$now." . $file->getClientOriginalExtension();
+        $fileName = $now . "_" . $originalFileName;
         $path = "files/$fileName";
-        Storage::disk('public')->put($path, $file->getContent());
-        return $this->resourceItemResponse('url', Storage::disk('public')->url($path), [
+        Storage::disk('s3')->put($path, $file->getContent());
+        return $this->resourceItemResponse('url', Storage::disk('s3')->url($path), [
             'path' => $path,
             'name' => $file->getClientOriginalName(),
             'mime_type' => $file->getClientMimeType(),

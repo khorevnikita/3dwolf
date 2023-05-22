@@ -89,7 +89,7 @@ export default {
       }
 
       if (this.file.size <= this.chunkSize) {
-        return await this.regularUpload();
+        return await this.regularUpload(this.file);
       }
       this.uploaded = 0;
       await this.createMultipartUpload();
