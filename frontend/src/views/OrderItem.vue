@@ -56,7 +56,7 @@
               {{ Math.round(item.total_weight * 100) / 100 }}
             </template>
             <template v-slot:[`item.weight`]="{item}">
-              {{ Math.round(item.total_weight * 100) / 100 }}
+              {{ Math.round(item.weight * 100) / 100 }}
             </template>
             <template v-slot:[`item.print_duration`]="{item}">
               {{ formatDuration(item.print_duration) }}
