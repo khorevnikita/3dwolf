@@ -40,7 +40,7 @@ class MoneyController extends Controller
 
         $accounts = Account::query()->get();
 
-        $users = User::query()->get();
+        $users = User::query()->moderator()->get();
 
         return $this->resourceItemResponse('data', [
             'income' => $totalIncome,
