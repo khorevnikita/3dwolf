@@ -119,6 +119,7 @@ class NotifyOrderChanged implements ShouldQueue
             'new' => "новый",
             'printing' => "в печати",
             'moving' => "перемещение на ПВЗ",
+            'moving_tk' => "перемещение на ТК",
             'shipping' => "готов к отгрузке",
             'completed' => 'отгружен',
             'canceled' => 'отменён'
@@ -134,6 +135,7 @@ class NotifyOrderChanged implements ShouldQueue
             "[totalDiscount]" => $this->order->amount_after_discount,
             "[totalDiscount50]" => round($this->order->amount_after_discount / 2),
             "[address]" => $this->order->delivery_address,
+            "[tkLink]" => $this->order->tk_link,
         ];
         $text = $template;
         foreach ($tagMap as $tag => $value) {

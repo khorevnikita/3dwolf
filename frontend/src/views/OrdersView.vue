@@ -4,7 +4,9 @@
       <div class="d-flex align-items-center">
         <div class="text-h6">Наряд-заказы</div>
         <v-spacer/>
-        <v-btn v-if="isModerator" small to="/order-notification-templates" color="secondary" class="mr-4">Шаблоны уведомлений</v-btn>
+        <v-btn v-if="isModerator" small to="/order-notification-templates" color="secondary" class="mr-4">Шаблоны
+          уведомлений
+        </v-btn>
         <v-btn v-if="isModerator" small @click="create()" color="primary">Создать</v-btn>
       </div>
     </v-col>
@@ -80,7 +82,7 @@
                 'info':item.status==='new',
                 'success':item.status==='printing',
                 'warning':item.status==='shipping',
-                'moving':item.status==='moving'
+                'moving':['moving_tk','moving'].includes(item.status)
               }"
           >
             <td>{{ item.id }}</td>
@@ -91,7 +93,7 @@
             <td>{{ item.deadline ? moment(item.deadline).format("DD.MM.YYYY") : "-" }}</td>
             <td>{{ statuses[item.status] }}</td>
             <td
-                v-bind:class="{'error': ['printing','shipping'].includes(item.status) &&item.payment_status!=='full_paid'}"
+                v-bind:class="{'error': ['printing','shipping','moving','moving_tk'].includes(item.status) &&item.payment_status!=='full_paid'}"
             >
               {{ paymentStatuses[item.payment_status] }}
             </td>
@@ -178,6 +180,7 @@ export default {
         new: "Новый",
         printing: "В печати",
         moving: "Перемещение на ПВЗ",
+        moving_tk: "перемещение на ТК",
         shipping: "Готов к отгрузке",
         completed: "Отгружено",
         canceled: "Отменён",

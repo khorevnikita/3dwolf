@@ -40,6 +40,7 @@ export default {
         new: 'Новый',
         printing: 'В печати',
         moving: 'Перемещение на ПВЗ',
+        moving_tk: 'перемещение на ТК',
         shipping: 'Готов к отгрузке',
         completed: 'Отгружен',
         canceled: 'Отменён',

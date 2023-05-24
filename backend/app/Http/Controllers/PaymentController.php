@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Paginator;
 use App\Http\Requests\Payment\PaymentRequest;
 use App\Models\Payment;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -44,8 +45,11 @@ class PaymentController extends Controller
         }
 
         if ($dates = array_filter(explode(",", $request->get("date")))) {
-            $models = $models->where("paid_at", ">=", $dates[0])
+            if ((count($dates) === 2)) $models->where("paid_at", ">=", $dates[0])
                 ->where("paid_at", "<=", $dates[1]);
+
+            if (count($dates) === 1) $models->where("paid_at", ">=", Carbon::parse($dates[0])->startOfDay())
+                ->where("paid_at", "<=", Carbon::parse($dates[0])->endOfDay());
         }
 
 

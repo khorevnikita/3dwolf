@@ -112,6 +112,7 @@
               {value:'new',text:'Новый'},
               {value:'printing',text:'В печати'},
               {value:'moving', text: 'Перемещение на ПВЗ'},
+              {value:'moving_tk', text: 'перемещение на ТК'},
               {value:'shipping',text:'Готов к отгрузке'},
               {value:'completed',text:'Отгружен'},
               {value:'canceled',text:'Отменён'},
@@ -140,6 +141,14 @@
           :error-count="1"
           :error="!!errors.delivery_address"
       />
+      <v-text-field
+          label="Трек-номер"
+          v-model="model.tk_link"
+          :error-messages="errors.tk_link"
+          :error-count="1"
+          :error="!!errors.tk_link"
+      />
+
       <v-textarea
           label="Комментарий к заказу"
           v-model="model.comment"
