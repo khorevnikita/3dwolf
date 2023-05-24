@@ -46,7 +46,7 @@
     <v-col cols="12">
       <div class="text-h4">Заказы</div>
     </v-col>
-    <v-col cols="4" md="3" lg="2" :offset-lg="i===0?1:0" v-for="(statusKey,i) in Object.keys(statuses)">
+    <v-col cols="4" md="3" lg="2" v-for="(statusKey,i) in Object.keys(statuses)">
       <v-card>
         <v-card-subtitle>{{ statuses[statusKey] }}</v-card-subtitle>
         <v-card-title>
