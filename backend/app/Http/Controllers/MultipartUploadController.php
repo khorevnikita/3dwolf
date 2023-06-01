@@ -20,7 +20,7 @@ class MultipartUploadController extends Controller
     {
         $request->validate([
             'filename' => 'required|string',
-            'file_type' => 'required|string'
+           # 'file_type' => 'required|string'
         ]);
 
         $originalFilename = $request->get('filename');
@@ -38,7 +38,7 @@ class MultipartUploadController extends Controller
                     ],
                 'ACL' => 'public-read',
                 'Expires' => 3000,
-                'ContentType' => $request->get('file_type'),
+                #'ContentType' => $request->get('file_type'),
             ]);
 
             return response()->json([
