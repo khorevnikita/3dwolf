@@ -136,7 +136,11 @@
 
         <div class="block bordered">
             <div class="bold" style="width: 100px">ЗАКАЗЧИК</div>
-            <div>{{$customer->full_name}}, в лице {{$customer->director_for_contract}}, действующего на основании {{$customer->legal_statement}}</div>
+            <div>
+                {{$customer->full_name}}, в
+                лице {{strtolower($customer->director_title)}} {{$customer->director_for_contract}},
+                действующего на основании {{$customer->legal_statement}}
+            </div>
         </div>
 
         <div class="block bordered">
@@ -211,8 +215,11 @@
             </div>
             <div style="width: 50%">
                 {{$customer->full_name}}<br/>
-                ОГРНИП {{$customer->orgn}}<br/>
+                {{$customer->entity_type==='company'?'ОГРН':'ОГРНИП'}} {{$customer->ogrn}}<br/>
                 ИНН {{$customer->inn}}<br/>
+                @if($customer->entity_type==='company')
+                    КПП: {{$customer->kpp}}<br/>
+                @endif
                 Адрес: {{$customer->address}}<br/>
                 Банковские реквизиты:<br/>
                 Р/с {{$customer->rs}}.<br/>
