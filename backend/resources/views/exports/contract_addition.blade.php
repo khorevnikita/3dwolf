@@ -63,7 +63,7 @@
             <td></td>
             <td>
                 Приложение №1<br/>
-                К Договору подряда №{{$contract->id}} от {{$date['day']}} {{$date['month']}} {{$date['year']}} г.
+                К Договору подряда №{{$contract->number}} от {{$date['day']}} {{$date['month']}} {{$date['year']}} г.
             </td>
         </tr>
         </tbody>

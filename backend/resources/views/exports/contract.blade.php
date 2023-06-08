@@ -124,7 +124,7 @@
 </footer>
 <main>
     <div>
-        <h1 class="text-center">Договор подряда № {{$contract->id}}</h1>
+        <h1 class="text-center">Договор подряда № {{$contract->number}}</h1>
         <div class="block">
             <div>
                 г. Москва
