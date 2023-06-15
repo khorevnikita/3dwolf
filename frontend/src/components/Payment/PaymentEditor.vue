@@ -61,6 +61,7 @@
           :error-messages="errors.order_id"
           :error-count="1"
           :error="!!errors.order_id"
+          :no-filter="true"
       >
         <template #item="{item}">Заказ №{{ item.id }}</template>
         <template #selection="{item}">Заказ №{{ item.id }}</template>
