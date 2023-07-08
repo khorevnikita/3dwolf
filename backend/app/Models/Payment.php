@@ -10,11 +10,12 @@ class Payment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['type', 'user_id', 'order_id', 'account_id', 'paid_at', 'amount', 'description'];
+    protected $fillable = ['type', 'user_id', 'order_id', 'account_id', 'source_account_id', 'paid_at', 'amount', 'description'];
 
     const TYPES = [
         'INCOME' => "income",
         'EXPENSE' => 'expense',
+        'EXCHANGE' => 'exchange',
     ];
 
     protected $casts = ['amount' => 'float'];
@@ -50,6 +51,11 @@ class Payment extends Model
         return $this->belongsTo(Account::class);
     }
 
+    public function sourceAccount()
+    {
+        return $this->belongsTo(Account::class, 'source_account_id');
+    }
+
     public function scopeIncome($q)
     {
         return $q->where("type", self::TYPES['INCOME']);
@@ -82,12 +88,17 @@ class Payment extends Model
     public function onCreated()
     {
         $model = $this;
-        $dir = $model->type === Payment::TYPES["INCOME"] ? 1 : -1;
+        $dir = in_array($model->type, [Payment::TYPES["INCOME"], Payment::TYPES["EXCHANGE"]]) ? 1 : -1;
         $amountChange = $dir * $model->amount;
 
         if ($model->account_id) {
             $account = Account::query()->find($model->account_id);
             $account?->updateBalance(0, false, $amountChange, is_null($model->paid_at));
+        }
+
+        if ($model->source_account_id) {
+            $sourceAccount = Account::query()->find($model->source_account_id);
+            $sourceAccount?->updateBalance($amountChange, is_null($model->paid_at), 0, false);
         }
 
         if ($model->user_id) {
@@ -104,7 +115,7 @@ class Payment extends Model
     public function onUpdated()
     {
         $model = $this;
-        $dir = $model->type === Payment::TYPES["INCOME"] ? 1 : -1;
+        $dir = in_array($model->type, [Payment::TYPES["INCOME"], Payment::TYPES["EXCHANGE"]]) ? 1 : -1;
         $originalAmount = $dir * $model->getOriginal('amount');
         $originalPaidDate = $model->getOriginal('paid_at');
         $amountChange = $dir * $model->amount;
@@ -117,6 +128,16 @@ class Payment extends Model
 
             $originalAccount?->updateBalance($originalAmount, is_null($originalPaidDate), 0, is_null($model->paid_at));
             $account?->updateBalance(0, is_null($originalPaidDate), $amountChange, is_null($model->paid_at));
+        }
+
+        if ($model->source_account_id) {
+            $sourceAccount = Account::query()->find($model->source_account_id);
+
+            $originalSourceAccountId = $model->getOriginal('source_account_id');
+            $originalSourceAccount = (int)$model->source_account_id !== (int)$originalSourceAccountId ? Account::query()->find($originalSourceAccountId) : $sourceAccount;
+
+            $originalSourceAccount?->updateBalance(0, is_null($originalPaidDate), $originalAmount, is_null($model->paid_at));
+            $sourceAccount?->updateBalance($amountChange, is_null($originalPaidDate), 0, is_null($model->paid_at));
         }
 
         if ($model->user_id) {
@@ -144,12 +165,17 @@ class Payment extends Model
     public function onDeleted()
     {
         $model = $this;
-        $dir = $model->type === Payment::TYPES["INCOME"] ? 1 : -1;
+        $dir = in_array($model->type,[Payment::TYPES["INCOME"], Payment::TYPES["EXCHANGE"]]) ? 1 : -1;
         $amountChange = $dir * $model->amount;
 
         if ($model->account_id) {
             $account = Account::query()->find($model->account_id);
-            $account?->updateBalance($amountChange, is_null($model->paid_at), 0, false);
+            $account?->updateBalance($amountChange);
+        }
+
+        if ($model->source_account_id) {
+            $sourceAccount = Account::query()->find($model->source_account_id);
+            $sourceAccount?->updateBalance(0, false, $amountChange);
         }
 
         if ($model->user_id) {

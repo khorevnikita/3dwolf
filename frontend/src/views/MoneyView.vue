@@ -175,8 +175,10 @@
         class="elevation-1 mt-3"
     >
       <template v-slot:[`item.type`]="{item}">
-        <v-icon :color="item.type==='income'?'success':'error'">
-          {{ item.type === 'income' ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+        <v-icon color="success" v-if="item.type === 'income'">mdi-chevron-up</v-icon>
+        <v-icon color="error" v-if="item.type === 'expense'">mdi-chevron-down</v-icon>
+        <v-icon color="warning" v-if="item.type==='exchange'">
+          mdi-unfold-more-horizontal
         </v-icon>
       </template>
       <template v-slot:[`item.amount`]="{item}">
@@ -190,6 +192,7 @@
         {{ item.order_id ? `Заказ №${item.order_id}` : '-' }}
       </template>
       <template v-slot:[`item.account_id`]="{item}">
+        {{ item.source_account ? `${item.source_account.name} ->` : '' }}
         {{ item.account ? item.account.name : '-' }}
       </template>
       <template v-slot:[`item.paid_at`]="{item}">

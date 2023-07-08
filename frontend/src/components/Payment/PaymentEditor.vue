@@ -9,6 +9,7 @@
           :items="[
               {value:'expense',text:'Расход'},
               {value:'income',text:'Приход'},
+              {value:'exchange',text:'Перевод'},
           ]"
           item-value="value"
           item-text="text"
@@ -18,7 +19,7 @@
 
       />
       <v-select
-          v-if="showUser"
+          v-if="showUser && model.type !== 'exchange'"
           label="Пользователь"
           v-model="model.user_id"
           :items="users"
@@ -34,6 +35,18 @@
 
       </v-select>
       <v-select
+          v-if="model.type === 'exchange'"
+          label="Старый счет"
+          v-model="model.source_account_id"
+          :items="accounts"
+          item-value="id"
+          item-text="name"
+          :error-messages="errors.source_account_id"
+          :error-count="1"
+          :error="!!errors.source_account_id"
+      />
+
+      <v-select
           label="Счёт"
           v-model="model.account_id"
           :items="accounts"
@@ -45,13 +58,13 @@
       />
 
       <v-switch
-          v-if="!order_id"
+          v-if="!order_id && model.type !== 'exchange'"
           label="По наряд-заказу"
           v-model="showOrder"
           dense
       />
       <v-autocomplete
-          v-if="showOrder"
+          v-if="showOrder && model.type !== 'exchange' "
           label="Наряд-заказ"
           v-model="model.order_id"
           :items="orders"
@@ -119,7 +132,7 @@
       </v-menu>
 
       <v-textarea
-          v-if="!autoDescription"
+          v-if="!autoDescription && model.type !== 'exchange'"
           label="Комментарий к платежу"
           v-model="model.description"
           :error-messages="errors.description"
@@ -169,7 +182,7 @@ export default {
   watch: {
     searchOrder() {
       this.getOrders();
-    },
+    }
   },
   methods: {
     getUsers() {
@@ -181,7 +194,7 @@ export default {
     getOrders() {
       if (this.isLoadingOrders) return;
       this.isLoadingOrders = true;
-      axios.get(`orders?search=${this.searchOrder ? this.searchOrder : ''}&sort_order_id=${this.model.order_id?this.model.order_id:''}`).then(body => {
+      axios.get(`orders?search=${this.searchOrder ? this.searchOrder : ''}&sort_order_id=${this.model.order_id ? this.model.order_id : ''}`).then(body => {
         this.orders = body.orders;
         this.isLoadingOrders = false;
       })
@@ -195,6 +208,9 @@ export default {
       }
     },
     store() {
+      if (this.model.type === 'exchange') {
+        this.model.description = "Перевод ДС";
+      }
       axios.post(`${this.modelName}s`, this.model).then(body => {
         this.$emit("created", body[this.modelName]);
         this.$emit("close");
