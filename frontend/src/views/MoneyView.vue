@@ -211,7 +211,7 @@
         </v-btn>
       </template>
     </v-data-table>
-    <div class="text-subtitle mt-2">Итого: <b>{{ totalSum }} руб.</b></div>
+    <div class="text-subtitle mt-2">Итого: <b>{{ formatPrice(totalSum) }}</b></div>
 
     <v-dialog v-model="editDialog" max-width="500">
       <PaymentEditor

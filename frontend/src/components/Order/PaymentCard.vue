@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Платежи</v-card-title>
+    <v-card-subtitle>Итого: {{formatPrice(totalSum)}}</v-card-subtitle>
     <v-card-text>
       <v-alert type="info" v-if="items.length===0">Платежей нет</v-alert>
       <v-list v-else>
@@ -59,6 +60,7 @@
 <script>
 import PaymentEditor from "@/components/Payment/PaymentEditor";
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
+import axios from "@/plugins/axios";
 
 export default {
   name: "PaymentCard",
@@ -72,14 +74,26 @@ export default {
       resourceApiParams: `order_id=${this.orderId}`,
       deleteSwalTitle: `Безвозвратно удалить платёж?`,
       page: 1,
+      totalSum:0,
     }
-  }, watch: {
+  },
+  watch: {
     page() {
       this.query.page = this.page;
       this.getItems();
     }
   },
-
+  methods:{
+    getItems() {
+      axios.get(`${this.resourceApiRoute}?${this.resourceApiParams}&${this.setQueryString(this.query)}`).then(body => {
+        this.items = body[this.resourceKey];
+        this.totalItems = body.totalCount;
+        this.pagesCount = body.pagesCount;
+        this.totalSum = body.totalSum;
+        this.loading = false;
+      })
+    },
+  }
 }
 </script>
 
