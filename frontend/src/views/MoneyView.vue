@@ -211,6 +211,7 @@
         </v-btn>
       </template>
     </v-data-table>
+    <div class="text-subtitle mt-2">Итого: <b>{{ totalSum }} руб.</b></div>
 
     <v-dialog v-model="editDialog" max-width="500">
       <PaymentEditor
@@ -269,6 +270,7 @@ export default {
       ],
       accounts: [],
       menu: false,
+      totalSum: 0,
     }
   },
   created() {
@@ -294,6 +296,15 @@ export default {
     },
   },
   methods: {
+    getItems() {
+      axios.get(`${this.resourceApiRoute}?${this.resourceApiParams}&${this.setQueryString(this.query)}`).then(body => {
+        this.items = body[this.resourceKey];
+        this.totalItems = body.totalCount;
+        this.pagesCount = body.pagesCount;
+        this.totalSum = body.totalSum;
+        this.loading = false;
+      })
+    },
     getAccounts() {
       axios.get(`accounts`).then(body => this.accounts = body.accounts)
     },

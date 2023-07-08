@@ -54,6 +54,7 @@ class PaymentController extends Controller
 
 
         $totalCount = $models->count();
+        $totalSum = round($models->sum("amount"), 2);
 
         $models = $models->orderByRaw("CASE WHEN paid_at is null THEN 1 ELSE 0 END DESC")
             ->orderBy('paid_at', "desc")
@@ -61,9 +62,11 @@ class PaymentController extends Controller
         if ($take >= 0) {
             $models = $models->skip($skip)->take($take);
         }
-        $models = $models->with(['account', 'user','sourceAccount'])->get();
+        $models = $models->with(['account', 'user', 'sourceAccount'])->get();
         $pagesCount = Paginator::pagesCount($take, $totalCount);
-        return $this->resourceListResponse('payments', $models, $totalCount, $pagesCount);
+        return $this->resourceListResponse('payments', $models, $totalCount, $pagesCount, [
+            'totalSum' => $totalSum,
+        ]);
     }
 
     /**

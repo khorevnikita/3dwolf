@@ -11,7 +11,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function resourceListResponse(string $key, $collection, int $totalCount, int $pagesCount): JsonResponse
+    public function resourceListResponse(string $key, $collection, int $totalCount, int $pagesCount, array $extra = []): JsonResponse
     {
         $data = [
             'status' => 'success',
@@ -19,7 +19,7 @@ class Controller extends BaseController
             'pagesCount' => $pagesCount,
         ];
         $data[$key] = $collection;
-        return response()->json($data);
+        return response()->json(array_merge($data, $extra));
     }
 
     public function resourceItemResponse(string $key, $collection, $additionalData = []): JsonResponse
