@@ -26,10 +26,12 @@ class OrderController extends Controller
     {
         list($page, $skip, $take) = Paginator::get($request);
         $models = Order::query()->visible();
-        if ($request->has('search')) {
+        if ($request->get('search')) {
             $search = $request->get('search');
-            $models = $models->whereHas("customer", function ($q) use ($search) {
-                $q->search($search);
+            $models = $models->where(function($q)  use ($search) {
+                $q->where("id","=","$search")/*->orWhereHas("customer", function ($q) use ($search) {
+                    $q->search($search);
+                })*/;
             });
         }
 
