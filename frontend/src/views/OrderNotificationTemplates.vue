@@ -17,7 +17,7 @@
           class="elevation-1 mt-3"
       >
         <template v-slot:[`item.order_status`]="{item}">
-          {{ statusLabel(item.order_status) }}
+          {{ orderStatusLabel(item.order_status) }}
         </template>
         <template v-slot:[`item.template`]="{item}">
           <div v-html="item.template"></div>
@@ -50,6 +50,7 @@
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import OrderNotificationTemplateEditDialog
   from "@/components/OrderNotificationTemplate/OrderNotificationTemplateEditDialog";
+import {orderStatuses, orderStatusLabel} from "@/mixins/StatusHelper";
 
 export default {
   name: "OrderNotificationTemplates",
@@ -66,15 +67,9 @@ export default {
       resourceKey: "templates",
       resourceApiRoute: `order-notification-templates`,
       deleteSwalTitle: `Безвозвратно удалить шаблон?`,
-      statuses: [
-        {value: 'new', text: 'Новый'},
-        {value: 'printing', text: 'В печати'},
-        {value: 'moving', text: 'Перемещение на ПВЗ'},
-        {value: 'moving_tk', text: 'Перемещение ТК'},
-        {value: 'shipping', text: 'Готов к отгрузке'},
-        {value: 'completed', text: 'Отгружен'},
-        {value: 'canceled', text: 'Отменён'},
-      ],
+
+      statuses:orderStatuses,
+      orderStatusLabel:orderStatusLabel,
     }
   },
   computed: {
@@ -86,11 +81,6 @@ export default {
       return this.statuses.filter(x => !this.busyStatuses.includes(x.value));
     }
   },
-  methods: {
-    statusLabel(key) {
-      return this.statuses.find(x => x.value === key)?.text;
-    }
-  }
 }
 </script>
 

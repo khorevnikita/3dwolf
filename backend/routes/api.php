@@ -22,7 +22,7 @@ use App\Http\Controllers\ProdNumberMaskController;
 use App\Http\Controllers\OrderFileController;
 use App\Http\Controllers\OrderNotificationTemplateController;
 use App\Http\Controllers\MultipartUploadController;
-
+use App\Http\Controllers\OrderNotificationLogController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -59,6 +59,7 @@ Route::middleware('moderator')->group(function () {
         'orders' => OrderController::class,
         'orders.order-lines' => OrderLineController::class,
         'orders.order-files' => OrderFileController::class,
+        'orders.notification-logs' => OrderNotificationLogController::class,
         'contracts' => ContractController::class,
         'users' => UserController::class,
         'payments' => PaymentController::class,

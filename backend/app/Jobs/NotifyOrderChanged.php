@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Mail\OrderStatusChanged;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\OrderNotificationLog;
 use App\Models\OrderNotificationTemplate;
 use App\Models\SMSRU;
 use Illuminate\Bus\Queueable;
@@ -23,6 +24,7 @@ class NotifyOrderChanged implements ShouldQueue
     public Order $order;
     public OrderNotificationTemplate|null $template;
     public Customer|null $customer;
+
     public string $channel;
     public bool $attachPDF;
 
@@ -62,6 +64,7 @@ class NotifyOrderChanged implements ShouldQueue
         } else {
             Log::info("CANT NOTIFY: WRONG CHANNEL");
         }
+        OrderNotificationLog::log($this->order, $this->channel);
     }
 
     protected function notifySMS()

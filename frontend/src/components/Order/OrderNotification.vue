@@ -12,12 +12,28 @@
     <v-col cols="6">
       <v-btn color="info" small @click="notify('sms')">Уведомить по SMS</v-btn>
     </v-col>
+    <v-col cols="12">
+      <v-list>
+        <v-list-item v-for="log in logs" :key="log.id">
+          <v-list-item-content>
+            <v-list-item-title>{{ orderStatusLabel(log.order_status) }} по {{ log.channel }}</v-list-item-title>
+            <v-list-item-subtitle>
+              {{ moment(log.created_at).format('HH:mm DD.MM.YYYY') }}
+              от
+              {{ [log.user.name, log.user.surname].join(" ") }}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-col>
   </v-row>
 </template>
 
 <script>
 import axios from "@/plugins/axios";
 import Swal from "sweetalert2-khonik";
+import {orderStatuses, orderStatusLabel} from "@/mixins/StatusHelper";
+import moment from "moment";
 
 export default {
   name: "OrderNotification",
@@ -25,16 +41,28 @@ export default {
   data() {
     return {
       attach: false,
+      logs: [],
+      statuses: orderStatuses,
+      orderStatusLabel: orderStatusLabel,
+      moment: moment,
     }
   },
+  created() {
+    this.getLogs();
+  },
   methods: {
+    getLogs() {
+      axios.get(`orders/${this.order.id}/notification-logs`).then(({orderNotificationLogs}) => {
+        this.logs = orderNotificationLogs;
+      })
+    },
     notify(channel) {
       axios.post(`orders/${this.order.id}/notify`, {
         attach: this.attach,
         channel: channel,
-      }).then(()=>{
+      }).then(() => {
         Swal.fire("Отправлено")
-      }).catch(()=>{
+      }).catch(() => {
         Swal.fire("Ошибка при отправке")
       })
     }
