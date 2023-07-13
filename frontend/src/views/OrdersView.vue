@@ -37,7 +37,7 @@
                   hide-details
                   :items="[
                       {value:'',text:'Все'},
-                      ...orderStatusesFilter
+                      ...statuses
                       ]"
                   item-value="value"
                   item-text="text"
@@ -51,7 +51,7 @@
                   hide-details
                   :items="[
                       {value:'',text:'Все'},
-                      ...paymentStatusesFilter
+                      ...paymentStatuses
                       ]"
                   item-value="value"
                   item-text="text"
@@ -80,9 +80,9 @@
               :key="i"
               v-bind:class="{
                 'info':item.status==='new',
-                'success':item.status==='printing',
+                'success':['modeling','printing'].includes(item.status),
                 'warning':item.status==='shipping',
-                'moving':['moving_tk','moving'].includes(item.status)
+                'moving':['moving_tk','moving','processing'].includes(item.status)
               }"
           >
             <td>{{ item.id }}</td>
@@ -91,11 +91,11 @@
             <td>{{ item.phone }}</td>
             <td>{{ formatPrice(item.amount) }}</td>
             <td>{{ item.deadline ? moment(item.deadline).format("DD.MM.YYYY") : "-" }}</td>
-            <td>{{ statuses[item.status] }}</td>
+            <td>{{ orderStatusLabel(item.status) }}</td>
             <td
-                v-bind:class="{'error': ['printing','shipping','moving','moving_tk'].includes(item.status) &&item.payment_status!=='full_paid'}"
+                v-bind:class="{'error': ['modeling','printing','processing','shipping','moving','moving_tk'].includes(item.status) &&item.payment_status!=='full_paid'}"
             >
-              {{ paymentStatuses[item.payment_status] }}
+              {{ paymentStatusLabel(item.payment_status) }}
             </td>
             <td>{{ item.delivery_address }}</td>
             <td>
@@ -153,6 +153,7 @@ import OrderEditor from "@/components/Order/OrderEditor";
 import CustomerPicker from "@/components/Forms/CustomerPicker";
 import axios from "@/plugins/axios";
 import {mapGetters} from "vuex";
+import {orderStatuses, orderStatusLabel, paymentStatuses, paymentStatusLabel} from "@/mixins/StatusHelper";
 
 export default {
   name: "OrdersView",
@@ -176,34 +177,14 @@ export default {
       resourceApiParams: "status_sort=1",
       resourceApiRoute: `orders`,
       deleteSwalTitle: `Безвозвратно удалить заказ?`,
-      statuses: {
-        new: "Новый",
-        printing: "В печати",
-        moving: "Перемещение на ПВЗ",
-        moving_tk: "Перемещение ТК",
-        shipping: "Готов к отгрузке",
-        completed: "Отгружено",
-        canceled: "Отменён",
-      },
-      paymentStatuses: {
-        not_paid: "Не оплачено",
-        part_paid: "Частично оплачено",
-        full_paid: "Полносью оплачено",
-      }
+      statuses: orderStatuses,
+      orderStatusLabel: orderStatusLabel,
+      paymentStatuses: paymentStatuses,
+      paymentStatusLabel: paymentStatusLabel,
     }
   },
   computed: {
     ...mapGetters(['isModerator']),
-    orderStatusesFilter() {
-      return Object.keys(this.statuses).map(key => {
-        return {value: key, text: this.statuses[key]};
-      })
-    },
-    paymentStatusesFilter() {
-      return Object.keys(this.paymentStatuses).map(key => {
-        return {value: key, text: this.paymentStatuses[key]};
-      })
-    },
   },
   methods: {
     copy(item) {

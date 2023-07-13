@@ -50,7 +50,9 @@ class CustomerController extends Controller
         }
         $models = $models->orderBy($sort, $sortDir);
 
-        $models = $models->get();
+        $models = $models->with(["user" => function ($q) {
+            $q->select("users.id", "users.customer_id", "users.last_activity_date");
+        }])->get();
         $pagesCount = Paginator::pagesCount($take, $totalCount);
         return $this->resourceListResponse('customers', $models, $totalCount, $pagesCount);
     }

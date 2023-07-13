@@ -108,15 +108,7 @@
           :error-messages="errors.status"
           :error-count="1"
           :error="!!errors.status"
-          :items="[
-              {value:'new',text:'Новый'},
-              {value:'printing',text:'В печати'},
-              {value:'moving', text: 'Перемещение на ПВЗ'},
-              {value:'moving_tk', text: 'Перемещение ТК'},
-              {value:'shipping',text:'Готов к отгрузке'},
-              {value:'completed',text:'Отгружен'},
-              {value:'canceled',text:'Отменён'},
-          ]"
+          :items="orderStatuses"
           item-value="value"
           item-text="text"
       />
@@ -126,11 +118,7 @@
           :error-messages="errors.payment_status"
           :error-count="1"
           :error="!!errors.payment_status"
-          :items="[
-              {value:'not_paid',text:'Не оплачен'},
-              {value:'part_paid',text:'Частично оплачен'},
-              {value:'full_paid',text:'Полностью оплачен'},
-          ]"
+          :items="paymentStatuses"
           item-value="value"
           item-text="text"
       />
@@ -170,6 +158,7 @@
 import axios from "@/plugins/axios";
 import CustomerPicker from "@/components/Forms/CustomerPicker";
 import Swal from "sweetalert2-khonik";
+import {orderStatuses, paymentStatuses} from "@/mixins/StatusHelper";
 
 export default {
   name: "OrderEditor",
@@ -182,6 +171,8 @@ export default {
       errors: {},
       menu: false,
       menu2: false,
+      orderStatuses:orderStatuses,
+      paymentStatuses:paymentStatuses,
     }
   },
   methods: {

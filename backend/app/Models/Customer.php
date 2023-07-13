@@ -29,6 +29,11 @@ class Customer extends Model
         });
     }
 
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
+
     public function contracts()
     {
         return $this->hasMany(Contract::class);

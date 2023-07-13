@@ -7,6 +7,10 @@
           <v-list-item-content>
             <v-list-item-title>{{ user.name }} {{ user.surname }}</v-list-item-title>
             <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
+            <v-list-item-subtitle>
+              В сети:
+              {{ user.last_activity_date ? moment(user.last_activity_date).format("HH:mm DD.MM.YYYY") : '' }}
+            </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
             <v-btn color="warning" icon @click="edit(user)">

@@ -17,7 +17,7 @@ class Order extends Model
 
     protected $fillable = ['date', 'customer_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address', 'comment', 'tk_link'];
 
-    const STATUSES = ['new', 'printing', 'moving', 'moving_tk', 'shipping', 'completed', 'canceled'];
+    const STATUSES = ['new', 'modeling', 'printing', 'processing', 'moving', 'moving_tk', 'shipping', 'completed', 'canceled'];
 
     protected static function booted(): void
     {

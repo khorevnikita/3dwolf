@@ -45,6 +45,9 @@ class AuthController extends Controller
             ->with("customer")
             ->find(auth("sanctum")->id());
 
+        $user->last_activity_date = now();
+        $user->save();
+
         return $this->resourceItemResponse('user', $user);
     }
 
