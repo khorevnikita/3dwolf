@@ -15,10 +15,10 @@
       :hide-details="dense"
   >
     <template #item="{item}">
-      {{ item.name }} {{item.surname}}
+      {{ item.name }} {{ item.surname }}
     </template>
     <template #selection="{item}">
-      {{ item.name }} {{item.surname}}
+      {{ item.name }} {{ item.surname }}
     </template>
   </v-autocomplete>
 </template>
@@ -31,7 +31,7 @@ export default {
   props: ['value', 'error', 'dense'],
   data() {
     return {
-      user_id: this.value,
+      user_id: Number(this.value),
       users: [],
       isLoading: false,
       search: ''
@@ -44,6 +44,9 @@ export default {
     },
     user_id: function (userId) {
       this.$emit('input', userId);
+    },
+    value() {
+      this.user_id = Number(this.value);
     }
   },
   created() {

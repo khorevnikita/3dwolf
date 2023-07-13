@@ -1,7 +1,10 @@
 <template>
   <v-card>
     <v-card-title>Платежи</v-card-title>
-    <v-card-subtitle>Итого: {{formatPrice(totalSum)}}</v-card-subtitle>
+    <v-card-subtitle>
+      Итого: {{ formatPrice(totalSum) }}<br/>
+      Осталось: {{ formatPrice(getRemainAmount) }}
+    </v-card-subtitle>
     <v-card-text>
       <v-alert type="info" v-if="items.length===0">Платежей нет</v-alert>
       <v-list v-else>
@@ -46,7 +49,7 @@
     <v-dialog v-model="editDialog" max-width="500">
       <PaymentEditor
           v-if="editDialog"
-          :order_id="orderId"
+          :order_id="order.id"
           @close="editDialog=false"
           @created="onCreated"
           v-model="editItem"
@@ -66,15 +69,15 @@ export default {
   name: "PaymentCard",
   components: {PaymentEditor},
   mixins: [ResourceComponentHelper],
-  props: ['orderId'],
+  props: ['order', 'totalAmount'],
   data() {
     return {
       resourceKey: "payments",
       resourceApiRoute: `payments`,
-      resourceApiParams: `order_id=${this.orderId}`,
+      resourceApiParams: `order_id=${this.order.id}`,
       deleteSwalTitle: `Безвозвратно удалить платёж?`,
       page: 1,
-      totalSum:0,
+      totalSum: 0,
     }
   },
   watch: {
@@ -83,7 +86,19 @@ export default {
       this.getItems();
     }
   },
-  methods:{
+  computed: {
+    getRemainAmount() {
+      const remain = this.totalAmount - this.totalSum;
+      if (remain <= 0) {
+        return 0;
+      }
+      return remain;
+    }
+  },
+  methods: {
+    onCreated() {
+      this.getItems();
+    },
     getItems() {
       axios.get(`${this.resourceApiRoute}?${this.resourceApiParams}&${this.setQueryString(this.query)}`).then(body => {
         this.items = body[this.resourceKey];

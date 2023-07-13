@@ -19,7 +19,7 @@
         <v-col cols="12" md="6" order-md="2">
           <CustomerCard v-if="isModerator" :customer="order.customer" class="mb-4"/>
           <FilesCard :order-id="order.id" class="mb-4"/>
-          <PaymentCard v-if="showMoney" :order-id="order.id"/>
+          <PaymentCard v-if="showMoney" :order="order" :total-amount="totalAmountAfterDiscount"/>
         </v-col>
         <v-col cols="12" md="6" order-md="1">
           <OrderEditor v-if="isModerator" v-model="order"/>

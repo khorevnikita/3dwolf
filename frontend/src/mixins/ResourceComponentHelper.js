@@ -86,7 +86,6 @@ export default {
             if (this.items.length === 0) {
                 this.$set(this, 'items', []);
             }
-            console.log("on created",resource)
             this.items.unshift(resource);
         },
         onUpdated(resource) {

@@ -61,6 +61,7 @@ export default {
         attach: this.attach,
         channel: channel,
       }).then(() => {
+        this.getLogs();
         Swal.fire("Отправлено")
       }).catch(() => {
         Swal.fire("Ошибка при отправке")

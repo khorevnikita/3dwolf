@@ -189,7 +189,7 @@
       </template>
 
       <template v-slot:[`item.order_id`]="{item}">
-        {{ item.order_id ? `Заказ №${item.order_id}` : '-' }}
+        <router-link v-if="item.order_id" :to="`/orders/${item.order_id}`">Заказ №{{item.order_id}}</router-link>
       </template>
       <template v-slot:[`item.account_id`]="{item}">
         {{ item.source_account ? `${item.source_account.name} ->` : '' }}
@@ -250,7 +250,6 @@ export default {
   data() {
     return {
       year: 2023,
-
       data: {},
       addPaymentDialog: false,
       formatPrice: formatPrice,
@@ -280,6 +279,11 @@ export default {
   watch: {
     year() {
       this.getData();
+    },
+    $route: {
+      handler() {
+        this.readRoute();
+      }, deep: true
     }
   },
   computed: {
