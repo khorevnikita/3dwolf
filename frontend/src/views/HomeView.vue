@@ -46,14 +46,53 @@
     <v-col cols="12">
       <div class="text-h4">Заказы</div>
     </v-col>
-    <v-col cols="6" md="3" lg="2" v-for="(statusKey,i) in Object.keys(statuses)">
+    <!--<v-col cols="12">
+      <v-chip
+          class="ma-2"
+          v-for="(status,i) in statuses" :key="i"
+      >
+        <v-avatar left
+                  color="primary" class="white--text">
+          {{ data.orders[status.value] ? data.orders[status.value] : 0 }}
+        </v-avatar>
+        {{ orderStatusLabel(status.value) }}
+      </v-chip>
+      <v-chip class="ma-2">
+        <v-avatar left color="primary" class="white--text">0</v-avatar>
+        Отгружено за месяц
+      </v-chip>
+    </v-col>-->
+    <v-col cols="12">
       <v-card>
-        <v-card-subtitle>{{ statuses[statusKey] }}</v-card-subtitle>
-        <v-card-title>
-          <div class="text-h3" v-if="data.orders">{{ data.orders[statusKey] ? data.orders[statusKey] : 0 }}</div>
-        </v-card-title>
+        <v-card-text>
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+              <tr>
+                <th class="text-left">
+                  Статус
+                </th>
+                <th class="text-left">
+                  Кол-во
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><b>Отгружено за месяц</b></td>
+                <td><b>{{data.orders.completed_by_month}}</b></td>
+              </tr>
+              <tr v-for="(status,i) in statuses" :key="i">
+                <td>{{ orderStatusLabel(status.value) }}</td>
+                <td>{{ data.orders[status.value] ? data.orders[status.value] : 0 }}</td>
+              </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </v-card-text>
       </v-card>
     </v-col>
+
     <v-col cols="12" v-if="showMoney">
       <div class="text-h4">Деньги</div>
     </v-col>
@@ -62,6 +101,7 @@
     </v-col>
     <v-col cols="12" md="6" v-if="showMoney">
       <MoneyAccountTable :accounts="data.accounts"/>
+      <div class="mt-2" v-if="data.client_credit_amount">Положительный баланс клиентов: <b>{{formatPrice(data.client_credit_amount)}}</b></div>
     </v-col>
     <v-col cols="12" v-if="showStock">
       <div class="text-h4">Склад</div>
@@ -80,20 +120,15 @@ import StockStats from "@/components/Dashboard/StockStats.vue";
 import axios from "@/plugins/axios";
 import {mapGetters} from "vuex";
 import {formatPrice} from "@/plugins/formats";
+import {orderStatuses, orderStatusLabel} from "@/mixins/StatusHelper";
 
 export default Vue.extend({
   name: 'Home',
   components: {MoneyAccountTable, MonthMoneyTable, StockStats},
   data() {
     return {
-      statuses: {
-        new: "Новый",
-        printing: "В печати",
-        moving: "Перемещение на ПВЗ",
-        moving_tk: "Перемещение ТК",
-        shipping: "Готов к отгрузке",
-        completed: "Отгружено",
-      },
+      statuses: orderStatuses,
+      orderStatusLabel: orderStatusLabel,
       data: {},
       formatPrice: formatPrice,
     }

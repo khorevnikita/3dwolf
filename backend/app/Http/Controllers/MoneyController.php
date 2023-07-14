@@ -71,7 +71,13 @@ class MoneyController extends Controller
         $orders = Order::query()
             ->visible()
             ->selectRaw("status, count(id) as count")
-            ->groupBy("status")->pluck('count', 'status');
+            ->groupBy("status")->pluck('count', 'status')->toArray();
+
+        $orders['completed_by_month'] = Order::query()
+            ->visible()->whereStatus("completed")
+            ->where("created_at", ">", Carbon::now()->startOfMonth())
+            ->count();
+
         $sources = Customer::query()->selectRaw("source, count(id) as count")
             ->groupBy("source")->pluck('count', 'source');
 
@@ -86,7 +92,10 @@ class MoneyController extends Controller
                 'new' => Customer::query()->where("created_at", ">", Carbon::now()->startOfMonth())->count()
             ],
             'sources' => $sources,
-            'stock' => $stockData
+            'stock' => $stockData,
+            'client_credit_amount' => Customer::query()
+                ->where("balance", ">", 0)
+                ->sum("balance"),
         ]);
         return $this->resourceItemResponse('data', $response);
     }
@@ -122,20 +131,6 @@ class MoneyController extends Controller
 
     protected function getStockData()
     {
-        /*$remained = DB::table("parts")
-            ->groupBy("prod_number", "manufacturer_id", "material_id", "color")
-            ->selectRaw("prod_number, manufacturer_id, material_id, color, COUNT(id) as count,'remain' as type")
-            ->where("status", "!=", "ended")
-            ->get();
-
-        $finished = DB::table("parts")
-            ->groupBy("prod_number", "manufacturer_id", "material_id", "color")
-            ->selectRaw("prod_number, manufacturer_id, material_id, color, COUNT(id) as count,'finished' as type")
-            ->where("status", "=", "ended")
-            ->whereNotIn("prod_number", $remained->pluck("prod_number"))
-            ->get();
-        return $finished->merge($remained);*/
-
         $sql = "select m.name as 'manufacturer',
        p1.prod_number,
        m2.name as 'material',
