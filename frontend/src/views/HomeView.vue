@@ -80,7 +80,7 @@
               <tbody>
               <tr>
                 <td><b>Отгружено за месяц</b></td>
-                <td><b>{{data.orders.completed_by_month}}</b></td>
+                <td><b>{{ data.orders.completed_by_month }}</b></td>
               </tr>
               <tr v-for="(status,i) in statuses" :key="i">
                 <td>{{ orderStatusLabel(status.value) }}</td>
@@ -101,12 +101,15 @@
     </v-col>
     <v-col cols="12" md="6" v-if="showMoney">
       <MoneyAccountTable :accounts="data.accounts"/>
-      <div class="mt-2" v-if="data.client_credit_amount">Положительный баланс клиентов: <b>{{formatPrice(data.client_credit_amount)}}</b></div>
+      <div class="mt-2" v-if="data.client_credit_amount">Положительный баланс клиентов:
+        <b>{{ formatPrice(data.client_credit_amount) }}</b></div>
     </v-col>
     <v-col cols="12" v-if="showStock">
       <div class="text-h4">Склад</div>
     </v-col>
     <v-col cols="12" v-if="showStock">
+      <div>Всего: <b>{{ data.parts_count }}</b></div>
+      <div>Суммарный вес: <b>{{ formatKg(data.parts_weight) }} кг</b></div>
       <StockStats :stock="data.stock"/>
     </v-col>
   </v-row>
@@ -119,7 +122,7 @@ import MoneyAccountTable from "@/components/Dashboard/MoneyAccountTable.vue";
 import StockStats from "@/components/Dashboard/StockStats.vue";
 import axios from "@/plugins/axios";
 import {mapGetters} from "vuex";
-import {formatPrice} from "@/plugins/formats";
+import {formatKg, formatPrice} from "@/plugins/formats";
 import {orderStatuses, orderStatusLabel} from "@/mixins/StatusHelper";
 
 export default Vue.extend({
@@ -131,6 +134,7 @@ export default Vue.extend({
       orderStatusLabel: orderStatusLabel,
       data: {},
       formatPrice: formatPrice,
+      formatKg: formatKg,
     }
   },
   created() {

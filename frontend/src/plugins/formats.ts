@@ -24,3 +24,8 @@ export const formatWeight = (bytes: number, decimals = 2) => {
 
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
 }
+
+export const formatKg = (gramms: number) => {
+    const kg = Math.round(gramms / 1000 * 100) / 100;
+    return kg.toFixed(2);
+}

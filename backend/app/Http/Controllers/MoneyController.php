@@ -6,6 +6,7 @@ use App\Http\Requests\Money\TotalStatistics;
 use App\Models\Account;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Part;
 use App\Models\Payment;
 use App\Models\User;
 use Carbon\Carbon;
@@ -96,6 +97,8 @@ class MoneyController extends Controller
             'client_credit_amount' => Customer::query()
                 ->where("balance", ">", 0)
                 ->sum("balance"),
+            'parts_count' => Part::query()->where("status", "!=", "ended")->count(),
+            'parts_weight' => Part::query()->where("status", "!=", "ended")->sum("weight"),
         ]);
         return $this->resourceItemResponse('data', $response);
     }
