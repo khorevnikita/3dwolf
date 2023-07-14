@@ -258,6 +258,13 @@
           :error-count="1"
           :error="!!errors.legal_statement"
       />
+      <v-textarea
+          label="Коментарий"
+          v-model="model.comment"
+          :error-messages="errors.comment"
+          :error-count="1"
+          :error="!!errors.comment"
+      />
     </v-card-text>
     <v-card-actions>
       <v-btn v-if="modal" text @click="$emit('close')">Закрыть</v-btn>

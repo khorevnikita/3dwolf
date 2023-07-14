@@ -26,12 +26,20 @@
           {{ item.inv_number }}. {{ `${item.material.name}, ${item.color} (${item.prod_number})` }}
         </template>
       </v-autocomplete>
+
       <v-text-field
           label="Название"
           v-model="model.name"
           :error-messages="errors.name"
           :error-count="1"
           :error="!!errors.name"
+      />
+      <v-text-field
+          label="Заполнение"
+          v-model="model.filling"
+          :error-messages="errors.filling"
+          :error-count="1"
+          :error="!!errors.filling"
       />
       <v-text-field
           label="Цена"

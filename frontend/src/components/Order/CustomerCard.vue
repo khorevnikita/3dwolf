@@ -47,6 +47,16 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-subtitle>Комментарий</v-list-item-subtitle>
+            <v-list-item-title>
+              <div style="white-space: normal">
+                {{ customer.comment ? customer.comment : '-' }}
+              </div>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-card-text>
     <v-card-actions>
