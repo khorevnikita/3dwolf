@@ -92,11 +92,11 @@ export default {
   },
   computed: {
     totalAmount() {
-      const amount = this.items.reduce((acc, item) => acc += (item.price * item.count), 0)
+      const amount = this.items.reduce((acc, item) => acc += (Number(item.price) * Number(item.count)), 0)
       return Math.round(amount * 100) / 100;
     },
     totalWeight() {
-      const weight = this.items.reduce((acc, item) => acc += (item.weight * item.count), 0);
+      const weight = this.items.reduce((acc, item) => acc += (Number(item.weight) * Number(item.count)), 0);
       return Math.round(weight * 100) / 100;
     },
     totalTime() {
