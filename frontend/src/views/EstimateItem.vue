@@ -100,7 +100,7 @@ export default {
       return Math.round(weight * 100) / 100;
     },
     totalTime() {
-      const time = this.items.reduce((acc, item) => acc += item.print_duration, 0);
+      const time = this.items.reduce((acc, item) => acc += Number(item.print_duration), 0);
       return Math.round(time * 100) / 100;
     },
   },
