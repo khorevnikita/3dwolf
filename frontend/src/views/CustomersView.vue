@@ -72,7 +72,10 @@
             <v-icon>mdi-eye</v-icon>
           </v-btn>
         </template>
-
+        <template v-slot:[`item.surname`]="{item}">
+          {{ item.surname }}
+          <div style="font-size: 10px">{{item.user && item.user.last_activity_date ? moment(item.user.last_activity_date).format("HH:mm DD.MM.YYYY") : '-'}}</div>
+        </template>
         <template v-slot:[`item.type`]="{item}">
           {{ item.type === 'individual' ? 'Физ. лицо' : 'Юр. лицо' }}
         </template>
@@ -80,7 +83,7 @@
           {{ item.entity_type === 'self_employed' ? 'ИП' : item.entity_type === 'company' ? 'ООО' : '-' }}
         </template>
         <template v-slot:[`item.last_activity_date`]="{item}">
-          {{ item.user && item.user.last_activity_date ? moment(item.user.last_activity_date).format("HH:mm DD.MM.YYYY") : '-' }}
+          {{  }}
         </template>
 
       </v-data-table>
@@ -123,7 +126,7 @@ export default {
         {text: "Название", value: "title", sortable: false},
         {text: "ИНН", value: "inn", sortable: false},
         {text: "Баланс", value: "balance", sortable: false},
-        {text: "Был в сети", value: "last_activity_date", sortable: false},
+     //   {text: "Был в сети", value: "last_activity_date", sortable: false},
         {text: "", value: "actions", sortable: false},
       ],
       resourceKey: "customers",
