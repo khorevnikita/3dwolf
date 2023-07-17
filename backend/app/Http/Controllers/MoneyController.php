@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Part;
 use App\Models\Payment;
+use App\Models\RegularPayment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -99,6 +100,7 @@ class MoneyController extends Controller
                 ->sum("balance"),
             'parts_count' => Part::query()->where("status", "!=", "ended")->count(),
             'parts_weight' => Part::query()->where("status", "!=", "ended")->sum("weight"),
+            'nearestPayments' => RegularPayment::getClosest(),
         ]);
         return $this->resourceItemResponse('data', $response);
     }

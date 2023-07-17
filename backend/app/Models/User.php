@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Helpers\Mutator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'surname',
         'email',
+        'phone',
         'password',
         'balance',
         'customer_id'
@@ -109,6 +111,7 @@ class User extends Authenticatable
             'orders' => in_array('orders', $permission),
             'contracts' => in_array('contracts', $permission),
             'payments' => in_array('payments', $permission),
+            'regular_payments' => in_array('regular_payments', $permission),
             'estimates' => in_array('estimates', $permission),
             'newsletters' => in_array('newsletters', $permission),
         ]);

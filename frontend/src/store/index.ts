@@ -21,6 +21,7 @@ export default new Vuex.Store({
             {title: 'Наряд-заказы', icon: 'mdi-cart-outline', to: '/orders', permission: 'orders'},
             {title: 'Договора', icon: 'mdi-file-sign', to: '/contracts', permission: 'contracts'},
             {title: 'Деньги', icon: 'mdi-cash', to: '/money', permission: 'payments'},
+            {title: 'Рег. платежи', icon: 'mdi-cash-clock', to: '/regular-payments', permission: 'regular_payments'},
             {title: 'Сметы', icon: 'mdi-clipboard-list', to: '/estimates', permission: 'estimates'},
             {title: 'Рассылки', icon: 'mdi-email-arrow-right-outline', to: '/newsletters', permission: 'newsletters'},
             {title: 'Профиль', icon: 'mdi-account', to: '/profile'},

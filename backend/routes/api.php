@@ -23,6 +23,8 @@ use App\Http\Controllers\OrderFileController;
 use App\Http\Controllers\OrderNotificationTemplateController;
 use App\Http\Controllers\MultipartUploadController;
 use App\Http\Controllers\OrderNotificationLogController;
+use App\Http\Controllers\RegularPaymentController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -63,6 +65,7 @@ Route::middleware('moderator')->group(function () {
         'contracts' => ContractController::class,
         'users' => UserController::class,
         'payments' => PaymentController::class,
+        'regular-payments' => RegularPaymentController::class,
         'newsletters' => NewsletterController::class,
         'prod-number-masks' => ProdNumberMaskController::class,
         'order-notification-templates' => OrderNotificationTemplateController::class,

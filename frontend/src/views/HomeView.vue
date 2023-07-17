@@ -102,7 +102,13 @@
     <v-col cols="12" md="6" v-if="showMoney">
       <MoneyAccountTable :accounts="data.accounts"/>
       <div class="mt-2" v-if="data.client_credit_amount">Положительный баланс клиентов:
-        <b>{{ formatPrice(data.client_credit_amount) }}</b></div>
+        <b>{{ formatPrice(data.client_credit_amount) }}</b>
+      </div>
+      <NearestRegularPayments
+          v-if="data.nearestPayments && data.nearestPayments.length>0"
+          :regular-payments="data.nearestPayments"
+          class="mt-4"
+      />
     </v-col>
     <v-col cols="12" v-if="showStock">
       <div class="text-h4">Склад</div>
@@ -124,10 +130,11 @@ import axios from "@/plugins/axios";
 import {mapGetters} from "vuex";
 import {formatKg, formatPrice} from "@/plugins/formats";
 import {orderStatuses, orderStatusLabel} from "@/mixins/StatusHelper";
+import NearestRegularPayments from "@/components/Dashboard/NearestRegularPayments";
 
 export default Vue.extend({
   name: 'Home',
-  components: {MoneyAccountTable, MonthMoneyTable, StockStats},
+  components: {NearestRegularPayments, MoneyAccountTable, MonthMoneyTable, StockStats},
   data() {
     return {
       statuses: orderStatuses,

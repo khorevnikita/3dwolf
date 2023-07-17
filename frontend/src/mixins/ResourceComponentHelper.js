@@ -83,10 +83,11 @@ export default {
             });
         },
         onCreated(resource) {
-            if (this.items.length === 0) {
+            /*if (this.items.length === 0) {
                 this.$set(this, 'items', []);
             }
-            this.items.unshift(resource);
+            this.items.unshift(resource);*/
+            this.getItems();L
         },
         onUpdated(resource) {
             let item = this.items.find(i => i.id === resource.id);

@@ -60,6 +60,7 @@ export default {
         {title: 'Наряд-заказы', type: 'orders'},
         {title: 'Договора', type: 'contracts'},
         {title: 'Деньги', type: 'payments'},
+        {title: 'Рег. платежи', type: 'regular_payments'},
         {title: 'Сметы', type: 'estimates'},
         {title: 'Рассылки', type: 'newsletters'},
       ],

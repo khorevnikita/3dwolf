@@ -23,6 +23,14 @@
         :error="!!errors.email"
     />
     <v-text-field
+        label="Телефон"
+        v-model="model.phone"
+        :error-messages="errors.phone"
+        :error-count="1"
+        :error="!!errors.phone"
+        v-mask="'+7 (###) ###-##-##'"
+    />
+    <v-text-field
         v-if="!model.id"
         type="password"
         label="Пароль"
