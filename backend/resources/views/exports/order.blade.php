@@ -167,7 +167,12 @@
     @foreach($order->lines as $k=>$line)
         <tr class="bordered">
             <td class="text-center">{{$k+1}}</td>
-            <td>{{$line->name}}</td>
+            <td>
+                {{$line->name}}
+                @if($line->filling)
+                    ({{$line->filling}}%)
+                @endif
+            </td>
             <td class="text-center">{{$line->weight?:""}}</td>
             <td class="text-center">{{secondsToTime($line->print_duration)}}</td>
             <td class="text-center">{{$line->part?->material?->name}}</td>

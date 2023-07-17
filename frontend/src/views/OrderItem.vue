@@ -44,9 +44,8 @@
               {{ items.indexOf(item) + 1 }}
             </template>
             <template v-slot:[`item.name`]="{item}">
-              {{ item.name }} <span v-if="item.filling">({{item.filling}})</span>
+              {{ item.name }} <span v-if="item.filling">({{item.filling}}%)</span>
             </template>
-
             <template v-slot:[`item.part_id`]="{item}">
               {{ item.part ? `${item.part.material.name}, ${item.part.color} (${item.part.prod_number})` : '-' }}
             </template>
