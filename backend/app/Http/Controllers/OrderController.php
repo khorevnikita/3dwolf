@@ -28,10 +28,11 @@ class OrderController extends Controller
         $models = Order::query()->visible();
         if ($request->get('search')) {
             $search = $request->get('search');
-            $models = $models->where(function($q)  use ($search) {
-                $q->where("id","=","$search")/*->orWhereHas("customer", function ($q) use ($search) {
+            $models = $models->where(function ($q) use ($search) {
+                $q->where("id", "=", "$search")/*->orWhereHas("customer", function ($q) use ($search) {
                     $q->search($search);
-                })*/;
+                })*/
+                ;
             });
         }
 
@@ -45,6 +46,10 @@ class OrderController extends Controller
 
         if ($paymentStatus = $request->get("payment_status")) {
             $models = $models->wherePaymentStatus($paymentStatus);
+        }
+
+        if ($bid = $request->get("branch_id")) {
+            $models = $models->where("branch_id", $bid);
         }
 
         $totalCount = $models->count();
@@ -67,7 +72,7 @@ class OrderController extends Controller
         list($sort, $sortDir) = Paginator::getSorting($request);
         $models = $models->orderBy($sort, $sortDir);
 
-        $models = $models->with('customer')->get();
+        $models = $models->with(['customer','branch'])->get();
         $pagesCount = Paginator::pagesCount($take, $totalCount);
         return $this->resourceListResponse('orders', $models, $totalCount, $pagesCount);
     }

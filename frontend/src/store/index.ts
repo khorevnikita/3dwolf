@@ -8,6 +8,7 @@ export default new Vuex.Store({
         routes: [
             {title: 'Главная', icon: 'mdi-view-dashboard', to: '/',},
             {title: 'Сотрудники', icon: 'mdi-account-multiple', to: '/users', permission: 'users'},
+            {title: 'Филиалы', icon: 'mdi-source-branch', to: '/branches', permission: 'branches'},
             {title: 'Клиенты', icon: 'mdi-toolbox', to: '/customers', permission: 'customers'},
             {title: 'Материалы', icon: 'mdi-box-cutter', to: '/materials', permission: 'materials'},
             {
@@ -45,7 +46,7 @@ export default new Vuex.Store({
                 return user.permission.includes(item.permission)
             })
         },
-        isModerator:state=>{
+        isModerator: state => {
             return state.user && !state.user.customer_id
         }
     },

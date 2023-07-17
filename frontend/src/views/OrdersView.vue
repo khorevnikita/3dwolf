@@ -23,6 +23,12 @@
                   dense
               />
             </v-col>
+            <v-col cols="12" md="3">
+              <BranchPicker
+                  v-model="query.branch_id"
+                  :dense="true"
+              />
+            </v-col>
             <v-col cols="12" md="3" v-if="isModerator">
               <CustomerPicker
                   v-model="query.customer_id"
@@ -91,7 +97,12 @@
             <td>{{ item.phone }}</td>
             <td>{{ formatPrice(item.amount) }}</td>
             <td>{{ item.deadline ? moment(item.deadline).format("DD.MM.YYYY") : "-" }}</td>
-            <td>{{ orderStatusLabel(item.status) }}</td>
+            <td>
+              {{ orderStatusLabel(item.status) }}
+              <div v-if="item.branch" style="font-size: 10px">
+                <b>{{ item.branch.name }}</b>
+              </div>
+            </td>
             <td
                 v-bind:class="{'error': ['modeling','printing','processing','shipping','moving','moving_tk'].includes(item.status) &&item.payment_status!=='full_paid'}"
             >
@@ -154,10 +165,11 @@ import CustomerPicker from "@/components/Forms/CustomerPicker";
 import axios from "@/plugins/axios";
 import {mapGetters} from "vuex";
 import {orderStatuses, orderStatusLabel, paymentStatuses, paymentStatusLabel} from "@/mixins/StatusHelper";
+import BranchPicker from "@/components/Forms/BranchPicker";
 
 export default {
   name: "OrdersView",
-  components: {CustomerPicker, OrderEditor},
+  components: {BranchPicker, CustomerPicker, OrderEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {

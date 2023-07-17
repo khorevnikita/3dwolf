@@ -114,6 +114,7 @@ class User extends Authenticatable
             'regular_payments' => in_array('regular_payments', $permission),
             'estimates' => in_array('estimates', $permission),
             'newsletters' => in_array('newsletters', $permission),
+            'branches' => in_array('branches', $permission),
         ]);
     }
 

@@ -24,6 +24,7 @@ use App\Http\Controllers\OrderNotificationTemplateController;
 use App\Http\Controllers\MultipartUploadController;
 use App\Http\Controllers\OrderNotificationLogController;
 use App\Http\Controllers\RegularPaymentController;
+use App\Http\Controllers\BranchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,7 @@ Route::middleware('moderator')->group(function () {
         'materials' => MaterialController::class,
         'manufacturers' => ManufacturerController::class,
         'customers' => CustomerController::class,
+        'branches' => BranchController::class,
         'accounts' => AccountController::class,
         'estimates' => EstimateController::class,
         'estimates.estimate-lines' => EstimateLineController::class,

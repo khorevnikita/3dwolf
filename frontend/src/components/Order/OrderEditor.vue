@@ -45,6 +45,11 @@
           </v-btn>
         </v-date-picker>
       </v-menu>
+      <BranchPicker
+          v-model="model.branch_id"
+          :error="errors.branch_id"
+          :dense="false"
+      />
       <CustomerPicker
           v-model="model.customer_id"
           :error="errors.customer_id"
@@ -159,10 +164,11 @@ import axios from "@/plugins/axios";
 import CustomerPicker from "@/components/Forms/CustomerPicker";
 import Swal from "sweetalert2-khonik";
 import {orderStatuses, paymentStatuses} from "@/mixins/StatusHelper";
+import BranchPicker from "@/components/Forms/BranchPicker";
 
 export default {
   name: "OrderEditor",
-  components: {CustomerPicker},
+  components: {BranchPicker, CustomerPicker},
   props: ['value', 'modal'],
   data() {
     return {

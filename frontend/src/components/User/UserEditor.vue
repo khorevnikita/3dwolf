@@ -52,6 +52,7 @@ export default {
 
       permissionTypes: [
         {title: 'Сотрудники', type: 'users'},
+        {title: 'Филиалы', type: 'branches'},
         {title: 'Клиенты', type: 'customers'},
         {title: 'Материалы', type: 'materials'},
         {title: 'Производители', type: 'manufacturers'},

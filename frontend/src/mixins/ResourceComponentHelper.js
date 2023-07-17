@@ -87,13 +87,10 @@ export default {
                 this.$set(this, 'items', []);
             }
             this.items.unshift(resource);*/
-            this.getItems();L
+            this.getItems();
         },
         onUpdated(resource) {
-            let item = this.items.find(i => i.id === resource.id);
-            if (item) {
-                item = {...item, ...resource};
-            }
+            this.getItems();
         },
         edit(item) {
             this.editItem = item;

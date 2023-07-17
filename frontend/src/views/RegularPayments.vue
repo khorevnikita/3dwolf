@@ -99,6 +99,7 @@ export default {
       resourceKey: "regularPayments",
       resourceApiRoute: `regular-payments`,
       totalSum: 0,
+      deleteSwalTitle: `Безвозвратно удалить платеж?`,
     }
   },
   methods: {

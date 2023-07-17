@@ -15,7 +15,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date', 'customer_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address', 'comment', 'tk_link'];
+    protected $fillable = ['date', 'customer_id', 'branch_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address', 'comment', 'tk_link'];
 
     const STATUSES = ['new', 'modeling', 'printing', 'processing', 'moving', 'moving_tk', 'shipping', 'completed', 'canceled'];
 
@@ -43,6 +43,11 @@ class Order extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     public function payments()
