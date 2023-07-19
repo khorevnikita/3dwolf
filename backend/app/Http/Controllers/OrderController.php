@@ -6,6 +6,7 @@ use App\Exports\OrderExport;
 use App\Helpers\Paginator;
 use App\Http\Requests\Order\OrderRequest;
 use App\Http\Requests\Order\SetDiscountRequest;
+use App\Models\Branch;
 use App\Models\Order;
 use App\Models\OrderLine;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -72,7 +73,7 @@ class OrderController extends Controller
         list($sort, $sortDir) = Paginator::getSorting($request);
         $models = $models->orderBy($sort, $sortDir);
 
-        $models = $models->with(['customer','branch'])->get();
+        $models = $models->with(['customer', 'branch'])->get();
         $pagesCount = Paginator::pagesCount($take, $totalCount);
         return $this->resourceListResponse('orders', $models, $totalCount, $pagesCount);
     }
@@ -92,6 +93,13 @@ class OrderController extends Controller
     public function store(OrderRequest $request): JsonResponse
     {
         $order = new Order($request->all());
+        if (!$request->get("branch_id")) {
+            $defaultBranch = Branch::query()->where("is_default", true)->first();
+            if ($defaultBranch) {
+                $order->branch_id = $defaultBranch->id;
+            }
+        }
+
         $order->save();
 
         $order->load('customer');
