@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Редактирование производителя</v-card-title>
+    <v-card-title>Редактирование сметы</v-card-title>
     <v-card-text>
       <v-text-field
           label="Название"

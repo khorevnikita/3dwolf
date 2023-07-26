@@ -107,7 +107,7 @@ export default {
   watch:{
     printDuration: {
       handler() {
-        this.model.print_duration = this.printDuration.h * 3600 + this.printDuration.m * 60 + this.printDuration.s;
+        this.model.print_duration = Number(this.printDuration.h) * 3600 + Number(this.printDuration.m) * 60 + Number(this.printDuration.s);
       }, deep: true
     }
   },
