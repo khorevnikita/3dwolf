@@ -13,17 +13,17 @@
         * {
             font-family: "Dojo Sans Serif", "DejaVu Sans", sans-serif;
             font-size: 8px;
-            line-height: 8px
+            line-height: 6px
         }
 
         h1 {
             font-size: 12px;
-            line-height: 12px;
-            margin-bottom: 5px;
+            line-height: 10px;
+            margin-bottom: 3px;
         }
 
         p {
-            margin-bottom: 3px;
+            margin-bottom: 1px;
             /* max-height: 8px;
              overflow: hidden;*/
             white-space: nowrap;
