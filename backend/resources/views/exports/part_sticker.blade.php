@@ -21,9 +21,10 @@
             line-height: 12px;
         }
 
-        p{
-            max-height: 8px;
-            overflow: hidden;
+        p {
+            /* max-height: 8px;
+             overflow: hidden;*/
+            white-space: nowrap;
         }
 
         @page {
