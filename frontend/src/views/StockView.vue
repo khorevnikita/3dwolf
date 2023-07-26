@@ -91,7 +91,10 @@
             <td>{{ item.weight }}</td>
             <td>{{ formatPrice(item.price) }}</td>
             <td>{{ statuses[item.status] }}</td>
-            <td>
+            <td style="width: 140px;">
+              <v-btn color="primary" icon @click="downloadSticker(item)">
+                <v-icon>mdi-barcode</v-icon>
+              </v-btn>
               <v-btn color="warning" icon @click="edit(item)">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
@@ -160,6 +163,12 @@ export default {
     this.getMaterials();
   },
   methods: {
+    downloadSticker(item) {
+      console.log('item', item);
+      axios.get(`parts/${item.id}/export/auth`).then(body => {
+        window.open(body.download_link, '_blank')
+      })
+    },
     getManufacturers() {
       axios.get('manufacturers').then(body => {
         this.manufacturers = body.manufacturers;

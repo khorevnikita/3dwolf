@@ -137,3 +137,7 @@ Route::prefix('contracts')->group(function () {
     Route::get('{contract}/export/pdf', [ContractController::class, 'exportPDF']);
     Route::get('{contract}/export/test', [ContractController::class, 'testExport']);
 });
+Route::prefix('parts')->group(function () {
+    Route::get('{part}/export/auth', [PartController::class, 'exportAuth'])->middleware('auth:sanctum');
+    Route::get('{part}/export/sticker', [PartController::class, 'exportSticker']);
+});

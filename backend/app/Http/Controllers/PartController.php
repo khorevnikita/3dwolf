@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Helpers\Paginator;
 use App\Http\Requests\Part\PartRequest;
 use App\Models\Part;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class PartController extends Controller
 {
@@ -147,5 +150,25 @@ class PartController extends Controller
     {
         $part->delete();
         return $this->emptySuccessResponse();
+    }
+
+    public function exportAuth(Part $part): JsonResponse
+    {
+        auth('web')->login(auth('sanctum')->user());
+        $hash = Hash::make("wolf-export-part-$part->id");
+        return $this->resourceItemResponse('download_link', url("api/parts/$part->id/export/sticker?hash=$hash"));
+
+    }
+
+    public function exportSticker(Part $part, Request $request)
+    {
+        if (!Hash::check("wolf-export-part-$part->id", $request->get('hash'))) abort(403);
+        $time = Carbon::now()->format("Y-m-d_H:i:s");
+        $filename = "part_$part->id" . "_by_$time.pdf";
+
+        $pdf = Pdf::loadView('exports.part_sticker', [
+            'part' => $part,
+        ])->setPaper('a10', 'landscape');
+        return $pdf->download($filename);
     }
 }
