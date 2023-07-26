@@ -21,6 +21,11 @@
             line-height: 12px;
         }
 
+        p{
+            max-height: 8px;
+            overflow: hidden;
+        }
+
         @page {
             margin: 5px 5px 5px 5px;
         }
