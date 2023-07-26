@@ -12,12 +12,12 @@
 
         * {
             font-family: "Dojo Sans Serif", "DejaVu Sans", sans-serif;
-            font-size: 10px;
+            font-size: 8px;
             line-height: 8px
         }
 
         h1 {
-            font-size: 14px;
+            font-size: 12px;
             line-height: 12px;
         }
 
