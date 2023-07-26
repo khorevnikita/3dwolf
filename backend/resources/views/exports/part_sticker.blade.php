@@ -29,6 +29,8 @@
 </head>
 <body>
 <h1>{{$part->inv_number}}</h1>
-<p>{{$part->prod_number}} {{$part->manufacturer?->name}}</p>
+<p>{{$part->prod_number}}</p>
+<p>{{$part->manufacturer?->name}}</p>
+<p>{{$part->color}}</p>
 </body>
 </html>
