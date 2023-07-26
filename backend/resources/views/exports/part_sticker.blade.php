@@ -19,9 +19,11 @@
         h1 {
             font-size: 12px;
             line-height: 12px;
+            margin-bottom: 5px;
         }
 
         p {
+            margin-bottom: 3px;
             /* max-height: 8px;
              overflow: hidden;*/
             white-space: nowrap;
