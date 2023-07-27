@@ -43,3 +43,10 @@ Artisan::command('randomize', function () {
         });
     });
 })->purpose('Display an inspiring quote');
+
+
+Artisan::command('reset', function () {
+    \App\Models\User::query()->update([
+        'password' => \Illuminate\Support\Facades\Hash::make(123456)
+    ]);
+})->purpose('Display an inspiring quote');
