@@ -11,10 +11,13 @@ use App\Models\Order;
 use App\Models\OrderLine;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use chillerlan\QRCode\QRCode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends Controller
@@ -220,5 +223,14 @@ class OrderController extends Controller
             'order' => $order,
             'customer' => $order->customer,
         ]);
+    }
+
+    public function qr(Order $order)
+    {
+        if ($order->qr) {
+            return $this->resourceItemResponse('url', $order->qr);
+        }
+        $order->generateQR();
+        return $this->resourceItemResponse('url', $order->qr);
     }
 }

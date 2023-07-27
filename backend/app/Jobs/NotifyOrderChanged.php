@@ -118,6 +118,7 @@ class NotifyOrderChanged implements ShouldQueue
         //[totalDiscount] - Сумма заказа с учётом скидки<br/>
         //[totalDiscount50] - 50% от суммы заказа с учетом скидки<br/>
         //[address] - Адрес доставки
+        //[qr] - QR
         $statusNames = [
             'new' => "новый",
             'printing' => "в печати",
@@ -127,6 +128,7 @@ class NotifyOrderChanged implements ShouldQueue
             'completed' => 'отгружен',
             'canceled' => 'отменён'
         ];
+        $order = $this->order;
         $tagMap = [
             "[fio]" => implode(" ", [$customer->surname, $customer->name, $customer->father_name]),
             "[email]" => $customer->email,
@@ -139,6 +141,7 @@ class NotifyOrderChanged implements ShouldQueue
             "[totalDiscount50]" => round($this->order->amount_after_discount / 2),
             "[address]" => $this->order->delivery_address,
             "[tkLink]" => $this->order->tk_link,
+            "[qr]" => "<img style='margin:5px auto; width:100%; max-width: 240px;' alt='order-qr-$order->id' src='$order->qr'/>",
         ];
         $text = $template;
         foreach ($tagMap as $tag => $value) {

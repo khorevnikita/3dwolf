@@ -46,6 +46,7 @@
         [totalDiscount50] - 50% от суммы заказа с учетом скидки<br/>
         [address] - Адрес доставки<br/>
         [tkLink] - Трек-номер<br/>
+        [qr] - QR-код<br/>
       </p>
     </v-card-text>
     <v-card-actions>

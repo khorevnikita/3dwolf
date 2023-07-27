@@ -3,7 +3,14 @@
     <v-progress-circular indeterminate v-if="!order"/>
     <div v-else>
       <div class="d-flex align-items-center justify-space-between">
-        <div class="text-h6 mb-4">Заказ-наряд №{{ order.id }} от {{ moment(order.date).format("DD.MM.YYYY") }}</div>
+        <div class="d-flex">
+          <div class="text-h6 mb-4">
+            Заказ-наряд №{{ order.id }} от {{ moment(order.date).format("DD.MM.YYYY") }}
+          </div>
+          <v-btn color="primary" icon @click="qr()" class="ml-2">
+            <v-icon>mdi-qrcode</v-icon>
+          </v-btn>
+        </div>
         <div>
           <v-btn color="error" class="mr-2" @click="exportFile('pdf')">
             <v-icon>mdi-file-pdf-box</v-icon>&nbsp;
@@ -221,6 +228,11 @@ export default {
         Swal.fire("Скидка применена")
       }).catch(err => {
         this.errors = err.body.errors;
+      })
+    },
+    qr() {
+      axios.get(`orders/${this.order_id}/qr`).then(({url}) => {
+        window.open(url, '_blank').focus();
       })
     }
   }
