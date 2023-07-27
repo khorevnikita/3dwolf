@@ -70,7 +70,7 @@ class AuthController extends Controller
                 ],
             ], 422);
         }
-        #$user->password = $request->get("password");
+        $user->password = $request->get("password");
         $user->save();
 
         return $this->emptySuccessResponse();
