@@ -87,12 +87,6 @@ class Order extends Model
         return round($amount, 2);
     }
 
-    public function getQrAttribute($v)
-    {
-        if (!$v) return $v;
-        return Storage::disk('s3')->url($v);
-    }
-
     public function copy(): Order
     {
         $newOrder = new Order($this->toArray());
@@ -152,7 +146,7 @@ class Order extends Model
         $rand = Str::random(12);
         $qrPath = "qr/$rand.png";
         Storage::disk("s3")->put($qrPath, file_get_contents($tmpFile));
-        $this->qr = $qrPath;
+        $this->qr = Storage::disk('s3')->url($qrPath);
         $this->save();
         unlink($tmpFile);
     }
