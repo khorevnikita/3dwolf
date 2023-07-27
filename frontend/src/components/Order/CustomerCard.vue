@@ -57,6 +57,16 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-subtitle>Баланс</v-list-item-subtitle>
+            <v-list-item-title>
+              <div style="white-space: normal">
+                {{ formatPrice(customer.balance) }}
+              </div>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-card-text>
     <v-card-actions>
@@ -68,6 +78,7 @@
 
 <script>
 import moment from "moment";
+import {formatPrice} from "@/plugins/formats";
 
 export default {
   name: "CustomerCard",
@@ -75,6 +86,7 @@ export default {
   data() {
     return {
       moment: moment,
+      formatPrice:formatPrice,
     }
   },
   methods: {

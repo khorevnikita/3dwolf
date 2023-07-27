@@ -68,10 +68,15 @@
 <table>
     <tbody>
     <tr>
-        <td colspan="16">
+        <td colspan="18">
             <img alt="logo" src="{{storage_path('app/public/logo.png')}}"/>
         </td>
-        <td class="text-right" colspan="8">
+        <td colspan="3">
+            @if($order->qr)
+                <img src="{{$order->qr}}" style="width: 100px;height: 100px"/>
+            @endif
+        </td>
+        <td class="text-right" colspan="3">
             <b>3D WOLF</b><br/>
             Печать, моделирование <br/>
             +7 499 133-1423 <br/>

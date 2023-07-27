@@ -82,8 +82,9 @@
         <template v-slot:[`item.entity_type`]="{item}">
           {{ item.entity_type === 'self_employed' ? 'ИП' : item.entity_type === 'company' ? 'ООО' : '-' }}
         </template>
-        <template v-slot:[`item.last_activity_date`]="{item}">
-          {{  }}
+        <template v-slot:[`item.user`]="{item}">
+          <v-icon v-if="item.user" color="success">mdi-check</v-icon>
+          <v-icon v-else color="danger">mdi-close</v-icon>
         </template>
 
       </v-data-table>
@@ -126,6 +127,7 @@ export default {
         {text: "Название", value: "title", sortable: false},
         {text: "ИНН", value: "inn", sortable: false},
         {text: "Баланс", value: "balance", sortable: false},
+        {text: "Доступ", value: "user", sortable: false},
      //   {text: "Был в сети", value: "last_activity_date", sortable: false},
         {text: "", value: "actions", sortable: false},
       ],
