@@ -110,6 +110,10 @@
             </td>
             <td>{{ item.delivery_address }}</td>
             <td>
+              <v-btn color="primary" icon @click="qr(item)" class="mr-2">
+                <v-icon>mdi-qrcode</v-icon>
+              </v-btn>
+
               <v-btn color="primary" icon :to="`/orders/${item.id}`" class="mr-2">
                 <v-icon>mdi-eye</v-icon>
               </v-btn>
@@ -204,6 +208,11 @@ export default {
         this.onCreated(order);
       })
     },
+    qr(item) {
+      axios.get(`orders/${item.id}/qr`).then(({url}) => {
+        window.open(url, '_blank').focus();
+      })
+    }
   }
 }
 </script>

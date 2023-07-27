@@ -6,10 +6,13 @@ use App\Jobs\NotifyOrderChanged;
 use App\Mail\OrderStatusChanged;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use chillerlan\QRCode\QRCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -21,6 +24,9 @@ class Order extends Model
 
     protected static function booted(): void
     {
+        static::created(function (Order $order) {
+            $order->generateQR();
+        });
         static::updating(function (Order $model) {
             $amount = OrderLine::query()
                 ->where("order_id", $model->id)
@@ -81,6 +87,12 @@ class Order extends Model
         return round($amount, 2);
     }
 
+    public function getQrAttribute($v)
+    {
+        if (!$v) return $v;
+        return Storage::disk('s3')->url($v);
+    }
+
     public function copy(): Order
     {
         $newOrder = new Order($this->toArray());
@@ -130,5 +142,18 @@ class Order extends Model
             ->setPaper('a4', 'landscape');
         $pdf->save($fileName, 'public');
         return $fileName;
+    }
+
+    public function generateQR()
+    {
+        $tmpFile = "tmp_qr_$this->id.png";
+        $url = url("/orders/$this->id");
+        (new QRCode())->render($url, $tmpFile);
+        $rand = Str::random(12);
+        $qrPath = "qr/$rand.png";
+        Storage::disk("s3")->put($qrPath, file_get_contents($tmpFile));
+        $this->qr = $qrPath;
+        $this->save();
+        unlink($tmpFile);
     }
 }
