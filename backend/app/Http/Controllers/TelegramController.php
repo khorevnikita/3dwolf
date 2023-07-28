@@ -22,12 +22,12 @@ class TelegramController extends Controller
                     list($prefix, $uid) = explode("-", $command[1]);
 
                     User::query()->where("id", $uid)->update([
-                        'tg_channel_id' => $tgUser['id'],
+                        'chat_id' => $tgUser['id'],
                         'tg_username' => $tgUser['username'],
                     ]);
 
                     Telegram::request("sendMessage", [
-                        'channel_id' => $tgUser['id'],
+                        'chat_id' => $tgUser['id'],
                         "text" => "Вы успешно подписались на уведомления"
                     ]);
                 } else {
