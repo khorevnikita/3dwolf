@@ -48,7 +48,7 @@ class Task extends Model
         $time = Carbon::parse($this->datetime)->format("H:i");
         $text = "$name в $time";
 
-        if ($user->telegram_channel_id) {
+        if ($user->tg_channel_id) {
             Telegram::request("sendMessage", [
                 "chat_id" => $user->telegram_channel_id,
                 "text" => $text,
