@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Task\TaskRequest;
+use App\Mail\TaskNotification;
 use App\Models\Task;
+use App\Models\Telegram;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class TaskController extends Controller
 {
@@ -96,13 +100,28 @@ class TaskController extends Controller
             'date' => 'required|date'
         ]);
 
-        $tasks = Task::query()->forDate($request->get("date"))->get();
+        $userTasks = Task::query()->forDate($request->get("date"))->with("user")->get()->groupBy("user_id");
 
-        $tasks->each(function (Task $task) {
+        /*$tasks->each(function (Task $task) {
             $task->sendNotification();
+        });*/
+
+        $userTasks->each(function ($userTasks) {
+            $notificationText = $userTasks->map(function (Task $task) {
+                return "$task->name в " . Carbon::parse($task->datetime)->format("H:i");
+            })->implode("\n");
+            $user = $userTasks->first()?->user;
+            if ($user->telegram_channel_id) {
+                Telegram::request("sendMessage", [
+                    'channel_id' => $user->telegram_channel_id,
+                    'text' => $notificationText,
+                ]);
+            } else {
+                Mail::to($user->email)->queue(new TaskNotification($notificationText));
+            }
+            Task::query()->whereIn("id", $userTasks->pluck("id"))->update(['notified' => 1]);
         });
 
-        Task::query()->whereIn("id", $tasks->pluck("id"))->update(['notified' => 1]);
 
         return $this->emptySuccessResponse();
     }

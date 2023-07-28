@@ -1,7 +1,16 @@
 <template>
   <v-row class="mx-3 mt-5">
     <v-col cols="12" md="7" v-if="isModerator">
-      <h6 class="text-h6">Изменить профиль</h6>
+      <div class="d-flex justify-space-between">
+        <h6 class="text-h6">Изменить профиль</h6>
+        <v-btn
+            v-if="!user.tg_channel_id"
+            color="info"
+            text
+            :to="`https://t.me/${process.VUE_TG_USERNAME}?start=user-${user.id}`">
+          Подключить Telegram
+        </v-btn>
+      </div>
       <BaseUserForm
           v-if="profile"
           v-model="profile"

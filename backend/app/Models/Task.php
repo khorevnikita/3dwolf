@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Mail\TaskNotification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
 
 class Task extends Model
 {
@@ -41,6 +43,18 @@ class Task extends Model
 
     public function sendNotification()
     {
+        $user = $this->user;
+        $name = $this->name;
+        $time = Carbon::parse($this->datetime)->format("H:i");
+        $text = "$name в $time";
 
+        if ($user->telegram_channel_id) {
+            Telegram::request("sendMessage", [
+                "chat_id" => $user->telegram_channel_id,
+                "text" => $text,
+            ]);
+        } else {
+            Mail::to($user->email)->queue(new TaskNotification($text));
+        }
     }
 }

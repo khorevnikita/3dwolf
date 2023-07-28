@@ -26,6 +26,7 @@ use App\Http\Controllers\OrderNotificationLogController;
 use App\Http\Controllers\RegularPaymentController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\TaskController;
+use \App\Http\Controllers\TelegramController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,7 +76,7 @@ Route::middleware('moderator')->group(function () {
         'tasks' => TaskController::class,
     ]);
 
-    Route::get("tasks-schedule",[TaskController::class,'schedule']);
+    Route::get("tasks-schedule", [TaskController::class, 'schedule']);
     Route::prefix('tasks')->group(function () {
         Route::post('notify', [TaskController::class, 'notifyAll']);
         Route::post('{task}/complete', [TaskController::class, 'complete']);
@@ -151,3 +152,5 @@ Route::prefix('parts')->group(function () {
     Route::get('{part}/export/auth', [PartController::class, 'exportAuth'])->middleware('auth:sanctum');
     Route::get('{part}/export/sticker', [PartController::class, 'exportSticker']);
 });
+Route::post("tg/callback", [TelegramController::class, 'callback']);
+Route::post("tg/callback", [TelegramController::class, 'callback']);
