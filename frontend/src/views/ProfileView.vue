@@ -7,7 +7,7 @@
             v-if="!user.tg_channel_id"
             color="info"
             text
-            :to="`https://t.me/${process.VUE_APP_TG_USERNAME}?start=user-${user.id}`">
+            :to="`https://t.me/${process.env.VUE_APP_TG_USERNAME}?start=user-${user.id}`">
           Подключить Telegram
         </v-btn>
       </div>
