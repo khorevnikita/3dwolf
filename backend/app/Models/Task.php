@@ -50,7 +50,7 @@ class Task extends Model
 
         if ($user->tg_channel_id) {
             Telegram::request("sendMessage", [
-                "chat_id" => $user->telegram_channel_id,
+                "chat_id" => $user->tg_channel_id,
                 "text" => $text,
             ]);
         } else {
