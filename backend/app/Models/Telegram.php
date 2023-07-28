@@ -10,7 +10,7 @@ class Telegram
     {
         $key = config('services.tg.key');
         $client = new Client();
-        $response = $client->post("https://api.telegram.org/$key/$method", [
+        $response = $client->post("https://api.telegram.org/bot$key/$method", [
             "json" => $data
         ]);
         $body = $response->getBody();
