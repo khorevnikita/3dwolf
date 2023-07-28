@@ -7,7 +7,7 @@
             v-if="!user.tg_channel_id"
             color="info"
             text
-            :to="`https://t.me/${process.env.VUE_APP_TG_USERNAME}?start=user-${user.id}`">
+            :to="`https://t.me/${tgUsername}?start=user-${user.id}`">
           Подключить Telegram
         </v-btn>
       </div>
@@ -96,7 +96,8 @@ export default {
         password: "",
         password_confirmation: ""
       },
-      errors: {}
+      errors: {},
+      tgUsername: process.env.VUE_APP_TG_USERNAME,
     }
   },
   computed: {
