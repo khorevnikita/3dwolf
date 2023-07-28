@@ -26,7 +26,9 @@ class User extends Authenticatable
         'phone',
         'password',
         'balance',
-        'customer_id'
+        'customer_id',
+        'tg_username',
+        'tg_channel_id',
     ];
 
     /**
@@ -63,6 +65,11 @@ class User extends Authenticatable
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 
     public function scopeSearch($q, $search)
@@ -114,6 +121,7 @@ class User extends Authenticatable
             'regular_payments' => in_array('regular_payments', $permission),
             'estimates' => in_array('estimates', $permission),
             'newsletters' => in_array('newsletters', $permission),
+            'tasks' => in_array('tasks', $permission),
             'branches' => in_array('branches', $permission),
         ]);
     }

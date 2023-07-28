@@ -2,49 +2,11 @@
   <v-card>
     <v-card-title v-if="modal">Редактирование наряд-заказа</v-card-title>
     <v-card-text>
-      <v-menu
-          ref="menu"
-          v-model="menu"
-          :close-on-content-click="false"
-          :return-value.sync="model.date"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-              v-model="model.date"
-              label="Дата"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-              :error-messages="errors.date"
-              :error-count="1"
-              :error="!!errors.date"
-          />
-        </template>
-        <v-date-picker
-            v-model="model.date"
-            no-title
-            scrollable
-        >
-          <v-spacer></v-spacer>
-          <v-btn
-              text
-              color="primary"
-              @click="menu = false"
-          >
-            Отменить
-          </v-btn>
-          <v-btn
-              text
-              color="primary"
-              @click="$refs.menu.save(model.date)"
-          >
-            OK
-          </v-btn>
-        </v-date-picker>
-      </v-menu>
+      <DatePicker
+          label="Дата"
+          v-model="model.date"
+          :error="errors.date"
+      />
       <BranchPicker
           v-model="model.branch_id"
           :error="errors.branch_id"
@@ -64,49 +26,11 @@
           :error="!!errors.phone"
           v-mask="'+7 (###) ###-##-##'"
       />
-      <v-menu
-          ref="menu2"
-          v-model="menu2"
-          :close-on-content-click="false"
-          :return-value.sync="model.deadline"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-              v-model="model.deadline"
-              label="Дедлайн"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-              :error-messages="errors.deadline"
-              :error-count="1"
-              :error="!!errors.deadline"
-          />
-        </template>
-        <v-date-picker
-            v-model="model.deadline"
-            no-title
-            scrollable
-        >
-          <v-spacer></v-spacer>
-          <v-btn
-              text
-              color="primary"
-              @click="menu2 = false"
-          >
-            Отменить
-          </v-btn>
-          <v-btn
-              text
-              color="primary"
-              @click="$refs.menu2.save(model.deadline)"
-          >
-            OK
-          </v-btn>
-        </v-date-picker>
-      </v-menu>
+      <DatePicker
+          label="Дедлайн"
+          v-model="model.deadline"
+          :error="errors.deadline"
+      />
       <v-select
           label="Статус"
           v-model="model.status"
@@ -165,20 +89,19 @@ import CustomerPicker from "@/components/Forms/CustomerPicker";
 import Swal from "sweetalert2-khonik";
 import {orderStatuses, paymentStatuses} from "@/mixins/StatusHelper";
 import BranchPicker from "@/components/Forms/BranchPicker";
+import DatePicker from "@/components/Forms/DatePicker";
 
 export default {
   name: "OrderEditor",
-  components: {BranchPicker, CustomerPicker},
+  components: {DatePicker, BranchPicker, CustomerPicker},
   props: ['value', 'modal'],
   data() {
     return {
       model: {...this.value},
       modelName: 'order',
       errors: {},
-      menu: false,
-      menu2: false,
-      orderStatuses:orderStatuses,
-      paymentStatuses:paymentStatuses,
+      orderStatuses: orderStatuses,
+      paymentStatuses: paymentStatuses,
     }
   },
   methods: {

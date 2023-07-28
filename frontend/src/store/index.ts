@@ -25,6 +25,7 @@ export default new Vuex.Store({
             {title: 'Рег. платежи', icon: 'mdi-cash-clock', to: '/regular-payments', permission: 'regular_payments'},
             {title: 'Сметы', icon: 'mdi-clipboard-list', to: '/estimates', permission: 'estimates'},
             {title: 'Рассылки', icon: 'mdi-email-arrow-right-outline', to: '/newsletters', permission: 'newsletters'},
+            {title: 'Задачи', icon: 'mdi-calendar-check', to: '/tasks', permission: 'tasks'},
             {title: 'Профиль', icon: 'mdi-account', to: '/profile'},
         ],
 

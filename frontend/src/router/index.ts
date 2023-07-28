@@ -136,7 +136,16 @@ const routes: Array<RouteConfig> = [
         name: 'profile',
         component: () => import('../views/ProfileView.vue'),
     },
-
+    {
+        path: '/tasks',
+        name: 'tasks',
+        component: () => import('../views/TasksView.vue'),
+    },
+    {
+        path: '/tasks/:date',
+        name: 'tasksDay',
+        component: () => import('../views/TasksDayView.vue'),
+    },
 ]
 
 const router = new VueRouter({

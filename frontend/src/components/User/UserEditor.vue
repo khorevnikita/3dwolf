@@ -64,22 +64,8 @@ export default {
         {title: 'Рег. платежи', type: 'regular_payments'},
         {title: 'Сметы', type: 'estimates'},
         {title: 'Рассылки', type: 'newsletters'},
+        {title: 'Задачи', type: 'tasks'},
       ],
-    }
-  },
-  created() {
-    /*if (!this.model.permission) {
-      this.$set(this.model, 'permission', []);
-      this.permissionTypes.forEach(perm => {
-        this.$set(this.model.permission, perm.type, false);
-      })
-    }*/
-  },
-  watch: {
-    model: {
-      handler() {
-        console.log(this.model);
-      }, deep: true
     }
   },
   methods: {

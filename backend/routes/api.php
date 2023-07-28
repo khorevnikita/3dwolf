@@ -25,6 +25,7 @@ use App\Http\Controllers\MultipartUploadController;
 use App\Http\Controllers\OrderNotificationLogController;
 use App\Http\Controllers\RegularPaymentController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +72,15 @@ Route::middleware('moderator')->group(function () {
         'newsletters' => NewsletterController::class,
         'prod-number-masks' => ProdNumberMaskController::class,
         'order-notification-templates' => OrderNotificationTemplateController::class,
+        'tasks' => TaskController::class,
     ]);
+
+    Route::get("tasks-schedule",[TaskController::class,'schedule']);
+    Route::prefix('tasks')->group(function () {
+        Route::post('notify', [TaskController::class, 'notifyAll']);
+        Route::post('{task}/complete', [TaskController::class, 'complete']);
+        Route::post('{task}/notify', [TaskController::class, 'notify']);
+    });
 
     Route::prefix('money')->group(function () {
         Route::get('statistics', [MoneyController::class, 'getTotalStatistics']);
