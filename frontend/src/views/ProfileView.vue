@@ -7,7 +7,8 @@
             v-if="!user.tg_channel_id"
             color="info"
             text
-            :to="`https://t.me/${tgUsername}?start=user-${user.id}`">
+            target="_blank"
+            :href="`https://t.me/${tgUsername}?start=user-${user.id}`">
           Подключить Telegram
         </v-btn>
       </div>
