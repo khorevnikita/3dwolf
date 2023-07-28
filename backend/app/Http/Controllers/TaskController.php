@@ -113,7 +113,7 @@ class TaskController extends Controller
             $user = $userTasks->first()?->user;
             if ($user->telegram_channel_id) {
                 Telegram::request("sendMessage", [
-                    'channel_id' => $user->telegram_channel_id,
+                    'chat_id' => $user->telegram_channel_id,
                     'text' => $notificationText,
                 ]);
             } else {
