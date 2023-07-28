@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class TaskController extends Controller
@@ -107,6 +108,7 @@ class TaskController extends Controller
         });*/
 
         $userTasks->each(function ($userTasks) {
+            Log::info("notify", ['userTasks' => $userTasks]);
             $notificationText = $userTasks->map(function (Task $task) {
                 return "$task->name в " . Carbon::parse($task->datetime)->format("H:i");
             })->implode("\n");
