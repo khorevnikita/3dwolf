@@ -22,7 +22,7 @@ class TelegramController extends Controller
                     list($prefix, $uid) = explode("-", $command[1]);
 
                     User::query()->where("id", $uid)->update([
-                        'chat_id' => $tgUser['id'],
+                        'tg_channel_id' => $tgUser['id'],
                         'tg_username' => $tgUser['username'],
                     ]);
 
@@ -32,7 +32,7 @@ class TelegramController extends Controller
                     ]);
                 } else {
                     Telegram::request("sendMessage", [
-                        'channel_id' => $tgUser['id'],
+                        'chat_id' => $tgUser['id'],
                         "text" => "Не удалось связать с аккаунтом."
                     ]);
                 }
