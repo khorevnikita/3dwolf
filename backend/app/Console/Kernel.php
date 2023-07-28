@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\NotifyTasks;
 use App\Console\Commands\RegularPaymentNotification;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -16,6 +17,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('newsletters:send')->everyMinute();
         $schedule->command(RegularPaymentNotification::class)->everyMinute();
+        $schedule->command(NotifyTasks::class)->dailyAt("06:00");
 
     }
 

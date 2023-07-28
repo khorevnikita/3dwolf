@@ -6,6 +6,7 @@ use App\Mail\TaskNotification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class Task extends Model
@@ -56,5 +57,32 @@ class Task extends Model
         } else {
             Mail::to($user->email)->queue(new TaskNotification($text));
         }
+    }
+
+    public static function notifyForDay(string $day)
+    {
+        $userTasks = Task::query()->forDate($day)->with("user")->get()->groupBy("user_id");
+
+        $userTasks->each(function ($userTasks) {
+            $user = $userTasks->first()?->user;
+
+            $text = '';
+            foreach ($userTasks as $k => $task) {
+                $time = Carbon::parse($task->datetime)->format("H:i");
+                $name = $task->name;
+                $i = $k + 1;
+                $text .= "$i. $name в $time \n";
+            }
+
+            if ($user->tg_channel_id) {
+                Telegram::request("sendMessage", [
+                    'chat_id' => $user->tg_channel_id,
+                    'text' => $text,
+                ]);
+            } else {
+                Mail::to($user->email)->queue(new TaskNotification(str_replace("\n", "<br/>", $text)));
+            }
+            Task::query()->whereIn("id", $userTasks->pluck("id"))->update(['notified' => 1]);
+        });
     }
 }

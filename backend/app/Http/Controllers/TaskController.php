@@ -95,42 +95,13 @@ class TaskController extends Controller
         return $this->emptySuccessResponse();
     }
 
-    public function notifyAll(Request $request)
+    public function notifyAll(Request $request): JsonResponse
     {
         $request->validate([
             'date' => 'required|date'
         ]);
 
-        $userTasks = Task::query()->forDate($request->get("date"))->with("user")->get()->groupBy("user_id");
-
-        /*$tasks->each(function (Task $task) {
-            $task->sendNotification();
-        });*/
-
-        $userTasks->each(function ($userTasks) {
-            $user = $userTasks->first()?->user;
-
-            Log::info("notify", ['userTasks' => $userTasks]);
-
-            $text = '';
-            foreach ($userTasks as $k => $task) {
-                $time = Carbon::parse($task->datetime)->format("H:i");
-                $name = $task->name;
-                $i = $k + 1;
-                $text .= "$i. $name в $time \n";
-            }
-
-            if ($user->tg_channel_id) {
-                Telegram::request("sendMessage", [
-                    'chat_id' => $user->tg_channel_id,
-                    'text' => $text,
-                ]);
-            } else {
-                Mail::to($user->email)->queue(new TaskNotification(str_replace("\n", "<br/>", $text)));
-            }
-            Task::query()->whereIn("id", $userTasks->pluck("id"))->update(['notified' => 1]);
-        });
-
+        Task::notifyForDay($request->get("date"));
 
         return $this->emptySuccessResponse();
     }
