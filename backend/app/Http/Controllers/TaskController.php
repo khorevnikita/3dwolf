@@ -108,18 +108,25 @@ class TaskController extends Controller
         });*/
 
         $userTasks->each(function ($userTasks) {
-            Log::info("notify", ['userTasks' => $userTasks]);
-            $notificationText = $userTasks->map(function (Task $task) {
-                return "$task->name в " . Carbon::parse($task->datetime)->format("H:i");
-            })->implode("\n");
             $user = $userTasks->first()?->user;
-            if ($user->telegram_channel_id) {
+
+            Log::info("notify", ['userTasks' => $userTasks]);
+
+            $text = '';
+            foreach ($userTasks as $k => $task) {
+                $time = Carbon::parse($task->datetime)->format("H:i");
+                $name = $task->name;
+                $i = $k + 1;
+                $text .= "$i. $name в $time \n";
+            }
+
+            if ($user->tg_channel_id) {
                 Telegram::request("sendMessage", [
-                    'chat_id' => $user->telegram_channel_id,
-                    'text' => $notificationText,
+                    'chat_id' => $user->tg_channel_id,
+                    'text' => $text,
                 ]);
             } else {
-                Mail::to($user->email)->queue(new TaskNotification($notificationText));
+                Mail::to($user->email)->queue(new TaskNotification(str_replace("\n", "<br/>", $text)));
             }
             Task::query()->whereIn("id", $userTasks->pluck("id"))->update(['notified' => 1]);
         });
