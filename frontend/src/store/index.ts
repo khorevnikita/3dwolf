@@ -9,13 +9,14 @@ export default new Vuex.Store({
             {title: 'Главная', icon: 'mdi-view-dashboard', to: '/',},
             {title: 'Клиенты', icon: 'mdi-toolbox', to: '/customers', permission: 'customers'},
 
-            {title: 'Счета', icon: 'mdi-wallet-plus', to: '/accounts', permission: 'accounts'},
             {title: 'Наряд-заказы', icon: 'mdi-cart-outline', to: '/orders', permission: 'orders'},
             {title: 'Деньги', icon: 'mdi-cash', to: '/money', permission: 'payments'},
             {title: 'Рег. платежи', icon: 'mdi-cash-clock', to: '/regular-payments', permission: 'regular_payments'},
             {title: 'Задачи', icon: 'mdi-calendar-check', to: '/tasks', permission: 'tasks'},
+            {title: 'Склад', icon: 'mdi-store', to: '/stock', permission: 'parts'},
+            {title: 'Филиалы', icon: 'mdi-source-branch', to: '/branches', permission: 'branches'},
             {
-                title: "Учёт", icon: "mdi-palette-swatch-variant", children: [
+                title: "Справочники", icon: "mdi-palette-swatch-variant", children: [
                     {title: 'Материалы', icon: 'mdi-box-cutter', to: '/materials', permission: 'materials'},
                     {
                         title: 'Производители',
@@ -23,16 +24,15 @@ export default new Vuex.Store({
                         to: '/manufacturers',
                         permission: 'manufacturers'
                     },
-                    {title: 'Склад', icon: 'mdi-store', to: '/stock', permission: 'parts'},
+                    {title: 'Счета', icon: 'mdi-wallet-plus', to: '/accounts', permission: 'accounts'},
+                    {title: 'Сотрудники', icon: 'mdi-account-multiple', to: '/users', permission: 'users'},
 
                 ],
             },
-            {
+           /* {
                 title: "Компания", icon: "mdi-domain", children: [
-                    {title: 'Сотрудники', icon: 'mdi-account-multiple', to: '/users', permission: 'users'},
-                    {title: 'Филиалы', icon: 'mdi-source-branch', to: '/branches', permission: 'branches'},
-                ]
-            },
+                 ]
+            },*/
             {
                 title: "Шаблоны", icon: "mdi-clipboard-list-outline", children: [
                     {title: 'Договора', icon: 'mdi-file-sign', to: '/contracts', permission: 'contracts'},
