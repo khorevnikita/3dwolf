@@ -1,13 +1,15 @@
 <template>
   <v-row class="mx-3 mt-5">
     <v-col cols="12">
-      <div class="d-flex align-items-center">
-        <div class="text-h6">Наряд-заказы</div>
+      <div class="d-flex align-items-center flex-column flex-md-row">
+        <div class="text-h6 mb-2 mb-md-0">Наряд-заказы</div>
         <v-spacer/>
-        <v-btn v-if="isModerator" small to="/order-notification-templates" color="secondary" class="mr-4">Шаблоны
-          уведомлений
-        </v-btn>
-        <v-btn v-if="isModerator" small @click="create()" color="primary">Создать</v-btn>
+        <div>
+          <v-btn v-if="isModerator" small to="/order-notification-templates" color="secondary" class="mr-3">Шаблоны
+            уведомлений
+          </v-btn>
+          <v-btn v-if="isModerator" small @click="create()" color="primary">Создать</v-btn>
+        </div>
       </div>
     </v-col>
     <v-col cols="12">

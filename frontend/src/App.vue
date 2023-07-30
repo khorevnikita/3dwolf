@@ -15,20 +15,43 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item
-            v-for="item in visibleRoutes"
-            :key="item.title"
-            link
-            :to="item.to"
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
+        <div v-for="item in visibleRoutes" :key="item.title">
+          <v-list-item v-if="show(item.permission) && !item.children" link :to="item.to">
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-group v-else-if="show(item.permission)">
+            <template v-slot:activator>
+              <v-list-item link class="pl-0">
+                <v-list-item-icon>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.title }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <v-list-item v-if="show(child.permission)" class="ml-3" :to="child.to" :key="child.title"
+                         v-for="(child,j) in item.children" link>
+              <v-list-item-icon>
+                <v-icon>{{ child.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ child.title }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+        </div>
         <v-list-item @click="logout()">
           <v-list-item-icon>
             <v-icon>mdi-logout</v-icon>
@@ -98,6 +121,7 @@ export default Vue.extend({
   },
   methods: {
     show(key) {
+      if (key === undefined) return true;
       return this.user && this.user.permission?.includes(key);
     },
     logout() {

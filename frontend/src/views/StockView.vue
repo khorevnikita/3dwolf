@@ -1,11 +1,13 @@
 <template>
   <v-row class="mx-3 mt-5">
     <v-col cols="12">
-      <div class="d-flex align-items-center">
-        <div class="text-h6">Склад</div>
+      <div class="d-flex align-items-center flex-column flex-md-row">
+        <div class="text-h6 mb-2 mb-md-0">Склад</div>
         <v-spacer/>
-        <v-btn small to="/masks" color="secondary" class="mr-3">Маски внутренних номеров</v-btn>
-        <v-btn small @click="create()" color="primary">Добавить позицию</v-btn>
+        <div class="">
+          <v-btn small to="/masks" color="secondary" class="mr-3 mb-2 mb-md-0">Маски внутренних номеров</v-btn>
+          <v-btn small @click="create()" color="primary">Добавить позицию</v-btn>
+        </div>
       </div>
     </v-col>
     <v-col cols="12">

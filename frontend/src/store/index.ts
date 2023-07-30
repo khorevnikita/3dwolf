@@ -7,25 +7,39 @@ export default new Vuex.Store({
     state: {
         routes: [
             {title: 'Главная', icon: 'mdi-view-dashboard', to: '/',},
-            {title: 'Сотрудники', icon: 'mdi-account-multiple', to: '/users', permission: 'users'},
-            {title: 'Филиалы', icon: 'mdi-source-branch', to: '/branches', permission: 'branches'},
             {title: 'Клиенты', icon: 'mdi-toolbox', to: '/customers', permission: 'customers'},
-            {title: 'Материалы', icon: 'mdi-box-cutter', to: '/materials', permission: 'materials'},
-            {
-                title: 'Производители',
-                icon: 'mdi-office-building-cog',
-                to: '/manufacturers',
-                permission: 'manufacturers'
-            },
-            {title: 'Склад', icon: 'mdi-store', to: '/stock', permission: 'parts'},
+
             {title: 'Счета', icon: 'mdi-wallet-plus', to: '/accounts', permission: 'accounts'},
             {title: 'Наряд-заказы', icon: 'mdi-cart-outline', to: '/orders', permission: 'orders'},
-            {title: 'Договора', icon: 'mdi-file-sign', to: '/contracts', permission: 'contracts'},
             {title: 'Деньги', icon: 'mdi-cash', to: '/money', permission: 'payments'},
             {title: 'Рег. платежи', icon: 'mdi-cash-clock', to: '/regular-payments', permission: 'regular_payments'},
-            {title: 'Сметы', icon: 'mdi-clipboard-list', to: '/estimates', permission: 'estimates'},
-            {title: 'Рассылки', icon: 'mdi-email-arrow-right-outline', to: '/newsletters', permission: 'newsletters'},
             {title: 'Задачи', icon: 'mdi-calendar-check', to: '/tasks', permission: 'tasks'},
+            {
+                title: "Учёт", icon: "mdi-palette-swatch-variant", children: [
+                    {title: 'Материалы', icon: 'mdi-box-cutter', to: '/materials', permission: 'materials'},
+                    {
+                        title: 'Производители',
+                        icon: 'mdi-office-building-cog',
+                        to: '/manufacturers',
+                        permission: 'manufacturers'
+                    },
+                    {title: 'Склад', icon: 'mdi-store', to: '/stock', permission: 'parts'},
+
+                ],
+            },
+            {
+                title: "Компания", icon: "mdi-domain", children: [
+                    {title: 'Сотрудники', icon: 'mdi-account-multiple', to: '/users', permission: 'users'},
+                    {title: 'Филиалы', icon: 'mdi-source-branch', to: '/branches', permission: 'branches'},
+                ]
+            },
+            {
+                title: "Шаблоны", icon: "mdi-clipboard-list-outline", children: [
+                    {title: 'Договора', icon: 'mdi-file-sign', to: '/contracts', permission: 'contracts'},
+                    {title: 'Сметы', icon: 'mdi-clipboard-list', to: '/estimates', permission: 'estimates'},
+                ]
+            },
+            {title: 'Рассылки', icon: 'mdi-email-arrow-right-outline', to: '/newsletters', permission: 'newsletters'},
             {title: 'Профиль', icon: 'mdi-account', to: '/profile'},
         ],
 
@@ -42,10 +56,11 @@ export default new Vuex.Store({
             const user = <any>state.user;
             if (!user) return [];
             if (!user.permission) return [];
-            return state.routes.filter((item) => {
+            return state.routes
+            /*return state.routes.filter((item) => {
                 if (!item.permission) return true;
                 return user.permission.includes(item.permission)
-            })
+            })*/
         },
         isModerator: state => {
             return state.user && !state.user.customer_id

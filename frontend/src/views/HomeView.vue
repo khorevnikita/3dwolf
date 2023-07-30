@@ -80,7 +80,7 @@
               <tbody>
               <tr>
                 <td><b>Отгружено за месяц</b></td>
-                <td><b>{{ data.orders.completed_by_month }}</b></td>
+                <td><b>{{ data.orders ? data.orders.completed_by_month : '-' }}</b></td>
               </tr>
               <tr v-for="(status,i) in statuses" :key="i">
                 <td>{{ orderStatusLabel(status.value) }}</td>

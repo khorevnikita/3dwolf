@@ -182,7 +182,7 @@ router.beforeEach(async (to, from, next) => {
             store.commit('setUser', user)
         }
 
-        const route = store.getters.routes.find((r: any) => r.to.split('/')[1] === to.path.split('/')[1]);
+        const route = store.getters.routes.find((route: any) => findRoute(route, to.path.split('/')[1]));
 
         if (!route?.permission) {
             next()
@@ -195,5 +195,14 @@ router.beforeEach(async (to, from, next) => {
         }
     }
 });
+
+const findRoute = (route: any, needle: string) => {
+    const routeKey = route.to?.split('/')?.[1];
+    if (routeKey === needle) return route;
+    if (route.children) {
+        return route.children.find((child: any) => findRoute(child, needle))
+    }
+    return null;
+}
 
 export default router
