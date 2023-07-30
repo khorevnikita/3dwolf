@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Paginator;
 use App\Http\Requests\Task\TaskRequest;
 use App\Mail\TaskNotification;
 use App\Models\Task;
@@ -15,12 +16,15 @@ use Illuminate\Support\Facades\Mail;
 
 class TaskController extends Controller
 {
-    public function schedule(): JsonResponse
+    public function schedule(Request $request): JsonResponse
     {
+        list($page, $skip, $take) = Paginator::get($request);
         $tasks = DB::table("tasks")
-            ->selectRaw("DATE(datetime) as date, count(id) as count")
+            ->selectRaw("DATE(datetime) as date, count(id) as total_count,SUM(case when completed = 1 then 1 else 0 end) as completed_count")
             ->groupBy("date")
             ->orderBy("date", "desc")
+            ->skip($skip)
+            ->take($take)
             ->get();
 
         return $this->resourceListResponse('tasksSchedule', $tasks, count($tasks), 1);
@@ -35,7 +39,11 @@ class TaskController extends Controller
             "date" => 'required|date'
         ]);
 
-        $tasks = Task::query()->forDate($request->get("date"))->orderBy('datetime')->with("user")->get();
+        $tasks = Task::query()->forDate($request->get("date"));
+        if ($uid = $request->get("user_id")) {
+            $tasks = $tasks->where("user_id", $uid);
+        }
+        $tasks = $tasks->orderBy('datetime')->with("user")->get();
 
         return $this->resourceListResponse('tasks', $tasks, count($tasks), 1);
     }

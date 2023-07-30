@@ -20,6 +20,8 @@
     <v-date-picker
         v-model="input"
         @input="menu = false"
+        :locale="'ru'"
+        :first-day-of-week="1"
     ></v-date-picker>
   </v-menu>
 </template>

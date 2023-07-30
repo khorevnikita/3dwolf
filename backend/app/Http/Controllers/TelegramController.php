@@ -23,7 +23,7 @@ class TelegramController extends Controller
 
                     User::query()->where("id", $uid)->update([
                         'tg_channel_id' => $tgUser['id'],
-                        'tg_username' => $tgUser['username'],
+                        'tg_username' => $tgUser['username']??$tgUser['id'],
                     ]);
 
                     Telegram::request("sendMessage", [

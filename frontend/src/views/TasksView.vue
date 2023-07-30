@@ -38,6 +38,9 @@
         <template v-slot:[`item.date`]="{item}">
           {{ moment(item.date).format("DD.MM.YYYY") }}
         </template>
+        <template v-slot:[`item.count`]="{item}">
+          {{ item.completed_count }}/{{item.total_count}}
+        </template>
         <template v-slot:[`item.actions`]="{item}">
           <v-btn small color="primary" :to="`/tasks/${item.date}`">Открыть список</v-btn>
         </template>

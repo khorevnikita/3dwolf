@@ -45,12 +45,17 @@ import DateTimePicker from "@/components/Forms/DateTimePicker";
 export default {
   name: "TaskEditor",
   components: {DateTimePicker, DatePicker, UserPicker},
-  props: ['value'],
+  props: ['value', 'day'],
   data() {
     return {
       model: this.value,
       modelName: 'task',
       errors: {}
+    }
+  },
+  created() {
+    if (this.day) {
+      this.model.datetime = this.day;
     }
   },
   methods: {

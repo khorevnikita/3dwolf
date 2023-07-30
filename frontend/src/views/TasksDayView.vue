@@ -2,12 +2,29 @@
   <v-row class="mx-3 mt-5">
     <v-breadcrumbs :items="breadcrumps" divider="-"/>
     <v-col cols="12">
-      <div class="d-flex align-items-center">
-        <div class="text-h6">Задачи</div>
+      <div class="d-flex align-items-center flex-column flex-md-row">
+        <div class="text-h6 mb-2 mb-md-0">Задачи</div>
         <v-spacer/>
-        <v-btn small @click="notifyAll()" color="primary" :disabled="loading" class="mr-3">Разослать уведомления</v-btn>
-        <v-btn small @click="create()" color="primary">Создать</v-btn>
+        <div>
+          <v-btn small @click="notifyAll()" color="primary" :disabled="loading" class="mr-3">Разослать уведомления</v-btn>
+          <v-btn small @click="create()" color="primary">Создать</v-btn>
+        </div>
       </div>
+    </v-col>
+    <v-col cols="12">
+      <v-card>
+        <v-card-title>Фильтр</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" md="4">
+              <UserPicker v-model="query.user_id"/>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="replaceRoute">Найти</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-col>
     <v-col cols="12">
       <v-data-table
@@ -23,6 +40,9 @@
         </template>
         <template v-slot:[`item.user`]="{item}">
           {{ item.user ? [item.user.name, item.user.surname].join(" ") : '-' }}
+        </template>
+        <template v-slot:[`item.description`]="{item}">
+          <div style="white-space: break-spaces">{{ item.description }}</div>
         </template>
         <template v-slot:[`item.status`]="{item}">
           <div class="d-flex">
@@ -79,6 +99,7 @@
           v-model="editItem"
           @created="onCreated"
           @updated="onUpdated"
+          :day="$route.params.date"
       />
     </v-dialog>
   </v-row>
@@ -90,10 +111,11 @@ import TaskEditor from "@/components/Task/TaskEditor";
 import moment from "moment";
 import axios from "@/plugins/axios";
 import Swal from "sweetalert2-khonik";
+import UserPicker from "@/components/Forms/UserPicker";
 
 export default {
   name: "TasksView",
-  components: {TaskEditor},
+  components: {UserPicker, TaskEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {
