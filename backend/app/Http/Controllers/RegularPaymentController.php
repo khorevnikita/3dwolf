@@ -27,19 +27,19 @@ class RegularPaymentController extends Controller
 
         $totalCount = $regularPayments->count();
 
-        if ($take >= 0) {
+        /*if ($take >= 0) {
             $regularPayments = $regularPayments->skip($skip)->take($take);
         }
         list($sort, $sortDir) = Paginator::getSorting($request);
         $regularPayments = $regularPayments->orderBy($sort, $sortDir);
 
-        $pagesCount = Paginator::pagesCount($take, $totalCount);
+        $pagesCount = Paginator::pagesCount($take, $totalCount);*/
 
         $totalSum = $regularPayments->sum("amount");
 
-        $regularPayments = $regularPayments->with('user')->get();
+        $regularPayments = $regularPayments->with('user')->get()->sortBy("next_date")->values();
 
-        return $this->resourceListResponse('regularPayments', $regularPayments, $totalCount, $pagesCount, [
+        return $this->resourceListResponse('regularPayments', $regularPayments, $totalCount, 1, [
             'totalSum' => $totalSum
         ]);
     }
