@@ -15,7 +15,7 @@ class EstimateLineController extends Controller
      */
     public function index(Estimate $estimate): JsonResponse
     {
-        $lines = EstimateLine::query()->where("estimate_id", $estimate->id)->get();
+        $lines = EstimateLine::query()->with(['part', 'part.material'])->where("estimate_id", $estimate->id)->get();
         return $this->resourceListResponse('estimateLines', $lines, $lines->count(), 1);
     }
 
@@ -71,7 +71,7 @@ class EstimateLineController extends Controller
      * @param EstimateLine $estimateLine
      * @return JsonResponse
      */
-    public function destroy(Estimate $estimate,EstimateLine $estimateLine): JsonResponse
+    public function destroy(Estimate $estimate, EstimateLine $estimateLine): JsonResponse
     {
         $estimateLine->delete();
         return $this->emptySuccessResponse();

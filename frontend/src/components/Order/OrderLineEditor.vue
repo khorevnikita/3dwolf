@@ -2,30 +2,19 @@
   <v-card>
     <v-card-title>Редактирование позиции</v-card-title>
     <v-card-text>
-      <!--<v-text-field
+
+      <v-text-field
           label="Номер"
           v-model="model.number"
           :error-messages="errors.number"
           :error-count="1"
           :error="!!errors.number"
-      />-->
-      <v-autocomplete
+      />
+      <PartPicker
           label="Катушка"
           v-model="model.part_id"
-          :items="parts"
-          :loading="isLoadingParts"
-          :search-input.sync="searchPart"
-          item-value="id"
-          item-text="inv_number"
-          :error-messages="errors.part_id"
-          :error-count="1"
-          :error="!!errors.part_id"
-          :filter="()=>true"
-      >
-        <template #item="{item}">
-          {{ item.inv_number }}. {{ `${item.material.name}, ${item.color} (${item.prod_number})` }}
-        </template>
-      </v-autocomplete>
+          :error="errors.part_id"
+      />
 
       <v-text-field
           label="Название"
@@ -102,9 +91,11 @@
 
 <script>
 import axios from "@/plugins/axios";
+import PartPicker from "@/components/Forms/PartPicker";
 
 export default {
   name: "OrderLineEditor",
+  components: {PartPicker},
   props: ['value', 'modal'],
   data() {
     return {
@@ -113,9 +104,7 @@ export default {
       errors: {},
       menu: false,
       menu2: false,
-      parts: [],
-      isLoadingParts: false,
-      searchPart: '',
+
       printDuration: {
         h: 0,
         m: 0,
@@ -124,10 +113,6 @@ export default {
     }
   },
   watch: {
-    searchPart(oldV, newV) {
-      if (!newV) return;
-      this.getParts()
-    },
     printDuration: {
       handler() {
         this.model.print_duration = this.printHours * 3600 + this.printMinutes * 60 + this.printSeconds;
@@ -152,8 +137,6 @@ export default {
     },
   },
   created() {
-    this.getParts();
-
     let totalSeconds = this.model.print_duration;
     this.printDuration.h = Math.floor(totalSeconds / 3600);
     totalSeconds %= 3600;
@@ -161,15 +144,6 @@ export default {
     this.printDuration.s = totalSeconds % 60;
   },
   methods: {
-    getParts() {
-      if (this.isLoadingParts) return;
-      this.isLoadingParts = true;
-      axios.get(`parts?not_ended=1&search=${this.searchPart ? this.searchPart : ''}&field=${this.model.part_id ? this.model.part_id : ''}`)
-          .then(body => {
-            this.parts = body.parts;
-            this.isLoadingParts = false;
-          });
-    },
     save() {
       this.errors = {};
       if (this.model.id) {
@@ -179,7 +153,6 @@ export default {
       }
     },
     store() {
-      console.log(this.printDuration);
       axios.post(`orders/${this.$route.params.id}/order-lines`, this.model).then(body => {
         this.$emit("created", body[this.modelName]);
         this.$emit("close");

@@ -122,6 +122,7 @@ Route::middleware('moderator')->group(function () {
         Route::post('{order}/copy', [OrderController::class, 'copy']);
         Route::post('{order}/order-lines/{orderLine}/copy', [OrderLineController::class, 'copy']);
         Route::post('{order}/set-discount', [OrderController::class, 'setDiscount']);
+        Route::post('{order}/fill', [OrderController::class, 'fillFromEstimate']);
     });
 });
 

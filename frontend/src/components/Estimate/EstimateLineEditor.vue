@@ -2,6 +2,7 @@
   <v-card>
     <v-card-title>Редактирование позиции в смете</v-card-title>
     <v-card-text>
+
       <v-text-field
           label="Обозначение"
           v-model="model.key"
@@ -9,13 +10,24 @@
           :error-count="1"
           :error="!!errors.key"
       />
-
       <v-text-field
           label="Название"
           v-model="model.name"
           :error-messages="errors.name"
           :error-count="1"
           :error="!!errors.name"
+      />
+      <PartPicker
+          label="Катушка"
+          v-model="model.part_id"
+          :error="errors.part_id"
+      />
+      <v-text-field
+          label="Заполнение"
+          v-model="model.filling"
+          :error-messages="errors.filling"
+          :error-count="1"
+          :error="!!errors.filling"
       />
       <v-text-field
           label="Цена"
@@ -87,9 +99,11 @@
 
 <script>
 import axios from "@/plugins/axios";
+import PartPicker from "@/components/Forms/PartPicker";
 
 export default {
   name: "EstimateLineEditor",
+  components: {PartPicker},
   props: ['value', 'estimate_id'],
   data() {
     return {
