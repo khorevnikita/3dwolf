@@ -54,7 +54,7 @@ export default {
     }
   },
   created() {
-    if (this.day) {
+    if (!this.model.datetime && this.day) {
       this.model.datetime = this.day;
     }
   },

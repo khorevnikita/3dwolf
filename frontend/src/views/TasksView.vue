@@ -27,24 +27,34 @@
       </v-card>
     </v-col>-->
     <v-col cols="12">
-      <v-data-table
-          :headers="headers"
-          :items="items"
-          :options.sync="options"
-          :server-items-length="totalItems"
-          :loading="loading"
-          class="elevation-1 mt-3"
-      >
-        <template v-slot:[`item.date`]="{item}">
-          {{ moment(item.date).format("DD.MM.YYYY") }}
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+          <tr>
+            <th class="text-left">
+              Дата
+            </th>
+            <th class="text-left">
+              Задачи
+            </th>
+            <th class="text-left">
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+
+          <tr v-for="(item,i) in items" :key="i">
+            <td> {{ moment(item.date).format("DD.MM.YYYY") }}
+            <v-icon v-if="isToday(item.date)" small color="primary">mdi-circle</v-icon>
+            </td>
+            <td>{{ item.completed_count }}/{{ item.total_count }}</td>
+            <td>
+              <v-btn small color="primary" :to="`/tasks/${item.date}`">Открыть список</v-btn>
+            </td>
+          </tr>
+          </tbody>
         </template>
-        <template v-slot:[`item.count`]="{item}">
-          {{ item.completed_count }}/{{item.total_count}}
-        </template>
-        <template v-slot:[`item.actions`]="{item}">
-          <v-btn small color="primary" :to="`/tasks/${item.date}`">Открыть список</v-btn>
-        </template>
-      </v-data-table>
+      </v-simple-table>
     </v-col>
 
     <v-dialog v-model="editDialog" max-width="500">
@@ -62,6 +72,7 @@
 <script>
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import TaskEditor from "@/components/Task/TaskEditor";
+import moment from "moment";
 
 export default {
   name: "TasksView",
@@ -78,9 +89,16 @@ export default {
       resourceKey: "tasksSchedule",
     }
   },
+  methods: {
+    isToday(date) {
+      return moment(date).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")
+    }
+  }
 }
 </script>
 
 <style scoped>
-
+/*.today {
+  border:1px solid green;;
+}*/
 </style>

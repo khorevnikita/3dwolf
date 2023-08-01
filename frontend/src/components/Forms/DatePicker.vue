@@ -45,6 +45,7 @@ export default {
   },
   computed: {
     readValue() {
+      if (!this.input) return;
       if (!moment(this.input).isValid()) return;
       return moment(this.input).format("DD.MM.YYYY");
     }

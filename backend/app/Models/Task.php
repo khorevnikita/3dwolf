@@ -61,7 +61,7 @@ class Task extends Model
 
     public static function notifyForDay(string $day)
     {
-        $userTasks = Task::query()->forDate($day)->with("user")->get()->groupBy("user_id");
+        $userTasks = Task::query()->forDate($day)->orderBy('datetime')->with("user")->get()->groupBy("user_id");
 
         $userTasks->each(function ($userTasks) {
             $user = $userTasks->first()?->user;

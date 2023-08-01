@@ -78,7 +78,6 @@
               </template>
               <span>{{ item.completed ? 'Отметить, как не выполнено' : 'Отметить, как выполнено' }}</span>
             </v-tooltip>
-
           </div>
         </template>
         <template v-slot:[`item.actions`]="{item}">

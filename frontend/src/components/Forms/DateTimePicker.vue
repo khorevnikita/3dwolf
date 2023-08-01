@@ -49,8 +49,8 @@ export default {
   methods: {
     parseInput() {
       if (this.input && moment(this.input).isValid()) {
-        this.date = moment(this.input).format("YYYY-MM-DD")
-        this.time = moment(this.input).format("HH:mm")
+        this.date = moment(this.input).format("YYYY-MM-DD");
+        this.time = moment(this.input).format("HH:mm");
       }
     },
     collectInput() {

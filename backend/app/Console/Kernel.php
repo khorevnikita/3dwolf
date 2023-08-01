@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('newsletters:send')->everyMinute();
         $schedule->command(RegularPaymentNotification::class)->everyMinute();
-        $schedule->command(NotifyTasks::class)->dailyAt("06:00");
+        $schedule->command(NotifyTasks::class)->dailyAt("05:00");
 
     }
 
