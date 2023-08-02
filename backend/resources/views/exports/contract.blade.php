@@ -146,8 +146,8 @@
         <div class="block bordered">
             <div class="bold" style="width: 100px">ПОДРЯДЧИК</div>
             <div>
-                {{$settings['legal_full_name']}}, действующий на основании {{$settings['legal_settings']}}
-                {{$settings['orgn']}}
+                {{$settings['legal_full_name']}}, действующий на основании {{$settings['legal_statement']}}
+                {{$settings['ogrn']}}
             </div>
         </div>
 

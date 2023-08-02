@@ -212,9 +212,11 @@ class OrderController extends Controller
         $time = Carbon::now()->format("Y-m-d_H:i:s");
         $filename = "order_$order->id" . "_by_$time.pdf";
 
+        $settings = DB::table("settings")->first();
         $pdf = Pdf::loadView('exports.order', [
             'order' => $order,
             'customer' => $order->customer,
+            'settings' => (array)$settings,
         ])
             ->setPaper('a4', 'landscape');
         return $pdf->download($filename);

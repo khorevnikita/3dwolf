@@ -11,6 +11,7 @@ use iio\libmergepdf\Merger;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -122,11 +123,13 @@ class ContractController extends Controller
         $time = Carbon::now()->format("Y-m-d_H:i:s");
         $mainName = "contract_$contract->id" . "_text_by_$time.pdf";
 
+        $settings = DB::table("settings")->first();
         $mainPart = Pdf::loadView('exports.contract', [
             'contract' => $contract,
             'date' => $contract->getDate(),
             "template" => Contract::TEMPLATE_BLOCKS,
             'customer' => $contract->customer,
+            'settings' => (array)$settings
         ])
             ->setPaper('a4', 'portrait')->output();
 
@@ -137,6 +140,7 @@ class ContractController extends Controller
             'contract' => $contract,
             'date' => $contract->getDate(),
             'customer' => $contract->customer,
+            'settings' => (array)$settings
         ])
             ->setPaper('a4', 'landscape')->output();
 
