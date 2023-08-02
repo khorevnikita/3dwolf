@@ -59,6 +59,7 @@ export default {
         {title: 'Склад', type: 'parts'},
         {title: 'Счета', type: 'accounts'},
         {title: 'Наряд-заказы', type: 'orders'},
+        {title: 'Адреса доставки', type: 'delivery_address'},
         {title: 'Договора', type: 'contracts'},
         {title: 'Деньги', type: 'payments'},
         {title: 'Рег. платежи', type: 'regular_payments'},

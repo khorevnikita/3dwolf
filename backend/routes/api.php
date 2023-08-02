@@ -28,6 +28,9 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\TaskController;
 use \App\Http\Controllers\TelegramController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\DeliveryAddressController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -74,6 +77,7 @@ Route::middleware('moderator')->group(function () {
         'prod-number-masks' => ProdNumberMaskController::class,
         'order-notification-templates' => OrderNotificationTemplateController::class,
         'tasks' => TaskController::class,
+        'delivery-addresses' => DeliveryAddressController::class,
     ]);
 
     Route::get("settings", [SettingsController::class, 'get']);

@@ -124,6 +124,7 @@ class User extends Authenticatable
             'tasks' => in_array('tasks', $permission),
             'branches' => in_array('branches', $permission),
             'settings' => in_array('settings', $permission),
+            'delivery_address' => in_array('delivery_address', $permission),
         ]);
     }
 

@@ -51,12 +51,9 @@
           item-value="value"
           item-text="text"
       />
-      <v-textarea
-          label="Адрес доставки"
+      <DeliveryInput
           v-model="model.delivery_address"
-          :error-messages="errors.delivery_address"
-          :error-count="1"
-          :error="!!errors.delivery_address"
+          :error="errors.delivery_address"
       />
       <v-text-field
           label="Трек-номер"
@@ -90,10 +87,11 @@ import Swal from "sweetalert2-khonik";
 import {orderStatuses, paymentStatuses} from "@/mixins/StatusHelper";
 import BranchPicker from "@/components/Forms/BranchPicker";
 import DatePicker from "@/components/Forms/DatePicker";
+import DeliveryInput from "@/components/Forms/DeliveryInput";
 
 export default {
   name: "OrderEditor",
-  components: {DatePicker, BranchPicker, CustomerPicker},
+  components: {DeliveryInput, DatePicker, BranchPicker, CustomerPicker},
   props: ['value', 'modal'],
   data() {
     return {

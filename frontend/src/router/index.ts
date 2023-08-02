@@ -151,6 +151,11 @@ const routes: Array<RouteConfig> = [
         name: 'settings',
         component: () => import('../views/Settings.vue'),
     },
+    {
+        path: '/delivery-addresses',
+        name: 'delivery-addresses',
+        component: () => import('../views/DeliveryAddressesView.vue'),
+    },
 ]
 
 const router = new VueRouter({

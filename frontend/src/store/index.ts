@@ -17,6 +17,12 @@ export default new Vuex.Store({
             {title: 'Филиалы', icon: 'mdi-source-branch', to: '/branches', permission: 'branches'},
             {
                 title: "Справочники", icon: "mdi-palette-swatch-variant", children: [
+                    {
+                        title: 'Адреса доставки',
+                        icon: 'mdi-truck-delivery-outline',
+                        to: '/delivery-addresses',
+                        permission: 'delivery_address'
+                    },
                     {title: 'Материалы', icon: 'mdi-box-cutter', to: '/materials', permission: 'materials'},
                     {
                         title: 'Производители',
