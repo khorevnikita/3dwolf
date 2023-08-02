@@ -123,6 +123,7 @@ class User extends Authenticatable
             'newsletters' => in_array('newsletters', $permission),
             'tasks' => in_array('tasks', $permission),
             'branches' => in_array('branches', $permission),
+            'settings' => in_array('settings', $permission),
         ]);
     }
 

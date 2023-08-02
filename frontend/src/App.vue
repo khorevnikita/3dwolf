@@ -39,8 +39,9 @@
                 </v-list-item-content>
               </v-list-item>
             </template>
-            <v-list-item v-if="show(child.permission)" class="ml-3" :to="child.to" :key="child.title"
-                         v-for="(child,j) in item.children" link>
+            <v-list-item
+                v-if="show(child.permission)" class="ml-3" :to="child.to" :key="child.title"
+                v-for="(child,j) in item.children" link>
               <v-list-item-icon>
                 <v-icon>{{ child.icon }}</v-icon>
               </v-list-item-icon>

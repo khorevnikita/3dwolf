@@ -27,7 +27,7 @@ use App\Http\Controllers\RegularPaymentController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\TaskController;
 use \App\Http\Controllers\TelegramController;
-
+use App\Http\Controllers\SettingsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -76,6 +76,8 @@ Route::middleware('moderator')->group(function () {
         'tasks' => TaskController::class,
     ]);
 
+    Route::get("settings", [SettingsController::class, 'get']);
+    Route::post("settings", [SettingsController::class, 'set']);
     Route::get("tasks-schedule", [TaskController::class, 'schedule']);
     Route::prefix('tasks')->group(function () {
         Route::post('notify', [TaskController::class, 'notifyAll']);

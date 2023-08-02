@@ -146,6 +146,11 @@ const routes: Array<RouteConfig> = [
         name: 'tasksDay',
         component: () => import('../views/TasksDayView.vue'),
     },
+    {
+        path: '/settings',
+        name: 'settings',
+        component: () => import('../views/Settings.vue'),
+    },
 ]
 
 const router = new VueRouter({
@@ -165,8 +170,6 @@ router.beforeEach(async (to, from, next) => {
 
     const apiToken = !!store.getters.jwt;
     const guestRoute = to.matched.some(record => record.meta.guest);
-
-    console.log(to.path, apiToken, guestRoute)
 
     if (guestRoute && !apiToken) {
         next();

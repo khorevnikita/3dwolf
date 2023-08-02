@@ -65,6 +65,7 @@ export default {
         {title: 'Сметы', type: 'estimates'},
         {title: 'Рассылки', type: 'newsletters'},
         {title: 'Задачи', type: 'tasks'},
+        {title: 'Настройки', type: 'settings'},
       ],
     }
   },

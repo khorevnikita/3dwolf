@@ -36,7 +36,7 @@
           class="elevation-1 mt-3"
       >
         <template v-slot:[`item.time`]="{item}">
-          {{ moment(item.datetime).format("HH:mm") }}
+          {{ moment.utc(item.datetime).local().format("HH:mm") }}
         </template>
         <template v-slot:[`item.user`]="{item}">
           {{ item.user ? [item.user.name, item.user.surname].join(" ") : '-' }}

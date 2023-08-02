@@ -5,9 +5,8 @@
         v-model="date"
         :error="error"
     />
-    <v-text-field
+    <TimePicker
         v-model="time"
-        v-mask="'##:##'"
         label="Время"
     />
   </div>
@@ -16,10 +15,11 @@
 <script>
 import moment from "moment";
 import DatePicker from "@/components/Forms/DatePicker";
+import TimePicker from "@/components/Forms/TimePicker";
 
 export default {
   name: "DateTimePicker",
-  components: {DatePicker},
+  components: {TimePicker, DatePicker},
   props: ['value', 'error', 'label'],
   data() {
     return {
@@ -32,10 +32,9 @@ export default {
     this.parseInput();
   },
   watch: {
-    value() {
+    /*value() {
       this.input = this.value;
-      //this.parseInput();
-    },
+    },*/
     time() {
       this.collectInput();
     },
@@ -43,14 +42,14 @@ export default {
       this.collectInput();
     },
     input() {
-      this.$emit("input", moment(this.input).format());
+      this.$emit("input", moment(this.input).format("YYYY-MM-DD HH:mm"));
     }
   },
   methods: {
     parseInput() {
       if (this.input && moment(this.input).isValid()) {
-        this.date = moment(this.input).format("YYYY-MM-DD");
-        this.time = moment(this.input).format("HH:mm");
+        this.date = moment.utc(this.input).local().format("YYYY-MM-DD");
+        this.time = moment.utc(this.input).local().format("HH:mm");
       }
     },
     collectInput() {

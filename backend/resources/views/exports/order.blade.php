@@ -77,11 +77,11 @@
             @endif
         </td>
         <td class="text-right" colspan="3">
-            <b>3D WOLF</b><br/>
+            <b>{{$settings['brand_name']}}</b><br/>
             Печать, моделирование <br/>
-            +7 499 133-1423 <br/>
-            https://3dwolf.ru <br/>
-            co@3dwolf.ru
+            {{$settings['phone']}} <br/>
+            {{$settings['website']}} <br/>
+            {{$settings['email']}}
         </td>
     </tr>
     <tr>
