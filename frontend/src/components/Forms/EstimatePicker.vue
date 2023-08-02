@@ -11,11 +11,16 @@
       :error-count="1"
       :error="!!error"
       :filter="()=>true"
-  />
+  >
+    <template #item="{item}">
+      {{ item.name }} - {{ moment(item.date).format("DD.MM.YYYY") }}
+    </template>
+  </v-autocomplete>
 </template>
 
 <script>
 import axios from "@/plugins/axios";
+import moment from "moment";
 
 export default {
   name: "EstimatePicker",
@@ -26,6 +31,7 @@ export default {
       estimates: [],
       loading: false,
       search: '',
+      moment: moment,
     }
   },
   watch: {
@@ -44,7 +50,7 @@ export default {
     getItems() {
       if (this.loading) return;
       this.loading = true;
-      axios.get(`estimates?search=${this.searchPart ? this.searchPart : ''}&field=${this.input ? this.input : ''}`)
+      axios.get(`estimates?search=${this.searchPart ? this.searchPart : ''}&sort_desc=1&field=${this.input ? this.input : ''}`)
           .then(body => {
             this.estimates = body.estimates;
             this.loading = false;
