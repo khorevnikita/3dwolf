@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use chillerlan\QRCode\QRCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -129,9 +130,11 @@ class Order extends Model
     public function savePDF(): string
     {
         $fileName = "order_$this->id.pdf";
+        $settings = DB::table("settings")->first();
         $pdf = Pdf::loadView('exports.order', [
             'order' => $this,
             'customer' => $this->customer,
+            'settings' => (array)$settings
         ])
             ->setPaper('a4', 'landscape');
         $pdf->save($fileName, 'public');
