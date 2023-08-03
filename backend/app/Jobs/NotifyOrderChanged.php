@@ -96,6 +96,7 @@ class NotifyOrderChanged implements ShouldQueue
             return;
         }
 
+        $html = str_replace("\n", "<br/>", $html);
         $html = $this->fillTags($html);
         $file = null;
         if ($this->attachPDF) {
