@@ -68,15 +68,15 @@
 <table>
     <tbody>
     <tr>
-        <td colspan="18">
-            <img alt="logo" src="{{storage_path('app/public/logo.png')}}"/>
+        <td>
+            <img alt="logo" src="{{storage_path('app/public/logo.png')}}" style="height: 60px"/>
         </td>
-        <td colspan="3">
+        <td class="text-right">
             @if($order->qr)
-                <img src="{{$order->qr}}" style="width: 100px;height: 100px"/>
+                <img src="{{$order->qr}}" style="height: 60px;margin-left: auto" alt="qr"/>
             @endif
         </td>
-        <td class="text-right" colspan="3">
+        <td style="width:180px" class="text-right">
             <b>{{$settings['brand_name']}}</b><br/>
             Печать, моделирование <br/>
             {{$settings['phone']}} <br/>
@@ -84,6 +84,10 @@
             {{$settings['email']}}
         </td>
     </tr>
+    </tbody>
+</table>
+<table>
+    <tbody>
     <tr>
         <td colspan="24">&nbsp;</td>
     </tr>
@@ -100,35 +104,36 @@
     </tr>
     <tr>
         <td></td>
-        <td>
+        <td style="width: 100px">
             <b>Заказчик</b>
         </td>
-        <td colspan="15"></td>
-        <td colspan="4">
+        <td style="width: 100%"></td>
+        <td style="width: 100%;"></td>
+        <td style="width: 100px">
             <b>Дата заказа</b>
         </td>
-        <td>{{$order->date?\Carbon\Carbon::parse($order->date)->format("d.m.Y"):'-'}}</td>
+        <td style="width: 120px">{{$order->date?\Carbon\Carbon::parse($order->date)->format("d.m.Y"):'-'}}</td>
     </tr>
 
     <tr>
         <td></td>
         <td>ФИО</td>
-        <td colspan="8">{{$customer->surname}} {{$customer->name}} {{$customer->father_name}}</td>
-        <td colspan="7"></td>
-        <td colspan="4">
+        <td>{{$customer->surname}} {{$customer->name}} {{$customer->father_name}}</td>
+        <td style="width: 100%;"></td>
+        <td>
             <b>Дедлайн заказа</b>
         </td>
-        <td>{{$order->deadline?\Carbon\Carbon::parse($order->deadline)->format("d.m.Y"):''}}</td>
+        <td style="width: 120px">{{$order->deadline?\Carbon\Carbon::parse($order->deadline)->format("d.m.Y"):''}}</td>
     </tr>
     <tr>
         <td></td>
         <td>Телефон</td>
-        <td colspan="11">{{$order->phone}}</td>
-        <td colspan="4"></td>
-        <td colspan="4">
+        <td>{{$order->phone}}</td>
+        <td style="width: 100%"></td>
+        <td>
             <b>КАНАЛ</b>
         </td>
-        <td>{{$customer->source==='site'?'САЙТ':($customer->source==='avito'?'Авито':'-')}}</td>
+        <td style="width: 120px">{{$customer->source==='site'?'САЙТ':($customer->source==='avito'?'Авито':'-')}}</td>
     </tr>
     <tr>
         <td></td>
@@ -144,8 +149,8 @@
     </tr>
     <tr>
         <td></td>
-        <td>Адрес доставки</td>
-        <td>
+        <td style="vertical-align: baseline;">Адрес доставки</td>
+        <td style="white-space: break-spaces" >
             <b>{{$order->delivery_address}}</b>
         </td>
         <td colspan="18"></td>
