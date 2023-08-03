@@ -150,7 +150,7 @@
     <tr>
         <td></td>
         <td style="vertical-align: baseline;">Адрес доставки</td>
-        <td style="white-space: break-spaces">
+        <td style="white-space: break-spaces" >
             <b>{{$order->delivery_address}}</b>
         </td>
         <td colspan="18"></td>
@@ -188,7 +188,8 @@
             <td class="text-center">{{$line->part?->material?->name}}</td>
             <td>
                 @if($line->part)
-                    {{$line->part->color}} ({{implode(", ",[$line->part->prod_number,$line->part->inv_number])}})
+                    {{$line->part->color}} ({{$line->part->prod_number}})
+                    <div style="font-size: 0.8em">{{$line->part->inv_number}}</div>
                 @endif
             </td>
             <td class="text-center" colspan="1">{{$line->count}}</td>
