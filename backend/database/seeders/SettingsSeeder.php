@@ -32,7 +32,7 @@ class SettingsSeeder extends Seeder
                     "phone" => "+7 (499) 113-1423",
                     "email" => "co@3dwolf.ru",
                     "website" => "https://3dwolf.ru",
-                    "notification_time" => "0 5 * * *",
+                    "notification_time" => "08:00",
                 ]);
         }
     }

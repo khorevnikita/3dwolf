@@ -6,9 +6,10 @@
         <div class="text-h6 mb-2 mb-md-0">Задачи</div>
         <v-spacer/>
         <div>
-          <v-btn small @click="notifyAll()" color="primary" :disabled="loading" class="mr-3">Разослать уведомления
+          <v-btn small @click="notifyAll()" color="primary" :disabled="loading" class="mr-3 mb-2 mb-md-0">
+            Разослать уведомления
           </v-btn>
-          <v-btn small @click="create()" color="primary">Создать</v-btn>
+          <v-btn small @click="create()" color="primary" class="mb-2 mb-md-0">Создать</v-btn>
         </div>
       </div>
     </v-col>
@@ -37,7 +38,7 @@
           class="elevation-1 mt-3"
       >
         <template v-slot:[`item.time`]="{item}">
-          {{ moment.utc(item.datetime).local().format("HH:mm") }}
+          {{ moment(item.datetime).format("HH:mm") }}
         </template>
         <template v-slot:[`item.users`]="{item}">
           {{ item.users.map(u => `${u.name} ${u.surname}`).join(", ") }}

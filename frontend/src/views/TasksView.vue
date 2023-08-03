@@ -7,54 +7,27 @@
         <v-btn small @click="create()" color="primary">Создать</v-btn>
       </div>
     </v-col>
-    <!--<v-col cols="12">
-      <v-card>
-        <v-card-title>Фильтр</v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col cols="12" md="4">
-              <v-text-field
-                  label="Поиск"
-                  hide-details
-                  v-model="query.search"
-              />
-            </v-col>
-          </v-row>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" @click="replaceRoute">Найти</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>-->
-    <v-col cols="12">
-      <v-simple-table>
-        <template v-slot:default>
-          <thead>
-          <tr>
-            <th class="text-left">
-              Дата
-            </th>
-            <th class="text-left">
-              Задачи
-            </th>
-            <th class="text-left">
-            </th>
-          </tr>
-          </thead>
-          <tbody>
 
-          <tr v-for="(item,i) in items" :key="i">
-            <td> {{ moment(item.date).format("DD.MM.YYYY") }}
-            <v-icon v-if="isToday(item.date)" small color="primary">mdi-circle</v-icon>
-            </td>
-            <td>{{ item.completed_count }}/{{ item.total_count }}</td>
-            <td>
-              <v-btn small color="primary" :to="`/tasks/${item.date}`">Открыть список</v-btn>
-            </td>
-          </tr>
-          </tbody>
+    <v-col cols="12">
+      <v-data-table
+          :headers="headers"
+          :items="items"
+          :options.sync="options"
+          :server-items-length="totalItems"
+          :loading="loading"
+          class="elevation-1 mt-3"
+      >
+        <template v-slot:[`item.date`]="{item}">
+          {{ moment(item.date).format("DD.MM.YYYY") }}
+          <v-icon v-if="isToday(item.date)" small color="primary">mdi-circle</v-icon>
         </template>
-      </v-simple-table>
+        <template v-slot:[`item.count`]="{item}">
+          {{ item.completed_count }}/{{ item.total_count }}
+        </template>
+        <template v-slot:[`item.actions`]="{item}">
+          <v-btn small color="primary" :to="`/tasks/${item.date}`">Открыть список</v-btn>
+        </template>
+      </v-data-table>
     </v-col>
 
     <v-dialog v-model="editDialog" max-width="500">
