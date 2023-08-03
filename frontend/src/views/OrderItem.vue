@@ -58,7 +58,7 @@
             </template>
             <template v-slot:[`item.part_id`]="{item}">
               {{ item.part ? `${item.part.material.name}, ${item.part.color} (${item.part.prod_number})` : '-' }}
-              <div style="font-size: 0.8em">{{item.part.inv_number}}</div>
+              <div style="font-size: 0.8em" v-if="item.part">{{item.part.inv_number}}</div>
             </template>
             <template v-slot:[`item.price`]="{item}">
               {{ formatPrice(item.price) }}
