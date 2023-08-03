@@ -24,7 +24,7 @@ import axios from "@/plugins/axios";
 
 export default {
   name: "DeliveryInput",
-  props: ['value', 'error'],
+  props: ['value', 'error','selectedId'],
   data() {
     return {
       input: this.value,
@@ -54,8 +54,8 @@ export default {
       axios.get(`delivery-addresses`).then(({deliveryAddresses}) => {
         this.deliveryAddresses = deliveryAddresses;
         this.$nextTick(() => {
-          if (this.input) {
-            const selected = this.deliveryAddresses.find(a => a.text === this.input);
+          if (this.selectedId) {
+            const selected = this.deliveryAddresses.find(a => a.id === this.selectedId);
             this.deliveryAddress = selected ? selected : this.emptyAddress
           }
         })
@@ -63,7 +63,10 @@ export default {
     },
     onSelectAddress() {
       if (this.deliveryAddress) {
-        this.input = this.deliveryAddress.text;
+        this.$emit("onAddressId", this.deliveryAddress.id);
+        if (this.deliveryAddress.text) {
+          this.input = this.deliveryAddress.text;
+        }
       }
     }
   }

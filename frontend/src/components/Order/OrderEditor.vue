@@ -54,6 +54,8 @@
       <DeliveryInput
           v-model="model.delivery_address"
           :error="errors.delivery_address"
+          @onAddressId="id=>model.delivery_address_id=id"
+          :selectedId="model.delivery_address_id"
       />
       <v-text-field
           label="Трек-номер"
