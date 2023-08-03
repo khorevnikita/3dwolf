@@ -24,7 +24,8 @@ class EstimateRequest extends FormRequest
     {
         $modelId = request()->route('estimate')?->id ?? 0;
         return [
-            'name' => ['required', Rule::unique('estimates', 'name')->ignore($modelId)]
+            'name' => ['required', Rule::unique('estimates', 'name')->ignore($modelId)],
+            'date' => 'required'
         ];
     }
 }

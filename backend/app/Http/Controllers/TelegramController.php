@@ -14,6 +14,9 @@ class TelegramController extends Controller
         Log::info("TG CALLBACK", $request->all());
         $message = $request->get("message");
         $tgUser = $message['from'];
+        if (!isset($message['text'])) {
+            return;
+        }
         $text = $message['text'];
         if ($text[0] == "/") {
             $command = explode(" ", $text);
@@ -23,7 +26,7 @@ class TelegramController extends Controller
 
                     User::query()->where("id", $uid)->update([
                         'tg_channel_id' => $tgUser['id'],
-                        'tg_username' => $tgUser['username']??$tgUser['id'],
+                        'tg_username' => $tgUser['username'] ?? $tgUser['id'],
                     ]);
 
                     Telegram::request("sendMessage", [

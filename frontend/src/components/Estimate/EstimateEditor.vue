@@ -12,7 +12,7 @@
 
       <DatePicker
           label="Дата"
-          :return-value.sync="model.date"
+          v-model="model.date"
           :error="errors.date"
       />
     </v-card-text>

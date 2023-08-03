@@ -15,6 +15,9 @@
           readonly
           v-bind="attrs"
           v-on="on"
+          :error="!!error"
+          :error-messages="error"
+          :error-count="1"
       ></v-text-field>
     </template>
     <v-date-picker
