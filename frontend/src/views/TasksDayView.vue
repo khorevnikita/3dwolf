@@ -6,7 +6,8 @@
         <div class="text-h6 mb-2 mb-md-0">Задачи</div>
         <v-spacer/>
         <div>
-          <v-btn small @click="notifyAll()" color="primary" :disabled="loading" class="mr-3">Разослать уведомления</v-btn>
+          <v-btn small @click="notifyAll()" color="primary" :disabled="loading" class="mr-3">Разослать уведомления
+          </v-btn>
           <v-btn small @click="create()" color="primary">Создать</v-btn>
         </div>
       </div>
@@ -38,8 +39,8 @@
         <template v-slot:[`item.time`]="{item}">
           {{ moment.utc(item.datetime).local().format("HH:mm") }}
         </template>
-        <template v-slot:[`item.user`]="{item}">
-          {{ item.user ? [item.user.name, item.user.surname].join(" ") : '-' }}
+        <template v-slot:[`item.users`]="{item}">
+          {{ item.users.map(u => `${u.name} ${u.surname}`).join(", ") }}
         </template>
         <template v-slot:[`item.description`]="{item}">
           <div style="white-space: break-spaces">{{ item.description }}</div>
@@ -122,7 +123,7 @@ export default {
         {text: "Время", value: "time", sortable: false},
         {text: "Название", value: "name", sortable: false},
         {text: "Описание", value: "description", sortable: false},
-        {text: "Ответственный", value: "user", sortable: false},
+        {text: "Ответственне", value: "users", sortable: false},
         {text: "Статус", value: "status", sortable: false},
         {text: "", value: "actions", sortable: false},
       ],

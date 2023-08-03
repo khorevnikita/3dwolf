@@ -50,6 +50,30 @@ export default new Vuex.Store({
         user: undefined as any,
         attachedCustomer: undefined,
         detachedCustomer: undefined,
+
+        accessLevels: [
+            {key: 0, value: "Клиент"},
+            {key: 1, value: "Сотрудник"},
+            {key: 2, value: "Администратор"},
+        ],
+        permissionTypes: [
+            {title: 'Сотрудники', type: 'users'},
+            {title: 'Филиалы', type: 'branches'},
+            {title: 'Клиенты', type: 'customers'},
+            {title: 'Материалы', type: 'materials'},
+            {title: 'Производители', type: 'manufacturers'},
+            {title: 'Склад', type: 'parts'},
+            {title: 'Счета', type: 'accounts'},
+            {title: 'Наряд-заказы', type: 'orders'},
+            {title: 'Адреса доставки', type: 'delivery_address'},
+            {title: 'Договора', type: 'contracts'},
+            {title: 'Деньги', type: 'payments'},
+            {title: 'Рег. платежи', type: 'regular_payments'},
+            {title: 'Сметы', type: 'estimates'},
+            {title: 'Рассылки', type: 'newsletters'},
+            {title: 'Задачи', type: 'tasks'},
+            {title: 'Настройки', type: 'settings'},
+        ],
     },
     getters: {
         jwt: state => state.jwt,
@@ -62,8 +86,10 @@ export default new Vuex.Store({
             return state.routes
         },
         isModerator: state => {
-            return state.user && !state.user.customer_id
-        }
+            return state.user && state.user.access_level > 0;
+        },
+        accessLevels: state => state.accessLevels,
+        permissionTypes: state => state.permissionTypes,
     },
     mutations: {
         setToken(state, token) {

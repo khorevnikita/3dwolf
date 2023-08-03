@@ -1,7 +1,7 @@
 <template>
   <v-autocomplete
       label="Пользователь"
-      v-model="user_id"
+      v-model="input"
       :items="users"
       :loading="isLoading"
       :search-input.sync="search"
@@ -13,6 +13,7 @@
       :filter="()=>true"
       :dense="dense"
       :hide-details="dense"
+      :multiple="multiple"
   >
     <template #item="{item}">
       {{ item.name }} {{ item.surname }}
@@ -28,10 +29,10 @@ import axios from "@/plugins/axios";
 
 export default {
   name: "UserPicker",
-  props: ['value', 'error', 'dense'],
+  props: ['value', 'error', 'dense','multiple'],
   data() {
     return {
-      user_id: Number(this.value),
+      input: this.value,
       users: [],
       isLoading: false,
       search: ''
@@ -42,11 +43,11 @@ export default {
       if (!newV) return;
       this.getUsers()
     },
-    user_id: function (userId) {
-      this.$emit('input', userId);
+    input: function (ids) {
+      this.$emit('input', ids);
     },
     value() {
-      this.user_id = Number(this.value);
+      this.input = this.value;
     }
   },
   created() {

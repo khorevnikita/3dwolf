@@ -22,9 +22,10 @@ class TaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=>'required',
-            'datetime'=>'required|date',
-            'user_id'=>'required|integer|exists:users,id'
+            "name" => 'required',
+            'datetime' => 'required|date',
+            'users_id' => 'array|min:1',
+            'users_id.*' => 'required|integer|exists:users,id'
         ];
     }
 }

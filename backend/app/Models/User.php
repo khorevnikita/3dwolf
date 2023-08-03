@@ -29,6 +29,7 @@ class User extends Authenticatable
         'customer_id',
         'tg_username',
         'tg_channel_id',
+        'access_level',
     ];
 
     /**
@@ -52,6 +53,12 @@ class User extends Authenticatable
 
     protected $appends = ['permission'];
 
+    const ACCESS = [
+        "ADMIN" => 2,
+        "EMPLOYEE" => 1,
+        "CUSTOMER" => 0
+    ];
+
     public function payments()
     {
         return $this->hasMany(Payment::class);
@@ -69,7 +76,7 @@ class User extends Authenticatable
 
     public function tasks()
     {
-        return $this->hasMany(Task::class);
+        return $this->belongsToMany(Task::class);
     }
 
     public function scopeSearch($q, $search)

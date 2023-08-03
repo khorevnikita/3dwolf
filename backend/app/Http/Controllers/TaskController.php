@@ -19,8 +19,8 @@ class TaskController extends Controller
     public function schedule(Request $request): JsonResponse
     {
         list($page, $skip, $take) = Paginator::get($request);
-        $tasks = DB::table("tasks")
-            ->selectRaw("DATE(datetime) as date, count(id) as total_count,SUM(case when completed = 1 then 1 else 0 end) as completed_count")
+
+        $tasks = Task::query()->selectRaw("DATE(datetime) as date, count(id) as total_count,SUM(case when completed = 1 then 1 else 0 end) as completed_count")
             ->groupBy("date")
             ->orderBy("date", "desc")
             ->skip($skip)
@@ -41,9 +41,11 @@ class TaskController extends Controller
 
         $tasks = Task::query()->forDate($request->get("date"));
         if ($uid = $request->get("user_id")) {
-            $tasks = $tasks->where("user_id", $uid);
+            $tasks = $tasks->whereHas("users", function ($q) use ($uid) {
+                $q->where("users.id", $uid);
+            });
         }
-        $tasks = $tasks->orderBy('datetime')->with("user")->get();
+        $tasks = $tasks->orderBy('datetime')->with("users")->get();
 
         return $this->resourceListResponse('tasks', $tasks, count($tasks), 1);
     }
@@ -63,6 +65,10 @@ class TaskController extends Controller
     {
         $task = new Task($request->all());
         $task->save();
+
+        if ($uids = $request->get("users_id")) {
+            $task->users()->attach($uids);
+        }
 
         return $this->resourceItemResponse('task', $task);
     }
@@ -90,7 +96,9 @@ class TaskController extends Controller
     {
         $task->fill($request->all());
         $task->save();
-
+        if ($uids = $request->get("users_id")) {
+            $task->users()->sync($uids);
+        }
         return $this->resourceItemResponse('task', $task);
     }
 

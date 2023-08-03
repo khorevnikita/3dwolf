@@ -23,8 +23,9 @@
       />
       <UserPicker
           lang="Ответственный"
-          v-model="model.user_id"
-          :error="errors.user_id"
+          v-model="users_id"
+          :error="errors.users_id"
+          :multiple="true"
 
       />
     </v-card-text>
@@ -50,13 +51,15 @@ export default {
     return {
       model: this.value,
       modelName: 'task',
-      errors: {}
+      errors: {},
+      users_id: []
     }
   },
   created() {
     if (!this.model.datetime && this.day) {
       this.model.datetime = this.day;
     }
+    this.users_id = this.model.users.map(u => u.id);
   },
   methods: {
     save() {
@@ -68,7 +71,10 @@ export default {
       }
     },
     store() {
-      axios.post(`${this.modelName}s`, this.model).then(body => {
+      axios.post(`${this.modelName}s`, {
+        ...this.model,
+        users_id: this.users_id
+      }).then(body => {
         this.$emit("created", body[this.modelName]);
         this.$emit("close");
       }).catch(err => {
@@ -76,7 +82,10 @@ export default {
       })
     },
     update() {
-      axios.put(`${this.modelName}s/${this.model.id}`, this.model).then(body => {
+      axios.put(`${this.modelName}s/${this.model.id}`, {
+        ...this.model,
+        users_id: this.users_id
+      }).then(body => {
         this.$emit("updated", body[this.modelName]);
         this.$emit("close");
       }).catch(err => {

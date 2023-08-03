@@ -38,7 +38,9 @@
         <template v-slot:[`item.balance`]="{item}">
           {{ formatPrice(item.balance) }}
         </template>
-
+        <template v-slot:[`item.access_level`]="{item}">
+          {{ getAccess(item.access_level) }}
+        </template>
         <template v-slot:[`item.actions`]="{item}">
           <v-btn color="warning" icon @click="edit(item)">
             <v-icon>mdi-pencil</v-icon>
@@ -66,6 +68,7 @@
 <script>
 import UserEditor from "@/components/User/UserEditor";
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
+import {mapGetters} from "vuex";
 
 export default {
   name: "UsersView",
@@ -74,7 +77,8 @@ export default {
   data() {
     return {
       headers: [
-        {text: "ID", value: "id", sortable: false},
+        //{text: "ID", value: "id", sortable: false},
+        {text: "Доступ", value: "access_level", sortable: false},
         {text: "Фамилия", value: "surname", sortable: false},
         {text: "Имя", value: "name", sortable: false},
         {text: "E-mail", value: "email", sortable: false},
@@ -86,6 +90,14 @@ export default {
       deleteSwalTitle: `Безвозвратно удалить пользователя?`,
     }
   },
+  computed:{
+    ...mapGetters(['accessLevels'])
+  },
+  methods: {
+    getAccess(level) {
+      return this.accessLevels.find(l=>l.key===level)?.value
+    }
+  }
 }
 </script>
 

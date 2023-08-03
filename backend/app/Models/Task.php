@@ -8,20 +8,41 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Task extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'datetime',
+        'datetime',
         'description', 'name',
         'completed', 'notified',
     ];
 
-    public function user()
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
     {
-        return $this->belongsTo(User::class);
+        parent::boot();
+
+        $user = auth("sanctum")->user();
+        static::addGlobalScope('visible', function (Builder $builder) use ($user) {
+            if ($user->access_level !== User::ACCESS["ADMIN"]) {
+                $builder->whereHas('users', function (Builder $q) use ($user) {
+                    $q->where("users.id", "=", $user->id);
+                });
+            }
+        });
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
     }
 
     public function setDatetimeAttribute($v)
@@ -44,28 +65,31 @@ class Task extends Model
 
     public function sendNotification()
     {
-        $user = $this->user;
-        $name = $this->name;
-        $time = Carbon::parse($this->datetime)->format("H:i");
-        $text = "$name в $time";
+        $task = $this;
+        $this->users()->get()->each(function (User $user) use ($task) {
+            $name = $task->name;
+            $time = Carbon::parse($task->datetime)->format("H:i");
+            $text = "$name в $time";
 
-        if ($user->tg_channel_id) {
-            Telegram::request("sendMessage", [
-                "chat_id" => $user->tg_channel_id,
-                "text" => $text,
-            ]);
-        } else {
-            Mail::to($user->email)->queue(new TaskNotification($text));
-        }
+            if ($user->tg_channel_id) {
+                Telegram::request("sendMessage", [
+                    "chat_id" => $user->tg_channel_id,
+                    "text" => $text,
+                ]);
+            } else {
+                Mail::to($user->email)->queue(new TaskNotification($text));
+            }
+        });
     }
 
     public static function notifyForDay(string $day)
     {
-        $userTasks = Task::query()->forDate($day)->orderBy('datetime')->with("user")->get()->groupBy("user_id");
+        $users = User::query()->whereHas("tasks", function ($q) use ($day) {
+            $q->forDate($day);
+        })->get();
 
-        $userTasks->each(function ($userTasks) {
-            $user = $userTasks->first()?->user;
-
+        $users->each(function (User $user) use ($day) {
+            $userTasks = $user->tasks()->forDate($day)->orderBy('datetime')->get();
             $text = '';
             foreach ($userTasks as $k => $task) {
                 $time = Carbon::parse($task->datetime)->format("H:i");
