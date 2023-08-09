@@ -252,6 +252,7 @@ class OrderController extends Controller
             $lines->each(function (EstimateLine $line) use ($order) {
                 $orderLine = new OrderLine([
                     ...$line->only(['name', 'price', 'count', 'weight', 'print_duration', 'part_id', 'filling']),
+                    'name' => "Печать модели $line->name",
                     'order_id' => $order->id,
                 ]);
                 $orderLine->save();
