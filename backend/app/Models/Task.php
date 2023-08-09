@@ -32,7 +32,7 @@ class Task extends Model
 
         $user = auth("sanctum")->user();
         static::addGlobalScope('visible', function (Builder $builder) use ($user) {
-            if ($user->access_level !== User::ACCESS["ADMIN"]) {
+            if ($user && $user->access_level !== User::ACCESS["ADMIN"]) {
                 $builder->whereHas('users', function (Builder $q) use ($user) {
                     $q->where("users.id", "=", $user->id);
                 });
