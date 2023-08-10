@@ -88,8 +88,14 @@ class Task extends Model
             $q->forDate($day);
         })->get();
 
+        Log::info("notifyForDay", ['users_count' => $users->count()]);
+
         $users->each(function (User $user) use ($day) {
             $userTasks = $user->tasks()->forDate($day)->orderBy('datetime')->get();
+            Log::info("notifyForDay User", [
+                'tasks_count' => $userTasks->count(),
+                'user' => $user->id,
+            ]);
             $text = '';
             foreach ($userTasks as $k => $task) {
                 $time = Carbon::parse($task->datetime)->format("H:i");
