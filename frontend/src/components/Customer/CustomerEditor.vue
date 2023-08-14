@@ -119,6 +119,7 @@
               :error-messages="errors.surname"
               :error-count="1"
               :error="!!errors.surname"
+              @change="parseFullName"
           />
         </v-col>
         <v-col cols="12" md="4">
@@ -289,6 +290,12 @@ export default {
     }
   },
   methods: {
+    parseFullName() {
+      const nameParts = this.model.surname.split(" ");
+      this.model.surname = nameParts[0];
+      this.model.name = nameParts[1];
+      this.model.father_name = nameParts[2];
+    },
     fetchDataByINN() {
       axios.get(`company-by-inn?inn=${this.model.inn}`).then(body => {
         if (body.data.length > 0) {

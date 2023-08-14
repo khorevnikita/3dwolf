@@ -99,7 +99,6 @@ class PartController extends Controller
                 $index = 1;
             } else {
                 $index = (int)str_replace($maskNeedle, "", $lastMaskItem->inv_number) + 1;
-               # var_dump("last index", $maskNeedle, $lastMaskItem->inv_number);
             }
             for ($i = 0; $i < $count; $i++) {
                 $part = new Part($request->all());
