@@ -89,11 +89,17 @@ class PartController extends Controller
 
             $mask = $request->get("inv_number");
             $maskNeedle = str_replace("%", "", $mask);
-            $lastMaskItem = Part::query()->where("inv_number", "like", "%$maskNeedle%")->orderBy("id", "desc")->first();
+            $lastMaskItem = Part::query()
+                ->where("prod_number", "=", $request->get("prod_number"))
+                ->where("inv_number", "like", "%$maskNeedle%")
+                ->orderBy("id", "desc")
+                ->first();
+
             if (!$lastMaskItem) {
                 $index = 1;
             } else {
                 $index = (int)str_replace($maskNeedle, "", $lastMaskItem->inv_number) + 1;
+               # var_dump("last index", $maskNeedle, $lastMaskItem->inv_number);
             }
             for ($i = 0; $i < $count; $i++) {
                 $part = new Part($request->all());

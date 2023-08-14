@@ -53,13 +53,13 @@
                   hide-details
                   multiple
                   :items="[
-              {value:'',text:'Все'},
               {value:'new',text:'Новая'},
               {value:'opened',text:'Вскрытая'},
               {value:'ended',text:'Закончилась'},
           ]"
                   item-value="value"
                   item-text="text"
+                  clearable
               />
             </v-col>
             <v-col cols="12" md="3">
