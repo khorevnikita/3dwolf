@@ -38,7 +38,7 @@
 <body>
 <h1>{{$part->inv_number}}</h1>
 <p>{{$part->prod_number}}</p>
-<p>{{$part->manufacturer?->name}} ({{$part->material?->name}}</p>
-<p>{{$part->color}} {{$part->weight?:0}}гр.)</p>
+<p>{{$part->manufacturer?->name}} ({{$part->material?->name}})</p>
+<p>{{$part->color}} ({{$part->weight?:0}}гр.)</p>
 </body>
 </html>
