@@ -32,7 +32,7 @@ export default {
   props: ['value', 'error', 'dense','multiple'],
   data() {
     return {
-      input: this.value,
+      input: Number(this.value),
       users: [],
       isLoading: false,
       search: ''
@@ -47,7 +47,7 @@ export default {
       this.$emit('input', ids);
     },
     value() {
-      this.input = this.value;
+      this.input = Number(this.value);
     }
   },
   created() {
@@ -57,7 +57,7 @@ export default {
     getUsers() {
       if (this.isLoading) return;
       this.isLoading = true;
-      axios.get(`users?search=${this.search ? this.search : ''}&field=${this.user_id ? this.user_id : ''}`).then(body => {
+      axios.get(`users?search=${this.search ? this.search : ''}&field=${this.input ? this.input : ''}`).then(body => {
         this.users = body.users;
         this.isLoading = false;
       })
