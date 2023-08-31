@@ -29,10 +29,10 @@ import axios from "@/plugins/axios";
 
 export default {
   name: "UserPicker",
-  props: ['value', 'error', 'dense','multiple'],
+  props: ['value', 'error', 'dense', 'multiple'],
   data() {
     return {
-      input: Number(this.value),
+      input: this.multiple ? [] : undefined,
       users: [],
       isLoading: false,
       search: ''
@@ -47,17 +47,27 @@ export default {
       this.$emit('input', ids);
     },
     value() {
-      this.input = Number(this.value);
+      if (JSON.stringify(this.value) !== JSON.stringify(this.input)) {
+        this.fillInput();
+      }
     }
   },
   created() {
+    this.fillInput();
     this.getUsers();
   },
   methods: {
+    fillInput() {
+      if (Array.isArray(this.value)) {
+        this.input = this.multiple ? this.value.map(Number) : Number(this.value[0])
+      } else {
+        this.input = this.multiple ? [Number(this.value)] : Number(this.value);
+      }
+    },
     getUsers() {
       if (this.isLoading) return;
       this.isLoading = true;
-      axios.get(`users?search=${this.search ? this.search : ''}&field=${this.input ? this.input : ''}`).then(body => {
+      axios.get(`users?search=${this.search ? this.search : ''}&field=${this.input ? this.multiple ? this.input.join(',') : this.input : ''}`).then(body => {
         this.users = body.users;
         this.isLoading = false;
       })

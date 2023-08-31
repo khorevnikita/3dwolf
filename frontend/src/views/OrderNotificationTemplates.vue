@@ -33,7 +33,7 @@
       </v-data-table>
     </v-col>
 
-    <v-dialog v-model="editDialog" max-width="700">
+    <v-dialog v-model="editDialog" max-width="700" :retain-focus="false">
       <OrderNotificationTemplateEditDialog
           v-if="editDialog"
           @close="editDialog=false"
