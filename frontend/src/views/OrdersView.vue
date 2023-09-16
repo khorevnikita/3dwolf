@@ -108,7 +108,8 @@
             <td
                 v-bind:class="{'error': ['modeling','printing','processing','shipping','moving','moving_tk'].includes(item.status) &&item.payment_status!=='full_paid'}"
             >
-              {{ paymentStatusLabel(item.payment_status) }}
+              {{ paymentStatusLabel(item.payment_status) }}<br/>
+              {{ formatPrice(item.amount) }}
             </td>
             <td>{{ item.delivery_address }}</td>
             <td>
@@ -180,7 +181,7 @@ export default {
         {text: "Дата", value: "date", sortable: false},
         {text: "Клиент", value: "customer_id", sortable: false},
         {text: "Телефон", value: "phone", sortable: false},
-        {text: "Сумма", value: "amount", sortable: false},
+        //  {text: "Сумма", value: "amount", sortable: false},
         {text: "Дедлайн", value: "deadline", sortable: false},
         {text: "Статус", value: "status", sortable: false},
         {text: "Платёж", value: "payment_status", sortable: false},
