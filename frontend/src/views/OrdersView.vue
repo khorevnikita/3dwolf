@@ -97,7 +97,7 @@
             <td>{{ item.date ? moment(item.date).format("DD.MM.YYYY") : "-" }}</td>
             <td>{{ item.customer ? item.customer.title : '-' }}</td>
             <td>{{ item.phone }}</td>
-            <td>{{ formatPrice(item.amount) }}</td>
+            <!--<td>{{ formatPrice(item.amount) }}</td>-->
             <td>{{ item.deadline ? moment(item.deadline).format("DD.MM.YYYY") : "-" }}</td>
             <td>
               {{ orderStatusLabel(item.status) }}
@@ -106,7 +106,7 @@
               </div>
             </td>
             <td
-                v-bind:class="{'error': ['modeling','printing','processing','shipping','moving','moving_tk'].includes(item.status) &&item.payment_status!=='full_paid'}"
+                v-bind:class="{'error': ['modeling','printing','processing','shipping','moving','moving_tk','completed'].includes(item.status) &&item.payment_status!=='full_paid'}"
             >
               {{ paymentStatusLabel(item.payment_status) }}<br/>
               {{ formatPrice(item.amount) }}
