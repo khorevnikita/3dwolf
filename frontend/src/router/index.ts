@@ -136,7 +136,26 @@ const routes: Array<RouteConfig> = [
         name: 'profile',
         component: () => import('../views/ProfileView.vue'),
     },
-
+    {
+        path: '/tasks',
+        name: 'tasks',
+        component: () => import('../views/TasksView.vue'),
+    },
+    {
+        path: '/tasks/:date',
+        name: 'tasksDay',
+        component: () => import('../views/TasksDayView.vue'),
+    },
+    {
+        path: '/settings',
+        name: 'settings',
+        component: () => import('../views/Settings.vue'),
+    },
+    {
+        path: '/delivery-addresses',
+        name: 'delivery-addresses',
+        component: () => import('../views/DeliveryAddressesView.vue'),
+    },
 ]
 
 const router = new VueRouter({
@@ -157,8 +176,6 @@ router.beforeEach(async (to, from, next) => {
     const apiToken = !!store.getters.jwt;
     const guestRoute = to.matched.some(record => record.meta.guest);
 
-    console.log(to.path, apiToken, guestRoute)
-
     if (guestRoute && !apiToken) {
         next();
     } else if (guestRoute && apiToken) {
@@ -173,7 +190,7 @@ router.beforeEach(async (to, from, next) => {
             store.commit('setUser', user)
         }
 
-        const route = store.getters.routes.find((r: any) => r.to.split('/')[1] === to.path.split('/')[1]);
+        const route = store.getters.routes.find((route: any) => findRoute(route, to.path.split('/')[1]));
 
         if (!route?.permission) {
             next()
@@ -186,5 +203,14 @@ router.beforeEach(async (to, from, next) => {
         }
     }
 });
+
+const findRoute = (route: any, needle: string) => {
+    const routeKey = route.to?.split('/')?.[1];
+    if (routeKey === needle) return route;
+    if (route.children) {
+        return route.children.find((child: any) => findRoute(child, needle))
+    }
+    return null;
+}
 
 export default router

@@ -1,7 +1,7 @@
 <template>
   <v-autocomplete
       label="Пользователь"
-      v-model="user_id"
+      v-model="input"
       :items="users"
       :loading="isLoading"
       :search-input.sync="search"
@@ -13,6 +13,7 @@
       :filter="()=>true"
       :dense="dense"
       :hide-details="dense"
+      :multiple="multiple"
   >
     <template #item="{item}">
       {{ item.name }} {{ item.surname }}
@@ -28,10 +29,10 @@ import axios from "@/plugins/axios";
 
 export default {
   name: "UserPicker",
-  props: ['value', 'error', 'dense'],
+  props: ['value', 'error', 'dense', 'multiple'],
   data() {
     return {
-      user_id: Number(this.value),
+      input: this.multiple ? [] : undefined,
       users: [],
       isLoading: false,
       search: ''
@@ -42,21 +43,31 @@ export default {
       if (!newV) return;
       this.getUsers()
     },
-    user_id: function (userId) {
-      this.$emit('input', userId);
+    input: function (ids) {
+      this.$emit('input', ids);
     },
     value() {
-      this.user_id = Number(this.value);
+      if (JSON.stringify(this.value) !== JSON.stringify(this.input)) {
+        this.fillInput();
+      }
     }
   },
   created() {
+    this.fillInput();
     this.getUsers();
   },
   methods: {
+    fillInput() {
+      if (Array.isArray(this.value)) {
+        this.input = this.multiple ? this.value.map(Number) : Number(this.value[0])
+      } else {
+        this.input = this.multiple ? [Number(this.value)] : Number(this.value);
+      }
+    },
     getUsers() {
       if (this.isLoading) return;
       this.isLoading = true;
-      axios.get(`users?search=${this.search ? this.search : ''}&field=${this.user_id ? this.user_id : ''}`).then(body => {
+      axios.get(`users?search=${this.search ? this.search : ''}&field=${this.input ? this.multiple ? this.input.join(',') : this.input : ''}`).then(body => {
         this.users = body.users;
         this.isLoading = false;
       })

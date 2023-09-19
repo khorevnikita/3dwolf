@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use chillerlan\QRCode\QRCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date', 'customer_id', 'branch_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address', 'comment', 'tk_link'];
+    protected $fillable = ['date', 'customer_id', 'branch_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address_id', 'delivery_address', 'comment', 'tk_link'];
 
     const STATUSES = ['new', 'modeling', 'printing', 'processing', 'moving', 'moving_tk', 'shipping', 'completed', 'canceled'];
 
@@ -135,9 +136,11 @@ class Order extends Model
     public function savePDF(): string
     {
         $fileName = "order_$this->id.pdf";
+        $settings = DB::table("settings")->first();
         $pdf = Pdf::loadView('exports.order', [
             'order' => $this,
             'customer' => $this->customer,
+            'settings' => (array)$settings
         ])
             ->setPaper('a4', 'landscape');
         $pdf->save($fileName, 'public');
@@ -152,7 +155,7 @@ class Order extends Model
         $rand = Str::random(12);
         $qrPath = "qr/$rand.png";
         Storage::disk("s3")->put($qrPath, file_get_contents($tmpFile));
-        $this->qr = $qrPath;
+        $this->qr = Storage::disk('s3')->url($qrPath);
         $this->save();
         unlink($tmpFile);
     }

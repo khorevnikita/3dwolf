@@ -88,8 +88,8 @@ export default {
   data() {
     return {
       headers: [
-        {text: "ID", value: "id", sortable: true},
-        {text: "Дата", value: "next_date", sortable: true},
+    //    {text: "ID", value: "id", sortable: false},
+        {text: "След. платёж", value: "next_date", sortable: false},
         {text: "Кому", value: "recipient", sortable: false},
         {text: "Сотрудник", value: "user", sortable: false},
         {text: "Сумма", value: "amount", sortable: false},

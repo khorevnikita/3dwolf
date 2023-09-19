@@ -31,6 +31,14 @@
         v-mask="'+7 (###) ###-##-##'"
     />
     <v-text-field
+        label="Telegram"
+        v-model="model.tg_username"
+        :error-messages="errors.tg_username"
+        :error-count="1"
+        :error="!!errors.tg_username"
+        :append-icon="model.tg_channel_id?'mdi-check':'mdi-radiobox-blank'"
+    />
+    <v-text-field
         v-if="!model.id"
         type="password"
         label="Пароль"

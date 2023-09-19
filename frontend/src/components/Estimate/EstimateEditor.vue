@@ -10,49 +10,11 @@
           :error="!!errors.name"
       />
 
-      <v-menu
-          ref="menu"
-          v-model="menu"
-          :close-on-content-click="false"
-          :return-value.sync="model.date"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-              v-model="model.date"
-              label="Дата"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-              :error-messages="errors.date"
-              :error-count="1"
-              :error="!!errors.date"
-          ></v-text-field>
-        </template>
-        <v-date-picker
-            v-model="model.date"
-            no-title
-            scrollable
-        >
-          <v-spacer></v-spacer>
-          <v-btn
-              text
-              color="primary"
-              @click="menu = false"
-          >
-            Отменить
-          </v-btn>
-          <v-btn
-              text
-              color="primary"
-              @click="$refs.menu.save(model.date)"
-          >
-            OK
-          </v-btn>
-        </v-date-picker>
-      </v-menu>
+      <DatePicker
+          label="Дата"
+          v-model="model.date"
+          :error="errors.date"
+      />
     </v-card-text>
     <v-card-actions>
       <v-btn text @click="$emit('close')">Закрыть</v-btn>
@@ -64,9 +26,11 @@
 
 <script>
 import axios from "@/plugins/axios";
+import DatePicker from "@/components/Forms/DatePicker";
 
 export default {
   name: "EstimateEditor",
+  components: {DatePicker},
   props: ['value'],
   data() {
     return {

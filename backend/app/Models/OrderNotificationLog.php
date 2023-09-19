@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderNotificationLog extends Model
 {
 
-    protected $fillable = ['order_id', 'user_id', 'channel', 'order_status'];
+    protected $fillable = ['order_id', 'user_id', 'channel','attached', 'order_status'];
 
     use HasFactory;
 
@@ -22,13 +22,14 @@ class OrderNotificationLog extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function log(Order $order, string $channel): self
+    public static function log(Order $order, string $channel, bool $attach): self
     {
         $log = new OrderNotificationLog([
             'order_id' => $order->id,
             'user_id' => auth("sanctum")->id(),
             'channel' => $channel,
             'order_status' => $order->status,
+            'attached' => $attach,
         ]);
         $log->save();
         return $log;

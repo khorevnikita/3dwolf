@@ -26,7 +26,7 @@ class AdminSeeder extends Seeder
                 'email'=>'admin@3dwolf.ru',
                 'password'=>Hash::make("123456"),
             ]);
-            $user->is_admin = true;
+            $user->access_level = User::ACCESS["ADMIN"];
             $user->save();
         }
     }

@@ -25,6 +25,11 @@ use App\Http\Controllers\MultipartUploadController;
 use App\Http\Controllers\OrderNotificationLogController;
 use App\Http\Controllers\RegularPaymentController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\TaskController;
+use \App\Http\Controllers\TelegramController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\DeliveryAddressController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +76,18 @@ Route::middleware('moderator')->group(function () {
         'newsletters' => NewsletterController::class,
         'prod-number-masks' => ProdNumberMaskController::class,
         'order-notification-templates' => OrderNotificationTemplateController::class,
+        'tasks' => TaskController::class,
+        'delivery-addresses' => DeliveryAddressController::class,
     ]);
+
+    Route::get("settings", [SettingsController::class, 'get']);
+    Route::post("settings", [SettingsController::class, 'set']);
+    Route::get("tasks-schedule", [TaskController::class, 'schedule']);
+    Route::prefix('tasks')->group(function () {
+        Route::post('notify', [TaskController::class, 'notifyAll']);
+        Route::post('{task}/complete', [TaskController::class, 'complete']);
+        Route::post('{task}/notify', [TaskController::class, 'notify']);
+    });
 
     Route::prefix('money')->group(function () {
         Route::get('statistics', [MoneyController::class, 'getTotalStatistics']);
@@ -112,6 +128,7 @@ Route::middleware('moderator')->group(function () {
         Route::post('{order}/copy', [OrderController::class, 'copy']);
         Route::post('{order}/order-lines/{orderLine}/copy', [OrderLineController::class, 'copy']);
         Route::post('{order}/set-discount', [OrderController::class, 'setDiscount']);
+        Route::post('{order}/fill', [OrderController::class, 'fillFromEstimate']);
     });
 });
 
@@ -128,6 +145,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::prefix('orders')->group(function () {
     Route::get('{order}/qr', [OrderController::class, 'qr']);
+    Route::get('{order}/export-auth', [OrderController::class, 'exportAuth'])->middleware('auth:sanctum');
     Route::get('{order}/export/pdf', [OrderController::class, 'exportPDF']);
     Route::get('{order}/export/xlsx', [OrderController::class, 'exportXlsx']);
     Route::get('{order}/export/test', [OrderController::class, 'testExport']);
@@ -141,3 +159,5 @@ Route::prefix('parts')->group(function () {
     Route::get('{part}/export/auth', [PartController::class, 'exportAuth'])->middleware('auth:sanctum');
     Route::get('{part}/export/sticker', [PartController::class, 'exportSticker']);
 });
+Route::post("tg/callback", [TelegramController::class, 'callback']);
+Route::post("tg/callback", [TelegramController::class, 'callback']);

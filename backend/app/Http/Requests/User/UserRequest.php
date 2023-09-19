@@ -29,7 +29,7 @@ class UserRequest extends FormRequest
             'email' => ['required', 'email', Rule::unique('users')->ignore($modelId)],
             'balance' => ['required_without:customer_id', 'numeric'],
             'password' => $modelId === 0 ? ['required', 'confirmed', 'min:6'] : [],
-
+            'access_level' => ['required', 'integer', 'in:0,1,2']
         ];
     }
 }

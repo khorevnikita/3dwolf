@@ -1,13 +1,15 @@
 <template>
   <v-row class="mx-3 mt-5">
     <v-col cols="12">
-      <div class="d-flex align-items-center">
-        <div class="text-h6">Наряд-заказы</div>
+      <div class="d-flex align-items-center flex-column flex-md-row">
+        <div class="text-h6 mb-2 mb-md-0">Наряд-заказы</div>
         <v-spacer/>
-        <v-btn v-if="isModerator" small to="/order-notification-templates" color="secondary" class="mr-4">Шаблоны
-          уведомлений
-        </v-btn>
-        <v-btn v-if="isModerator" small @click="create()" color="primary">Создать</v-btn>
+        <div>
+          <v-btn v-if="isModerator" small to="/order-notification-templates" color="secondary" class="mr-3">Шаблоны
+            уведомлений
+          </v-btn>
+          <v-btn v-if="isModerator" small @click="create()" color="primary">Создать</v-btn>
+        </div>
       </div>
     </v-col>
     <v-col cols="12">
@@ -95,7 +97,7 @@
             <td>{{ item.date ? moment(item.date).format("DD.MM.YYYY") : "-" }}</td>
             <td>{{ item.customer ? item.customer.title : '-' }}</td>
             <td>{{ item.phone }}</td>
-            <td>{{ formatPrice(item.amount) }}</td>
+            <!--<td>{{ formatPrice(item.amount) }}</td>-->
             <td>{{ item.deadline ? moment(item.deadline).format("DD.MM.YYYY") : "-" }}</td>
             <td>
               {{ orderStatusLabel(item.status) }}
@@ -104,9 +106,10 @@
               </div>
             </td>
             <td
-                v-bind:class="{'error': ['modeling','printing','processing','shipping','moving','moving_tk'].includes(item.status) &&item.payment_status!=='full_paid'}"
+                v-bind:class="{'error': ['modeling','printing','processing','shipping','moving','moving_tk','completed'].includes(item.status) &&item.payment_status!=='full_paid'}"
             >
-              {{ paymentStatusLabel(item.payment_status) }}
+              {{ paymentStatusLabel(item.payment_status) }}<br/>
+              {{ formatPrice(item.amount) }}
             </td>
             <td>{{ item.delivery_address }}</td>
             <td>
@@ -182,7 +185,7 @@ export default {
         {text: "Дата", value: "date", sortable: false},
         {text: "Клиент", value: "customer_id", sortable: false},
         {text: "Телефон", value: "phone", sortable: false},
-        {text: "Сумма", value: "amount", sortable: false},
+        //  {text: "Сумма", value: "amount", sortable: false},
         {text: "Дедлайн", value: "deadline", sortable: false},
         {text: "Статус", value: "status", sortable: false},
         {text: "Платёж", value: "payment_status", sortable: false},

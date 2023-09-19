@@ -37,4 +37,7 @@ return [
         'key' => env("DADATA_KEY"),
         'secret' => env("DADATA_SECRET"),
     ],
+    'tg' => [
+        'key' => env("TELEGRAM_API_TOKEN")
+    ]
 ];

@@ -106,11 +106,11 @@
     <div class="block">
         <img alt="logo" src="{{storage_path('app/public/logo.png')}}"/>
         <div>
-            <b>3D WOLF</b><br/>
+            <b>{{$settings['brand_name']}}</b><br/>
             Печать, моделирование <br/>
-            +7 499 133-1423 <br/>
-            https://3dwolf.ru <br/>
-            co@3dwolf.ru
+            {{$settings['phone']}} <br/>
+            {{$settings['website']}} <br/>
+            {{$settings['email']}}
         </div>
     </div>
 </header>
@@ -127,7 +127,7 @@
         <h1 class="text-center">Договор подряда № {{$contract->number}}</h1>
         <div class="block">
             <div>
-                г. Москва
+                г. {{$settings['city']}}
             </div>
             <div class="text-right">
                 "{{$date['day']}}" {{$date['month']}} {{$date['year']}} г.
@@ -146,8 +146,8 @@
         <div class="block bordered">
             <div class="bold" style="width: 100px">ПОДРЯДЧИК</div>
             <div>
-                Индивидуальный предприниматель Ковыршин Кирилл Анатольевич, действующий на основании ОГРНИП
-                310774602101373 от 21.01.2010 г.
+                {{$settings['legal_full_name']}}, действующий на основании {{$settings['legal_statement']}}
+                {{$settings['ogrn']}}
             </div>
         </div>
 
@@ -202,16 +202,16 @@
         </div>
         <div class="block">
             <div style="width: 50%">
-                ИП Ковыршин К.А.<br/>
-                ОГРНИП 310774602101373 от 21.01.2010 г.<br/>
-                ИНН 771674399316<br/>
-                Адрес:<br/>
+                {{$settings['legal_name']}}<br/>
+                ОГРНИП {{$settings['ogrn']}}<br/>
+                ИНН {{$settings['inn']}}<br/>
+                Адрес: {{$settings['address']}}<br/>
                 Банковские реквизиты:<br/>
-                Р/с 40802810108500012357.<br/>
-                В ТОЧКА ПАО БАНКА "ФК ОТКРЫТИЕ" г Москва.<br/>
-                К/с 30101810845250000999.<br/>
-                БИК 044525999.<br/>
-                Телефон +7 (499) 113-1423<br/>
+                Р/с {{$settings['rs']}}<br/>
+                В {{$settings['bank']}}<br/>
+                К/с {{$settings['ks']}}<br/>
+                БИК {{$settings['bik']}}<br/>
+                Телефон {{$settings['phone']}}<br/>
             </div>
             <div style="width: 50%">
                 {{$customer->full_name}}<br/>
@@ -222,10 +222,10 @@
                 @endif
                 Адрес: {{$customer->address}}<br/>
                 Банковские реквизиты:<br/>
-                Р/с {{$customer->rs}}.<br/>
+                Р/с {{$customer->rs}}<br/>
                 В {{$customer->bank}}<br/>
-                К/с {{$customer->ks}}.<br/>
-                БИК {{$customer->bik}}.<br/>
+                К/с {{$customer->ks}}<br/>
+                БИК {{$customer->bik}}<br/>
                 Телефон {{$customer->phone}}<br/>
             </div>
         </div>

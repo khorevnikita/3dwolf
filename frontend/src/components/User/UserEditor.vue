@@ -15,6 +15,17 @@
           :error="!!errors.balance"
       />
 
+      <v-select
+          label="Доступ"
+          v-model="model.access_level"
+          :error-messages="errors.access_level"
+          :error-count="1"
+          :error="!!errors.access_level"
+          :items="accessLevels"
+          item-value="key"
+          item-text="value"
+      />
+
       <v-list-item-group v-model="model.permission" multiple>
         <v-list-item :value="permType.type" v-for="permType in permissionTypes" :key="permType.type">
           <template v-slot:default="{ active }">
@@ -39,6 +50,7 @@
 <script>
 import axios from "@/plugins/axios";
 import BaseUserForm from "@/components/User/BaseUserForm";
+import {mapGetters} from "vuex";
 
 export default {
   name: "UserEditor",
@@ -49,38 +61,10 @@ export default {
       model: this.value,
       modelName: 'user',
       errors: {},
-
-      permissionTypes: [
-        {title: 'Сотрудники', type: 'users'},
-        {title: 'Филиалы', type: 'branches'},
-        {title: 'Клиенты', type: 'customers'},
-        {title: 'Материалы', type: 'materials'},
-        {title: 'Производители', type: 'manufacturers'},
-        {title: 'Склад', type: 'parts'},
-        {title: 'Счета', type: 'accounts'},
-        {title: 'Наряд-заказы', type: 'orders'},
-        {title: 'Договора', type: 'contracts'},
-        {title: 'Деньги', type: 'payments'},
-        {title: 'Рег. платежи', type: 'regular_payments'},
-        {title: 'Сметы', type: 'estimates'},
-        {title: 'Рассылки', type: 'newsletters'},
-      ],
     }
   },
-  created() {
-    /*if (!this.model.permission) {
-      this.$set(this.model, 'permission', []);
-      this.permissionTypes.forEach(perm => {
-        this.$set(this.model.permission, perm.type, false);
-      })
-    }*/
-  },
-  watch: {
-    model: {
-      handler() {
-        console.log(this.model);
-      }, deep: true
-    }
+  computed: {
+    ...mapGetters(['permissionTypes', 'accessLevels'])
   },
   methods: {
     save() {

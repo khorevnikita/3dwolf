@@ -3,12 +3,15 @@
 namespace App\Console\Commands;
 
 use App\Helpers\Mutator;
+use App\Mail\TaskNotification;
 use App\Models\RegularPayment;
 use App\Models\SMSRU;
+use App\Models\Telegram;
 use App\Models\User;
 use Cron\CronExpression;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class RegularPaymentNotification extends Command
 {
@@ -45,21 +48,30 @@ class RegularPaymentNotification extends Command
                 continue;
             }
 
-            $phones = User::query()->whereNotNull("phone")->whereHas("permission", function ($q) {
+            $recipients = User::query()->whereHas("permission", function ($q) {
                 $q->where("regular_payments", true);
-            })->pluck("phone");
+            })->get();
 
             $msg = "Регулярный платеж $payment->recipient";
-            $phones->each(function (string $phone) use ($msg) {
-                $sms = new SMSRU(config("services.smsru.key"));
-                $post = (object)[
-                    'to' => Mutator::numberToDigits($phone),
-                    'msg' => $msg,
-                    'from' => config("app.name"),
-                    'test' => config("app.env") !== "production",
-                ];
-                $sent = $sms->send_one($post);
-                Log::info("SMS SENT", ['data' => $sent]);
+            $recipients->each(function (User $user) use ($msg) {
+                if ($user->tg_channel_id) {
+                    Telegram::request("sendMessage", [
+                        'chat_id' => $user->tg_channel_id,
+                        'text' => $msg,
+                    ]);
+                } elseif ($user->phone) {
+                    $sms = new SMSRU(config("services.smsru.key"));
+                    $post = (object)[
+                        'to' => Mutator::numberToDigits($user->phone),
+                        'msg' => $msg,
+                        'from' => config("app.name"),
+                        'test' => config("app.env") !== "production",
+                    ];
+                    $sent = $sms->send_one($post);
+                    Log::info("SMS SENT", ['data' => $sent]);
+                } else {
+                    Mail::to($user->email)->queue(new TaskNotification($msg));
+                }
             });
         }
     }

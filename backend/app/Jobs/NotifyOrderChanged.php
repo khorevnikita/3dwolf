@@ -64,7 +64,7 @@ class NotifyOrderChanged implements ShouldQueue
         } else {
             Log::info("CANT NOTIFY: WRONG CHANNEL");
         }
-        OrderNotificationLog::log($this->order, $this->channel);
+        OrderNotificationLog::log($this->order, $this->channel, $this->attachPDF);
     }
 
     protected function notifySMS()
@@ -96,6 +96,7 @@ class NotifyOrderChanged implements ShouldQueue
             return;
         }
 
+        $html = str_replace("\n", "<br/>", $html);
         $html = $this->fillTags($html);
         $file = null;
         if ($this->attachPDF) {

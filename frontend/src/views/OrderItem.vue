@@ -37,6 +37,9 @@
           <div class="d-flex align-items-center">
             <div class="text-h6">Позиции заказов</div>
             <v-spacer/>
+            <v-btn v-if="isModerator" small @click="estimateSelector=true" class="mr-2" color="secondary">Загрузить из
+              сметы
+            </v-btn>
             <v-btn v-if="isModerator" small @click="create()" color="primary">Добавить</v-btn>
           </div>
           <v-data-table
@@ -51,10 +54,11 @@
               {{ items.indexOf(item) + 1 }}
             </template>
             <template v-slot:[`item.name`]="{item}">
-              {{ item.name }} <span v-if="item.filling">({{item.filling}}%)</span>
+              {{ item.name }} <span v-if="item.filling">({{ item.filling }}%)</span>
             </template>
             <template v-slot:[`item.part_id`]="{item}">
               {{ item.part ? `${item.part.material.name}, ${item.part.color} (${item.part.prod_number})` : '-' }}
+              <div style="font-size: 0.8em" v-if="item.part">{{item.part.inv_number}}</div>
             </template>
             <template v-slot:[`item.price`]="{item}">
               {{ formatPrice(item.price) }}
@@ -100,9 +104,9 @@
             </v-col>
           </v-row>
           <div class="text-h6 mt-4 mb-5">
-            Итого: {{ totalAmount }} руб.
+            Итого: {{ formatPrice(totalAmount) }}
             <br/>
-            Итого с учетом скидки: {{ totalAmountAfterDiscount }} руб.
+            Итого с учетом скидки: {{ formatPrice(totalAmountAfterDiscount) }}
             <br/>
             Вес: {{ totalWeight }} <br/>
             Время печати: {{ formatDuration(totalTime) }}
@@ -118,6 +122,14 @@
           @created="getItems"
           @updated="onUpdated"
           :modal="true"
+      />
+    </v-dialog>
+    <v-dialog v-model="estimateSelector" max-width="700">
+      <EstimateModal
+          v-if="estimateSelector"
+          @selected="getItems()"
+          @close="estimateSelector=false"
+          :order-id="order_id"
       />
     </v-dialog>
   </div>
@@ -136,10 +148,14 @@ import Swal from "sweetalert2-khonik";
 import OrderNotification from "@/components/Order/OrderNotification";
 import {mapGetters} from "vuex";
 import OrderViewer from "@/components/Order/OrderViewer";
+import EstimateModal from "@/components/Order/EstimateModal";
 
 export default {
   name: "OrderItem",
-  components: {OrderViewer, OrderNotification, FilesCard, OrderLineEditor, PaymentCard, CustomerCard, OrderEditor},
+  components: {
+    EstimateModal,
+    OrderViewer, OrderNotification, FilesCard, OrderLineEditor, PaymentCard, CustomerCard, OrderEditor
+  },
   mixins: [ResourceComponentHelper],
   data() {
     return {
@@ -163,6 +179,7 @@ export default {
       resourceApiRoute: `orders/${this.$route.params.id}/order-lines`,
       deleteSwalTitle: `Безвозвратно удалить позицию?`,
       endpoint: process.env.VUE_APP_API_ENDPOINT,
+      estimateSelector: false,
     }
   },
   created() {

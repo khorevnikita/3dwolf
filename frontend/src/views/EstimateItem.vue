@@ -10,6 +10,7 @@
             <th class="text-left">Обозначение</th>
             <th class="text-left">Название</th>
             <th class="text-left">Кол-во</th>
+            <th class="text-left">Катушка</th>
             <th class="text-left">Цена</th>
             <th class="text-left">Итого</th>
             <th class="text-left">Вес</th>
@@ -21,8 +22,13 @@
           <tbody>
           <tr v-for="line in items" :key="line.id">
             <td>{{ line.key }}</td>
-            <td>{{ line.name }}</td>
+            <td>
+              {{ line.name }} {{ line.filling ? `(${line.filling}%)` : '' }}
+            </td>
             <td>{{ line.count }}</td>
+            <td>
+              {{ line.part ? `${line.part.material.name}, ${line.part.color} (${line.part.prod_number})` : '-' }}
+            </td>
             <td>{{ formatPrice(line.price) }}</td>
             <td>{{ formatPrice(line.amount) }}</td>
             <td>{{ line.weight }}</td>
@@ -100,7 +106,7 @@ export default {
       return Math.round(weight * 100) / 100;
     },
     totalTime() {
-      const time = this.items.reduce((acc, item) => acc += Number(item.print_duration), 0);
+      const time = this.items.reduce((acc, item) => acc += Number(item.print_duration) * Number(item.count), 0);
       return Math.round(time * 100) / 100;
     },
   },

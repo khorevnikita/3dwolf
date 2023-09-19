@@ -9,13 +9,18 @@ class EstimateLine extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['key', 'name', 'price', 'count', 'weight', 'print_duration'];
+    protected $fillable = ['key', 'name', 'part_id', 'filling', 'price', 'count', 'weight', 'print_duration'];
 
     protected $appends = ['amount', 'total_weight'];
 
     public function estimate()
     {
         return $this->belongsTo(Estimate::class);
+    }
+
+    public function part()
+    {
+        return $this->belongsTo(Part::class);
     }
 
     public function getAmountAttribute()
@@ -27,5 +32,4 @@ class EstimateLine extends Model
     {
         return round($this->weight * $this->count, 2);
     }
-
 }

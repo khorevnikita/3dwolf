@@ -50,3 +50,17 @@ Artisan::command('reset', function () {
         'password' => \Illuminate\Support\Facades\Hash::make(123456)
     ]);
 })->purpose('Display an inspiring quote');
+
+Artisan::command('qrs', function () {
+    \App\Models\Order::query()->whereNull("qr")->get()->each(function (\App\Models\Order $order) {
+        $order->generateQR();
+    });
+})->purpose('Display an inspiring quote');
+
+Artisan::command('tg:set-webhook', function () {
+    // https://core.telegram.org/bots/api#setwebhook
+    \App\Models\Telegram::request("setWebhook", [
+        "url" => url("api/tg/callback"),
+        "allowed_updates" => ["message"],
+    ]);
+})->purpose('Display an inspiring quote');

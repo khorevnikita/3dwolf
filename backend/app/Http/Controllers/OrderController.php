@@ -7,6 +7,8 @@ use App\Helpers\Paginator;
 use App\Http\Requests\Order\OrderRequest;
 use App\Http\Requests\Order\SetDiscountRequest;
 use App\Models\Branch;
+use App\Models\Estimate;
+use App\Models\EstimateLine;
 use App\Models\Order;
 use App\Models\OrderLine;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -15,6 +17,7 @@ use chillerlan\QRCode\QRCode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -209,9 +212,11 @@ class OrderController extends Controller
         $time = Carbon::now()->format("Y-m-d_H:i:s");
         $filename = "order_$order->id" . "_by_$time.pdf";
 
+        $settings = DB::table("settings")->first();
         $pdf = Pdf::loadView('exports.order', [
             'order' => $order,
             'customer' => $order->customer,
+            'settings' => (array)$settings,
         ])
             ->setPaper('a4', 'landscape');
         return $pdf->download($filename);
@@ -232,5 +237,26 @@ class OrderController extends Controller
         }
         $order->generateQR();
         return $this->resourceItemResponse('url', $order->qr);
+    }
+
+    public function fillFromEstimate(Order $order, Request $request)
+    {
+        $request->validate([
+            'estimate_id' => "required|integer|exists:estimates,id"
+        ]);
+        $lines = EstimateLine::query()
+            ->where("estimate_id", $request->get("estimate_id"))
+            ->get();
+
+        DB::transaction(function () use ($order, $lines) {
+            $lines->each(function (EstimateLine $line) use ($order) {
+                $orderLine = new OrderLine([
+                    ...$line->only(['name', 'price', 'count', 'weight', 'print_duration', 'part_id', 'filling']),
+                    'name' => "Печать модели $line->name",
+                    'order_id' => $order->id,
+                ]);
+                $orderLine->save();
+            });
+        });
     }
 }

@@ -16,7 +16,10 @@
       <v-list>
         <v-list-item v-for="log in logs" :key="log.id">
           <v-list-item-content>
-            <v-list-item-title>{{ orderStatusLabel(log.order_status) }} по {{ log.channel }}</v-list-item-title>
+            <v-list-item-title>
+              {{ orderStatusLabel(log.order_status) }} по {{ log.channel }}
+              <v-icon v-if="log.attached">mdi-file-pdf-box</v-icon>
+            </v-list-item-title>
             <v-list-item-subtitle>
               {{ moment(log.created_at).format('HH:mm DD.MM.YYYY') }}
               от

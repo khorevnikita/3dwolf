@@ -26,7 +26,10 @@ class User extends Authenticatable
         'phone',
         'password',
         'balance',
-        'customer_id'
+        'customer_id',
+        'tg_username',
+        'tg_channel_id',
+        'access_level',
     ];
 
     /**
@@ -50,6 +53,12 @@ class User extends Authenticatable
 
     protected $appends = ['permission'];
 
+    const ACCESS = [
+        "ADMIN" => 2,
+        "EMPLOYEE" => 1,
+        "CUSTOMER" => 0
+    ];
+
     public function payments()
     {
         return $this->hasMany(Payment::class);
@@ -63,6 +72,11 @@ class User extends Authenticatable
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class);
     }
 
     public function scopeSearch($q, $search)
@@ -114,7 +128,10 @@ class User extends Authenticatable
             'regular_payments' => in_array('regular_payments', $permission),
             'estimates' => in_array('estimates', $permission),
             'newsletters' => in_array('newsletters', $permission),
+            'tasks' => in_array('tasks', $permission),
             'branches' => in_array('branches', $permission),
+            'settings' => in_array('settings', $permission),
+            'delivery_address' => in_array('delivery_address', $permission),
         ]);
     }
 
