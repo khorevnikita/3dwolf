@@ -19,7 +19,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date', 'customer_id', 'branch_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address_id', 'delivery_address', 'comment', 'tk_link'];
+    protected $fillable = ['date', 'customer_id', 'branch_id', 'phone', 'amount', 'deadline', 'status', 'payment_status', 'delivery_address_id', 'delivery_address', 'comment', 'tk_link','symbol'];
 
     const STATUSES = ['new', 'modeling', 'printing', 'processing', 'moving', 'moving_tk', 'shipping', 'completed', 'canceled'];
 
@@ -70,6 +70,10 @@ class Order extends Model
     public function files()
     {
         return $this->hasMany(OrderFile::class);
+    }
+
+    public function address(){
+        return $this->belongsTo(DeliveryAddress::class,'delivery_address_id');
     }
 
     public function scopeVisible($q)

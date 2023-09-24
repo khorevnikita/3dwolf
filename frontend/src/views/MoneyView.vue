@@ -174,6 +174,18 @@
         :loading="loading"
         class="elevation-1 mt-3"
     >
+      <template v-slot:[`item.description`]="{item}">
+        <v-chip
+            v-if="item.purpose"
+            :color="item.purpose.color"
+            outlined
+            x-small
+            class="mb-1"
+        >
+          {{ item.purpose.name }}
+        </v-chip>
+        <div>{{ item.description }}</div>
+      </template>
       <template v-slot:[`item.type`]="{item}">
         <v-icon color="success" v-if="item.type === 'income'">mdi-chevron-up</v-icon>
         <v-icon color="error" v-if="item.type === 'expense'">mdi-chevron-down</v-icon>
@@ -189,7 +201,7 @@
       </template>
 
       <template v-slot:[`item.order_id`]="{item}">
-        <router-link v-if="item.order_id" :to="`/orders/${item.order_id}`">Заказ №{{item.order_id}}</router-link>
+        <router-link v-if="item.order_id" :to="`/orders/${item.order_id}`">Заказ №{{ item.order_id }}</router-link>
       </template>
       <template v-slot:[`item.account_id`]="{item}">
         {{ item.source_account ? `${item.source_account.name} ->` : '' }}

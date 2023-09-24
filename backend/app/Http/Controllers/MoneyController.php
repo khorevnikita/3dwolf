@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Part;
 use App\Models\Payment;
+use App\Models\PaymentPurpose;
 use App\Models\RegularPayment;
 use App\Models\User;
 use Carbon\Carbon;
@@ -17,6 +18,29 @@ use Illuminate\Support\Facades\DB;
 
 class MoneyController extends Controller
 {
+    public function getPurposeStatistics(Request $request): JsonResponse
+    {
+        $request->validate([
+            'month' => "required|integer|min:0|max:12",
+            'year' => "required|integer|min:0|max:3000",
+        ]);
+
+        $from = Carbon::create($request->get("year"), $request->get("month")+1)->startOfMonth();
+        $to = Carbon::create($request->get("year"), $request->get("month")+1)->endOfMonth();
+
+        $purposes = PaymentPurpose::query()->withSum('payments', 'amount')
+            ->whereHas("payments", function ($q) use ($from, $to) {
+                $q->where("type", Payment::TYPES["EXPENSE"])
+                    ->where("created_at", ">=", $from)
+                    ->where("created_at", "<", $to);
+            })->get();
+
+        return $this->resourceItemResponse("paymentPurposes", $purposes, [
+            "from" => $from,
+            "to" => $to,
+        ]);
+    }
+
     public function getTotalStatistics(TotalStatistics $request): JsonResponse
     {
         $year = (int)$request->get("year");

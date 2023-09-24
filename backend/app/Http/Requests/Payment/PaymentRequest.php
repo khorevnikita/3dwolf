@@ -30,7 +30,6 @@ class PaymentRequest extends FormRequest
             "paid_at" => "sometimes|date|nullable",
             "amount" => "required|numeric",
             "description" => "sometimes|max:5000",
-
         ];
     }
 }

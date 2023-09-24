@@ -29,6 +29,7 @@ use App\Http\Controllers\TaskController;
 use \App\Http\Controllers\TelegramController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DeliveryAddressController;
+use App\Http\Controllers\PaymentPurposeController;
 
 
 /*
@@ -71,6 +72,7 @@ Route::middleware('moderator')->group(function () {
         'orders.notification-logs' => OrderNotificationLogController::class,
         'contracts' => ContractController::class,
         'users' => UserController::class,
+        'payment-purposes' => PaymentPurposeController::class,
         'payments' => PaymentController::class,
         'regular-payments' => RegularPaymentController::class,
         'newsletters' => NewsletterController::class,
@@ -91,6 +93,7 @@ Route::middleware('moderator')->group(function () {
 
     Route::prefix('money')->group(function () {
         Route::get('statistics', [MoneyController::class, 'getTotalStatistics']);
+        Route::get('purposes', [MoneyController::class, 'getPurposeStatistics']);
     });
 
     Route::prefix('customers/{customer}')->group(function () {
@@ -149,6 +152,7 @@ Route::prefix('orders')->group(function () {
     Route::get('{order}/export/pdf', [OrderController::class, 'exportPDF']);
     Route::get('{order}/export/xlsx', [OrderController::class, 'exportXlsx']);
     Route::get('{order}/export/test', [OrderController::class, 'testExport']);
+    Route::post('{order}/payment-status', [OrderController::class, 'setPaymentStatus']);
 });
 Route::prefix('contracts')->group(function () {
     Route::get('{contract}/export-auth', [ContractController::class, 'exportAuth'])->middleware('auth:sanctum');

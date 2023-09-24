@@ -10,7 +10,7 @@ class Payment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['type', 'user_id', 'order_id', 'account_id', 'source_account_id', 'paid_at', 'amount', 'description'];
+    protected $fillable = ['type', 'user_id', 'order_id', 'account_id', 'source_account_id', 'paid_at', 'amount', 'description','payment_purpose_id'];
 
     const TYPES = [
         'INCOME' => "income",
@@ -54,6 +54,11 @@ class Payment extends Model
     public function sourceAccount()
     {
         return $this->belongsTo(Account::class, 'source_account_id');
+    }
+
+    public function purpose()
+    {
+        return $this->belongsTo(PaymentPurpose::class,'payment_purpose_id');
     }
 
     public function scopeIncome($q)
@@ -165,7 +170,7 @@ class Payment extends Model
     public function onDeleted()
     {
         $model = $this;
-        $dir = in_array($model->type,[Payment::TYPES["INCOME"], Payment::TYPES["EXCHANGE"]]) ? 1 : -1;
+        $dir = in_array($model->type, [Payment::TYPES["INCOME"], Payment::TYPES["EXCHANGE"]]) ? 1 : -1;
         $amountChange = $dir * $model->amount;
 
         if ($model->account_id) {

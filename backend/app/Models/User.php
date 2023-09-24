@@ -132,6 +132,7 @@ class User extends Authenticatable
             'branches' => in_array('branches', $permission),
             'settings' => in_array('settings', $permission),
             'delivery_address' => in_array('delivery_address', $permission),
+            'payment_purpose' => in_array('payment_purpose', $permission),
         ]);
     }
 

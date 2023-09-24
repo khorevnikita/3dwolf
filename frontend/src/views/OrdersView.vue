@@ -95,7 +95,10 @@
           >
             <td>{{ item.id }}</td>
             <td>{{ item.date ? moment(item.date).format("DD.MM.YYYY") : "-" }}</td>
-            <td>{{ item.customer ? item.customer.title : '-' }}</td>
+            <td>
+              {{ item.customer ? item.customer.title : '-' }}
+              <div v-if="item.symbol" style="font-size: .8em">{{item.symbol}}</div>
+            </td>
             <td>{{ item.phone }}</td>
             <!--<td>{{ formatPrice(item.amount) }}</td>-->
             <td>{{ item.deadline ? moment(item.deadline).format("DD.MM.YYYY") : "-" }}</td>
@@ -111,7 +114,12 @@
               {{ paymentStatusLabel(item.payment_status) }}<br/>
               {{ formatPrice(item.amount) }}
             </td>
-            <td>{{ item.delivery_address }}</td>
+            <td>
+              <div v-if="item.address">
+                <b>{{item.address.name}}</b>
+              </div>
+              {{ item.delivery_address }}
+            </td>
             <td>
               <v-btn color="primary" icon @click="qr(item)" class="mr-2">
                 <v-icon>mdi-qrcode</v-icon>

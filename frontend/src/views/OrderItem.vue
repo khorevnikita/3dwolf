@@ -26,7 +26,7 @@
         <v-col cols="12" md="6" order-md="2">
           <CustomerCard v-if="isModerator" :customer="order.customer" class="mb-4"/>
           <FilesCard :order-id="order.id" class="mb-4"/>
-          <PaymentCard v-if="showMoney" :order="order" :total-amount="totalAmountAfterDiscount"/>
+          <PaymentCard v-if="showMoney" :order="order" :total-amount="totalAmountAfterDiscount" @statusChanged="onPaymentStatusChanged"/>
         </v-col>
         <v-col cols="12" md="6" order-md="1">
           <OrderEditor v-if="isModerator" v-model="order"/>
@@ -251,6 +251,9 @@ export default {
       axios.get(`orders/${this.order_id}/qr`).then(({url}) => {
         window.open(url, '_blank').focus();
       })
+    },
+    onPaymentStatusChanged(status){
+      this.order.payment_status = status;
     }
   }
 }

@@ -31,7 +31,6 @@ export default {
   data() {
     return {
       customer_id: this.value,
-
       customers: [],
       isLoadingCustomers: false,
       searchCustomer: ''

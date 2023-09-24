@@ -97,10 +97,16 @@ const routes: Array<RouteConfig> = [
         component: () => import('../views/MoneyView.vue'),
     },
     {
+        path: '/payment-purposes',
+        name: 'payment-purposes',
+        component: () => import('../views/PaymentPurposesView.vue'),
+    },
+    {
         path: '/regular-payments',
         name: 'regular-payments',
         component: () => import('../views/RegularPayments.vue'),
     },
+
     {
         path: '/newsletters',
         name: 'newsletters',

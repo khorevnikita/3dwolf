@@ -64,6 +64,7 @@
 import PaymentEditor from "@/components/Payment/PaymentEditor";
 import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import axios from "@/plugins/axios";
+import Swal from "sweetalert2-khonik";
 
 export default {
   name: "PaymentCard",
@@ -96,8 +97,39 @@ export default {
     }
   },
   methods: {
-    onCreated() {
+    onCreated(payment) {
+
+      if (this.getRemainAmount > 0 && this.getRemainAmount > payment.amount) {
+        if (this.order.payment_status === "not_paid") {
+          this.changePaymentStatus("Поменять статус оплаты на \"Частично оплачено\"?", "part_paid")
+        }
+      } else if (this.getRemainAmount === 0 || this.getRemainAmount <= payment.amount) {
+        if (this.order.payment_status !== "full_paid") {
+          this.changePaymentStatus("Поменять статус оплаты на \"Полностью оплачено\"?", "full_paid")
+        }
+      }
+
       this.getItems();
+    },
+    changePaymentStatus(title, status) {
+      Swal.fire({
+        title: title,
+        showDenyButton: false,
+        showCancelButton: true,
+        cancelButtonText: 'Отменить',
+        showCloseButton: false,
+        showConfirmButton: true,
+        confirmButtonText: 'Подтвердить'
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          axios.post(`orders/${this.order.id}/payment-status`, {
+            payment_status: status
+          }).then(() => {
+            this.$emit("statusChanged", status)
+          })
+        }
+      });
     },
     getItems() {
       axios.get(`${this.resourceApiRoute}?${this.resourceApiParams}&${this.setQueryString(this.query)}`).then(body => {

@@ -6,6 +6,7 @@ use App\Exports\OrderExport;
 use App\Helpers\Paginator;
 use App\Http\Requests\Order\OrderRequest;
 use App\Http\Requests\Order\SetDiscountRequest;
+use App\Http\Requests\Order\SetPaymentStatus;
 use App\Models\Branch;
 use App\Models\Estimate;
 use App\Models\EstimateLine;
@@ -79,7 +80,7 @@ class OrderController extends Controller
         list($sort, $sortDir) = Paginator::getSorting($request);
         $models = $models->orderBy($sort, $sortDir);
 
-        $models = $models->with(['customer', 'branch'])->get();
+        $models = $models->with(['customer', 'branch', 'address'])->get();
         $pagesCount = Paginator::pagesCount($take, $totalCount);
         return $this->resourceListResponse('orders', $models, $totalCount, $pagesCount);
     }
@@ -155,6 +156,13 @@ class OrderController extends Controller
 
         $order->load('customer');
         return $this->resourceItemResponse('order', $order);
+    }
+
+    public function setPaymentStatus(SetPaymentStatus $request, Order $order):JsonResponse
+    {
+        $order->payment_status = $request->get("payment_status");
+        $order->save();
+        return $this->emptySuccessResponse();
     }
 
     public function notify(Order $order, Request $request): JsonResponse

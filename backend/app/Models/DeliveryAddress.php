@@ -18,4 +18,8 @@ class DeliveryAddress extends Model
                 ->orWhere("text", "LIKE", "%$needle%");
         });
     }
+
+    public function orders(){
+        return $this->hasMany(Order::class);
+    }
 }

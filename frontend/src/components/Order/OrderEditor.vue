@@ -72,7 +72,13 @@
           :error-count="1"
           :error="!!errors.comment"
       />
-
+      <v-text-field
+          label="Условное обозначение"
+          v-model="model.symbol"
+          :error-messages="errors.symbol"
+          :error-count="1"
+          :error="!!errors.symbol"
+      />
     </v-card-text>
     <v-card-actions>
       <v-btn v-if="modal" text @click="$emit('close')">Закрыть</v-btn>
@@ -102,6 +108,13 @@ export default {
       errors: {},
       orderStatuses: orderStatuses,
       paymentStatuses: paymentStatuses,
+    }
+  },
+  watch: {
+    value: {
+      handler() {
+        this.model = {...this.value}
+      }, deep: true,
     }
   },
   methods: {

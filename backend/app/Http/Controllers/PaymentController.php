@@ -62,7 +62,7 @@ class PaymentController extends Controller
         if ($take >= 0) {
             $models = $models->skip($skip)->take($take);
         }
-        $models = $models->with(['account', 'user', 'sourceAccount'])->get();
+        $models = $models->with(['account', 'user', 'sourceAccount','purpose'])->get();
         $pagesCount = Paginator::pagesCount($take, $totalCount);
         return $this->resourceListResponse('payments', $models, $totalCount, $pagesCount, [
             'totalSum' => $totalSum,

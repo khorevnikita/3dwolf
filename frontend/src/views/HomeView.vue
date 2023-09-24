@@ -110,6 +110,13 @@
           class="mt-4"
       />
     </v-col>
+    <v-col cols="12" v-if="showPaymentPurpose">
+      <PaymentPurposeStats/>
+    </v-col>
+    <v-col cols="12" v-if="showDeliveryMethods">
+      <DeliveryMethodStats/>
+    </v-col>
+
     <v-col cols="12" v-if="showStock">
       <div class="text-h4">Склад</div>
     </v-col>
@@ -131,10 +138,15 @@ import {mapGetters} from "vuex";
 import {formatKg, formatPrice} from "@/plugins/formats";
 import {orderStatuses, orderStatusLabel} from "@/mixins/StatusHelper";
 import NearestRegularPayments from "@/components/Dashboard/NearestRegularPayments";
+import DeliveryMethodStats from "@/components/Dashboard/DeliveryMethodStats";
+import PaymentPurposeStats from "@/components/Dashboard/PaymentPurposeStats";
 
 export default Vue.extend({
   name: 'Home',
-  components: {NearestRegularPayments, MoneyAccountTable, MonthMoneyTable, StockStats},
+  components: {
+    PaymentPurposeStats,
+    DeliveryMethodStats, NearestRegularPayments, MoneyAccountTable, MonthMoneyTable, StockStats
+  },
   data() {
     return {
       statuses: orderStatuses,
@@ -160,6 +172,13 @@ export default Vue.extend({
     },
     showStock() {
       return this.user && this.user.permission?.includes('parts');
+    },
+    showPaymentPurpose() {
+      return this.user && this.user.permission?.includes('payment_purpose');
+    },
+    showDeliveryMethods() {
+      return false;
+      return this.user && this.user.permission?.includes('delivery_address');
     },
   },
   methods: {

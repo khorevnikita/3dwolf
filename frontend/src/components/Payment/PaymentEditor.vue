@@ -18,6 +18,12 @@
           :error="!!errors.type"
 
       />
+      <PaymentPurposePicker
+          v-if="model.type==='expense'"
+          v-model="model.payment_purpose_id"
+          :error="errors.payment_purpose_id"
+          :dense="false"
+      />
       <v-select
           v-if="showUser && model.type !== 'exchange'"
           label="Пользователь"
@@ -151,9 +157,11 @@
 
 <script>
 import axios from "@/plugins/axios";
+import PaymentPurposePicker from "@/components/Forms/PaymentPurposePicker";
 
 export default {
   name: "PaymentEditor",
+  components: {PaymentPurposePicker},
   props: ['value', 'order_id', 'showUser', 'incomeOnly', 'autoDescription'],
   data() {
     return {

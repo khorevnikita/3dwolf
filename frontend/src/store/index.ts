@@ -32,7 +32,7 @@ export default new Vuex.Store({
                     },
                     {title: 'Счета', icon: 'mdi-wallet-plus', to: '/accounts', permission: 'accounts'},
                     {title: 'Сотрудники', icon: 'mdi-account-multiple', to: '/users', permission: 'users'},
-
+                    {title: 'Цели платежей', icon: 'mdi-credit-card-settings-outline', to: '/payment-purposes', permission: 'payment_purpose'},
                 ],
             },
             {
@@ -68,6 +68,7 @@ export default new Vuex.Store({
             {title: 'Адреса доставки', type: 'delivery_address'},
             {title: 'Договора', type: 'contracts'},
             {title: 'Деньги', type: 'payments'},
+            {title: 'Цели платежей', type: 'payment_purpose'},
             {title: 'Рег. платежи', type: 'regular_payments'},
             {title: 'Сметы', type: 'estimates'},
             {title: 'Рассылки', type: 'newsletters'},
