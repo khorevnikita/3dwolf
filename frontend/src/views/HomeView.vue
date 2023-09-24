@@ -177,7 +177,6 @@ export default Vue.extend({
       return this.user && this.user.permission?.includes('payment_purpose');
     },
     showDeliveryMethods() {
-      return false;
       return this.user && this.user.permission?.includes('delivery_address');
     },
   },

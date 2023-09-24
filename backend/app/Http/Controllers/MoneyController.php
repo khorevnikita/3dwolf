@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Money\TotalStatistics;
 use App\Models\Account;
 use App\Models\Customer;
+use App\Models\DeliveryAddress;
 use App\Models\Order;
 use App\Models\Part;
 use App\Models\Payment;
@@ -18,6 +19,35 @@ use Illuminate\Support\Facades\DB;
 
 class MoneyController extends Controller
 {
+
+    public function getDeliveryMethodsStats(Request $request): JsonResponse
+    {
+        $request->validate([
+            'month' => "required|integer|min:0|max:12",
+            'year' => "required|integer|min:0|max:3000",
+        ]);
+
+        $from = Carbon::create($request->get("year"), $request->get("month") + 1)->startOfMonth();
+        $to = Carbon::create($request->get("year"), $request->get("month") + 1)->endOfMonth();
+
+        $deliveryAddresses = DeliveryAddress::query() #->withSum("orders", "amount")
+        ->with("orders", function ($q) use ($from, $to) {
+            $q->where("orders.created_at", ">=", $from)
+                ->where("orders.created_at", "<", $to);
+        })
+            ->get()->map(function (DeliveryAddress $address) {
+                return [
+                    "name" => $address->name,
+                    "amount" => $address->orders->sum("amount")
+                ];
+            });
+
+        return $this->resourceItemResponse('deliveryAddresses', $deliveryAddresses, [
+            "from" => $from,
+            "to" => $to,
+        ]);
+    }
+
     public function getPurposeStatistics(Request $request): JsonResponse
     {
         $request->validate([
@@ -25,15 +55,21 @@ class MoneyController extends Controller
             'year' => "required|integer|min:0|max:3000",
         ]);
 
-        $from = Carbon::create($request->get("year"), $request->get("month")+1)->startOfMonth();
-        $to = Carbon::create($request->get("year"), $request->get("month")+1)->endOfMonth();
+        $from = Carbon::create($request->get("year"), $request->get("month") + 1)->startOfMonth();
+        $to = Carbon::create($request->get("year"), $request->get("month") + 1)->endOfMonth();
 
-        $purposes = PaymentPurpose::query()->withSum('payments', 'amount')
-            ->whereHas("payments", function ($q) use ($from, $to) {
-                $q->where("type", Payment::TYPES["EXPENSE"])
-                    ->where("created_at", ">=", $from)
-                    ->where("created_at", "<", $to);
-            })->get();
+        $purposes = PaymentPurpose::query() #->withSum('payments', 'amount')
+        ->with("payments", function ($q) use ($from, $to) {
+            $q->where("type", Payment::TYPES["EXPENSE"])
+                ->where("created_at", ">=", $from)
+                ->where("created_at", "<", $to);
+        })->get()->map(function (PaymentPurpose $purpose) {
+            return [
+                "name" => $purpose->name,
+                "color" => $purpose->color,
+                "amount" => $purpose->payments->sum("amount")
+            ];
+        });
 
         return $this->resourceItemResponse("paymentPurposes", $purposes, [
             "from" => $from,

@@ -94,6 +94,7 @@ Route::middleware('moderator')->group(function () {
     Route::prefix('money')->group(function () {
         Route::get('statistics', [MoneyController::class, 'getTotalStatistics']);
         Route::get('purposes', [MoneyController::class, 'getPurposeStatistics']);
+        Route::get('delivery-methods', [MoneyController::class, 'getDeliveryMethodsStats']);
     });
 
     Route::prefix('customers/{customer}')->group(function () {
