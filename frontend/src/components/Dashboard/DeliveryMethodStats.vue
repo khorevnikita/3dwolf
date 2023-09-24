@@ -117,9 +117,7 @@ export default {
       this.loading = true;
       axios.get(`money/delivery-methods?year=${this.year}&month=${this.month}`).then(body => {
         this.data = body.deliveryAddresses;
-        setTimeout(()=>{
-          this.loading = false;
-        },3000)
+        this.loading = false;
       })
     }
   }

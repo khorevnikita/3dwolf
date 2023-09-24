@@ -119,9 +119,7 @@ export default {
       this.loading = true;
       axios.get(`money/purposes?year=${this.year}&month=${this.month}`).then(body => {
         this.data = body.paymentPurposes;
-        setTimeout(()=>{
-          this.loading = false;
-        },3000)
+        this.loading = false;
       })
     }
   }
