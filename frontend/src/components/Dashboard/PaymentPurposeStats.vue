@@ -1,5 +1,6 @@
 <template>
   <v-card>
+    <v-card-title>Цели платежей</v-card-title>
     <v-card-actions>
       <v-btn @click="month--" class="mr-2" icon color="primary">
         <v-icon>mdi-chevron-left</v-icon>
@@ -13,6 +14,12 @@
     <v-card-text>
       <v-row>
         <v-col cols="12" md="6">
+          <v-skeleton-loader
+              v-if="loading"
+              class="mx-auto"
+              max-width="300"
+              type="image"
+          ></v-skeleton-loader>
           <VueApexCharts v-if="!loading" :key="month" width="380" type="donut" :options="options" :series="series"/>
         </v-col>
         <v-col cols="12" md="6">
