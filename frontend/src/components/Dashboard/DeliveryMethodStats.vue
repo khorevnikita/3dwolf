@@ -16,11 +16,11 @@
         <v-col cols="12" md="6">
           <v-skeleton-loader
               v-if="loading"
-              class="mx-auto"
-              max-width="300"
+              class="rounded-circle ml-4"
+              max-width="200"
               type="image"
           ></v-skeleton-loader>
-          <VueApexCharts v-if="!loading" :key="month" width="380" type="donut" :options="options" :series="series"/>
+          <VueApexCharts v-else :key="month" width="380" type="donut" :options="options" :series="series"/>
         </v-col>
         <v-col cols="12" md="6">
           <v-list-item v-for="address in data" :key="address.id">
@@ -117,7 +117,9 @@ export default {
       this.loading = true;
       axios.get(`money/delivery-methods?year=${this.year}&month=${this.month}`).then(body => {
         this.data = body.deliveryAddresses;
-        this.loading = false;
+        setTimeout(()=>{
+          this.loading = false;
+        },3000)
       })
     }
   }
