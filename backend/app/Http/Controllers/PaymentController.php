@@ -44,6 +44,10 @@ class PaymentController extends Controller
             $models = $models->whereAccountId($accountId);
         }
 
+        if ($purposeId = $request->get("payment_purpose_id")) {
+            $models = $models->wherePaymentPurposeId($purposeId);
+        }
+
         if ($dates = array_filter(explode(",", $request->get("date")))) {
             if ((count($dates) === 2)) $models->where("paid_at", ">=", $dates[0])
                 ->where("paid_at", "<=", $dates[1]);
@@ -62,7 +66,7 @@ class PaymentController extends Controller
         if ($take >= 0) {
             $models = $models->skip($skip)->take($take);
         }
-        $models = $models->with(['account', 'user', 'sourceAccount','purpose'])->get();
+        $models = $models->with(['account', 'user', 'sourceAccount', 'purpose'])->get();
         $pagesCount = Paginator::pagesCount($take, $totalCount);
         return $this->resourceListResponse('payments', $models, $totalCount, $pagesCount, [
             'totalSum' => $totalSum,

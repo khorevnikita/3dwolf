@@ -159,7 +159,9 @@
               </v-date-picker>
             </v-menu>
           </v-col>
-
+          <v-col cols="12" md="3">
+            <PaymentPurposePicker v-model="query.payment_purpose_id"/>
+          </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions>
@@ -254,10 +256,11 @@ import ResourceComponentHelper from "@/mixins/ResourceComponentHelper";
 import MonthMoneyTable from "@/components/Dashboard/MonthMoneyTable";
 import MoneyAccountTable from "@/components/Dashboard/MoneyAccountTable";
 import UserPicker from "@/components/Forms/UserPicker";
+import PaymentPurposePicker from "@/components/Forms/PaymentPurposePicker";
 
 export default {
   name: "MoneyView",
-  components: {UserPicker, MoneyAccountTable, MonthMoneyTable, PaymentEditor},
+  components: {PaymentPurposePicker, UserPicker, MoneyAccountTable, MonthMoneyTable, PaymentEditor},
   mixins: [ResourceComponentHelper],
   data() {
     return {
