@@ -13,16 +13,16 @@
     </v-card-actions>
     <v-card-text>
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="4">
           <v-skeleton-loader
               v-if="loading"
               class="rounded-circle ml-4"
               max-width="200"
               type="image"
           ></v-skeleton-loader>
-          <VueApexCharts v-else :key="month" width="380" type="donut" :options="options" :series="series"/>
+          <VueApexCharts style="max-width: 300px" v-else :key="month" type="donut" :options="options" :series="series"/>
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="8">
           <v-list-item v-for="address in data" :key="address.id">
             <v-list-item-content>
               <v-list-item-title>{{ address.name }}</v-list-item-title>
@@ -76,6 +76,9 @@ export default {
         return {
           labels: ["N/A"],
           colors: ["#8a8a8a"],
+          legend: {
+            position: "bottom",
+          }
         }
       }
       return {

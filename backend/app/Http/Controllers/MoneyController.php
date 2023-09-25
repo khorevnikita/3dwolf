@@ -67,7 +67,8 @@ class MoneyController extends Controller
             return [
                 "name" => $purpose->name,
                 "color" => $purpose->color,
-                "amount" => $purpose->payments->sum("amount")
+                "amount" => $purpose->payments->sum("amount"),
+                "count"=>$purpose->payments->count(),
             ];
         });
 

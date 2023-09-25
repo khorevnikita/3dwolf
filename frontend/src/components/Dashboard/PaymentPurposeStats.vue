@@ -13,23 +13,23 @@
     </v-card-actions>
     <v-card-text>
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="4">
           <v-skeleton-loader
               v-if="loading"
               class="rounded-circle ml-4"
               max-width="200"
               type="image"
           ></v-skeleton-loader>
-          <VueApexCharts v-else :key="month" width="380" type="donut" :options="options" :series="series"/>
+          <VueApexCharts v-else style="max-width: 300px" :key="month" type="donut" :options="options" :series="series"/>
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="8">
           <v-list-item v-for="purpose in data" :key="purpose.id">
             <v-list-item-icon>
               <v-icon :color="purpose.color">mdi-circle</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>{{ purpose.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ formatPrice(purpose.amount) }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ formatPrice(purpose.amount) }}  ({{purpose.count}} шт.)</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-col>
@@ -78,6 +78,9 @@ export default {
         return {
           labels: ["N/A"],
           colors: ["#8a8a8a"],
+          legend: {
+            position: "bottom",
+          }
         }
       }
       return {
