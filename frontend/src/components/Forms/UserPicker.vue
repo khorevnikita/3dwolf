@@ -44,7 +44,11 @@ export default {
       this.getUsers()
     },
     input: function (ids) {
-      this.$emit('input', ids);
+      if (!ids) {
+        this.$emit("input", undefined);
+      } else {
+        this.$emit('input', ids);
+      }
     },
     value() {
       if (JSON.stringify(this.value) !== JSON.stringify(this.input)) {
