@@ -25,7 +25,7 @@
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-group v-else-if="show(item.permission)">
+          <v-list-group v-else-if="show(item.permission, item.children?.map(c=>c.permission))">
             <template v-slot:activator>
               <v-list-item link class="pl-0">
                 <v-list-item-icon>
@@ -121,8 +121,12 @@ export default Vue.extend({
     },
   },
   methods: {
-    show(key) {
-      if (key === undefined) return true;
+    show(key, children_keys) {
+      if (key === undefined) {
+        if (!children_keys) return true;
+        return children_keys.filter(c => this.user.permission?.includes(c)).length > 0;
+      }
+
       return this.user && this.user.permission?.includes(key);
     },
     logout() {

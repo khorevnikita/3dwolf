@@ -151,7 +151,10 @@
         <td></td>
         <td style="vertical-align: baseline;">Адрес доставки</td>
         <td style="white-space: break-spaces" >
-            <b>{{$order->delivery_address}}</b>
+            @if($order->address)
+            <b>{{$order->address->name}}</b><br/>
+            @endif
+            <span>{{$order->delivery_address}}</span>
         </td>
         <td colspan="18"></td>
     </tr>

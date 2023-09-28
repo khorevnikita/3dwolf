@@ -61,7 +61,6 @@ Route::middleware('moderator')->group(function () {
         'materials' => MaterialController::class,
         'manufacturers' => ManufacturerController::class,
         'customers' => CustomerController::class,
-        'branches' => BranchController::class,
         'accounts' => AccountController::class,
         'estimates' => EstimateController::class,
         'estimates.estimate-lines' => EstimateLineController::class,
@@ -137,6 +136,7 @@ Route::middleware('moderator')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::resource("branches", BranchController::class);
     Route::get('orders', [OrderController::class, 'index']);
     Route::get('orders/{order}', [OrderController::class, 'show']);
     Route::get('orders/{order}/order-lines', [OrderLineController::class, 'index']);

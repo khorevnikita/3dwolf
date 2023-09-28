@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class BranchController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(["moderator"])->except(["index"]);
+    }
+
     /**
      * Display a listing of the resource.
      */

@@ -92,11 +92,11 @@ class Order extends Model
         return round($amount, 2);
     }
 
-    public function getQrAttribute($v)
+    /*public function getQrAttribute($v)
     {
         if (!$v) return $v;
         return Storage::disk('s3')->url($v);
-    }
+    }*/
 
     public function copy(): Order
     {
