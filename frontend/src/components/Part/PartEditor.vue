@@ -100,6 +100,7 @@
             v-model="model.bought_at"
             no-title
             scrollable
+            :locale="'ru'"
         >
           <v-spacer></v-spacer>
           <v-btn

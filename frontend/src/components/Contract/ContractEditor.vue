@@ -34,6 +34,7 @@
             v-model="model.date"
             no-title
             scrollable
+            :locale="'ru'"
         >
           <v-spacer></v-spacer>
           <v-btn

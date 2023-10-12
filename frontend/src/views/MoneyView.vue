@@ -140,6 +140,7 @@
                   no-title
                   scrollable
                   range
+                  :locale="'ru'"
               >
                 <v-spacer></v-spacer>
                 <v-btn

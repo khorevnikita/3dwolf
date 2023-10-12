@@ -119,6 +119,7 @@
             v-model="model.paid_at"
             no-title
             scrollable
+            :locale="'ru'"
         >
           <v-spacer></v-spacer>
           <v-btn
