@@ -38,9 +38,10 @@ class MoneyController extends Controller
             ->get()->map(function (DeliveryAddress $address) {
                 return [
                     "name" => $address->name,
-                    "amount" => $address->orders->sum("amount")
+                    "amount" => $address->orders->sum("amount"),
+                    "count" => $address->orders->count()
                 ];
-            });
+            })->sortByDesc("amount")->values();
 
         return $this->resourceItemResponse('deliveryAddresses', $deliveryAddresses, [
             "from" => $from,
@@ -68,9 +69,9 @@ class MoneyController extends Controller
                 "name" => $purpose->name,
                 "color" => $purpose->color,
                 "amount" => $purpose->payments->sum("amount"),
-                "count"=>$purpose->payments->count(),
+                "count" => $purpose->payments->count(),
             ];
-        });
+        })->sortByDesc("amount")->values();
 
         return $this->resourceItemResponse("paymentPurposes", $purposes, [
             "from" => $from,

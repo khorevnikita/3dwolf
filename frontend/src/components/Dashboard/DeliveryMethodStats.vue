@@ -26,7 +26,7 @@
           <v-list-item v-for="address in data" :key="address.id">
             <v-list-item-content>
               <v-list-item-title>{{ address.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{ formatPrice(address.amount) }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ formatPrice(address.amount) }} ({{address.count}} шт)</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-col>
