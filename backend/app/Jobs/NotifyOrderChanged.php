@@ -142,6 +142,7 @@ class NotifyOrderChanged implements ShouldQueue
             "[totalDiscount50]" => round($this->order->amount_after_discount / 2),
             "[address]" => $this->order->delivery_address,
             "[tkLink]" => $this->order->tk_link,
+            "[id]" => $this->order->id,
             "[qr]" => "<img style='margin:5px auto; width:100%; max-width: 240px;' alt='order-qr-$order->id' src='$order->qr'/>",
         ];
         $text = $template;

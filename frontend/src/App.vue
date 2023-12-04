@@ -4,11 +4,8 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
-            <v-img contain position="left" max-height="50" alt="logo" :src="require('@/assets/logo.svg')"/>
+            <v-img contain position="left" max-height="50" alt="logo" :src="require('@/assets/logo.png')"/>
           </v-list-item-title>
-          <v-list-item-subtitle>
-            3D WOLF | CRM
-          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 

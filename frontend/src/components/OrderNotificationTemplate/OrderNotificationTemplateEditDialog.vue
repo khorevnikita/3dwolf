@@ -47,6 +47,7 @@
         [address] - Адрес доставки<br/>
         [tkLink] - Трек-номер<br/>
         [qr] - QR-код<br/>
+        [id] - Номер заказа<br/>
       </p>
     </v-card-text>
     <v-card-actions>
