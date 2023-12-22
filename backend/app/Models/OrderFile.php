@@ -18,9 +18,6 @@ class OrderFile extends Model
 
     public function copy(): OrderFile
     {
-        $newFile = new OrderFile($this->toArray());
-        $newFile->save();
-
-        return $newFile;
+        return new OrderFile($this->toArray());
     }
 }

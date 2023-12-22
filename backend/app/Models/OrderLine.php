@@ -76,10 +76,6 @@ class OrderLine extends Model
 
     public function copy(): OrderLine
     {
-        $newLine = new OrderLine($this->toArray());
-        $newLine->order_id = $this->order_id;
-        $newLine->save();
-
-        return $newLine;
+        return new OrderLine($this->toArray());
     }
 }

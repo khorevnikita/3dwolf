@@ -119,15 +119,15 @@ class Order extends Model
         $newOrder->save();
 
         foreach ($this->lines()->get() as $line) {
-            $line->copy();
-            $line->order_id = $newOrder->id;
-            $line->save();
+            $newLine = $line->copy();
+            $newLine->order_id = $newOrder->id;
+            $newLine->save();
         }
 
         foreach ($this->files()->get() as $file) {
-            $file->copy();
-            $file->order_id = $newOrder->id;
-            $file->save();
+            $newFile = $file->copy();
+            $newFile->order_id = $newOrder->id;
+            $newFile->save();
         }
 
         return $newOrder;

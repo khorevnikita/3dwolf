@@ -21,6 +21,7 @@
                   hide-details
                   dense
                   v-model="query.search"
+                  @keydown.enter="replaceRoute"
               />
             </v-col>
             <v-col cols="12" md="3">
