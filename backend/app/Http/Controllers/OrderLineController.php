@@ -77,6 +77,8 @@ class OrderLineController extends Controller
     public function copy(Order $order, OrderLine $orderLine): JsonResponse
     {
         $newLine = $orderLine->copy();
+        $newLine->order_id = $order->id;
+        $newLine->save();
         $newLine->load(['part', 'part.material', 'part.manufacturer']);
 
         return $this->resourceItemResponse('orderLine', $newLine);
