@@ -4,7 +4,7 @@
       <v-col cols="12" md="6">
         <v-select
             label="Год"
-            :items="[2023]"
+            :items="[2023,2024]"
             v-model="year"
             dense
             hide-details
@@ -266,7 +266,7 @@ export default {
   mixins: [ResourceComponentHelper],
   data() {
     return {
-      year: 2023,
+      year: 2024,
       data: {},
       addPaymentDialog: false,
       formatPrice: formatPrice,
