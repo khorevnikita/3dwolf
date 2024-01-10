@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Telegram;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -62,5 +63,14 @@ Artisan::command('tg:set-webhook', function () {
     \App\Models\Telegram::request("setWebhook", [
         "url" => url("api/tg/callback"),
         "allowed_updates" => ["message"],
+    ]);
+})->purpose('Display an inspiring quote');
+Artisan::command('tg:test {userId}', function ($userId) {
+    $user = \App\Models\User::query()->find($userId);
+
+    // https://core.telegram.org/bots/api#setwebhook
+    Telegram::request("sendMessage", [
+        'chat_id' => $user->tg_channel_id,
+        'text' => "Тестовое сообщение",
     ]);
 })->purpose('Display an inspiring quote');
