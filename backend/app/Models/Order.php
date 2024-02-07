@@ -100,7 +100,7 @@ class Order extends Model
     {
         $user = auth("sanctum")->user();
         if ($user->isCustomer()) return null;
-        return $this->attributes["symbol"];
+        return $this->attributes["symbol"] ?? null;
     }
 
     /*public function getQrAttribute($v)

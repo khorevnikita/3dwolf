@@ -30,7 +30,7 @@ export default {
       input: this.value,
       deliveryAddress: undefined,
       deliveryAddresses: [],
-      emptyAddress: {id: 0, name: "Другое", text: ""}
+      emptyAddress: {id: null, name: "Другое", text: ""}
     }
   },
   created() {

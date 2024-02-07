@@ -29,7 +29,8 @@ class OrderRequest extends FormRequest
             #  'amount' => 'required|numeric',
             'deadline' => 'required|date',
             'status' => 'required|in:' . implode(",", Order::STATUSES),
-            'payment_status' => 'required|in:not_paid,part_paid,full_paid'
+            'payment_status' => 'required|in:not_paid,part_paid,full_paid',
+            'delivery_address_id'=>"nullable|exists:delivery_addresses,id"
         ];
     }
 }
