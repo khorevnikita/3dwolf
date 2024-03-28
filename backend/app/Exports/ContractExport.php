@@ -28,7 +28,7 @@ class ContractExport implements FromView
         return view('exports.contract', [
             'contract' => $this->contract,
             'date' => $this->contract->getDate(),
-            "template" => Contract::TEMPLATE_BLOCKS(),
+            "template" => $this->contract->getBlocks(),
             "settings" => $settings,
         ]);
     }

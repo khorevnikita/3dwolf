@@ -23,7 +23,6 @@ class Contract extends Model
      */
     #[ArrayShape(['day' => "int", 'month' => "string", 'year' => "int"])] public function getDate(): array
     {
-        #dd($this->date);
         $date = Carbon::parse($this->date);
         $months = [
             'января',
@@ -42,10 +41,9 @@ class Contract extends Model
         return ['day' => $date->day, 'month' => $months[$date->month - 1], 'year' => $date->year];
     }
 
-    public static function TEMPLATE_BLOCKS()
+    public function getBlocks()
     {
-        $now = Carbon::now();
-        $year = $now->year;
+        $year = $this->getDate()["year"];
         return [
             [
                 "title" => " Предмет договора",

@@ -127,7 +127,7 @@ class ContractController extends Controller
         $mainPart = Pdf::loadView('exports.contract', [
             'contract' => $contract,
             'date' => $contract->getDate(),
-            "template" => Contract::TEMPLATE_BLOCKS(),
+            "template" => $contract->getBlocks(),
             'customer' => $contract->customer,
             'settings' => (array)$settings
         ])
